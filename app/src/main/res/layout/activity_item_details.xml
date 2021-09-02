@@ -199,7 +199,7 @@
             <include
                 android:id="@+id/ln_progressbar"
                 layout="@layout/progress_bar_layout"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
             <include
                 android:id="@+id/rl_internet"

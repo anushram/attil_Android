@@ -10,6 +10,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import com.develop.sns.databinding.ActivitySubModuleBinding
+import com.develop.sns.databinding.ProgressBarLayoutBinding
 import com.develop.sns.utils.AppConstant
 import com.develop.sns.utils.PreferenceHelper
 import java.util.*
@@ -25,7 +26,9 @@ open class SubModuleActivity : ModuleActivity() {
     open var preferenceHelper: PreferenceHelper? = null
     var token: String? = null
     open var languageId = 0
+    open var language = ""
     var lnProgressBar: LinearLayout? = null
+    var progressBarLayoutBinding: ProgressBarLayoutBinding? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,8 +66,10 @@ open class SubModuleActivity : ModuleActivity() {
     private fun getPreferenceValues() {
         try {
             preferenceHelper = PreferenceHelper(context)
+            //preferenceHelper!!.saveValueToSharedPrefs(AppConstant.KEY_LANGUAGE, "en")
             token = preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)
             languageId = preferenceHelper!!.getIntFromSharedPrefs(AppConstant.KEY_LANGUAGE_ID)
+            language = preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_LANGUAGE)!!
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
         }
@@ -86,13 +91,11 @@ open class SubModuleActivity : ModuleActivity() {
 
     open fun showProgressBar() {
         try {
-            if (lnProgressBar != null) {
-                lnProgressBar!!.setVisibility(View.VISIBLE)
-                window.setFlags(
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-                )
-            }
+            this.progressBarLayoutBinding!!.root.visibility = View.VISIBLE
+            window.setFlags(
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+            )
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -100,18 +103,16 @@ open class SubModuleActivity : ModuleActivity() {
 
     open fun dismissProgressBar() {
         try {
-            if (lnProgressBar != null) {
-                window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-                lnProgressBar!!.setVisibility(View.GONE)
-            }
+            window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+            this.progressBarLayoutBinding!!.root.visibility = View.GONE
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    fun initialiseProgressBar(progressbarId: Int) {
+    fun initialiseProgressBar(progressbarId: ProgressBarLayoutBinding) {
         try {
-            lnProgressBar = findViewById<LinearLayout>(progressbarId)
+            this.progressBarLayoutBinding = progressbarId
         } catch (e: Exception) {
             e.printStackTrace()
         }

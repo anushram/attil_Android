@@ -30,7 +30,7 @@ class SignUpPasswordActivity : SubModuleActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        initialiseProgressBar(R.id.rl_progress_main)
+        initialiseProgressBar(binding.lnProgressbar)
         initToolBar()
         getIntentValue();
         initClassReference()

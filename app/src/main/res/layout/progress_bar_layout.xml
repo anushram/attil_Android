@@ -3,15 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center"
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/rl_progress_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/black_transparent_16"
-        android:gravity="center"
-        android:visibility="gone">
+        android:gravity="center">
 
         <com.agrawalsuneet.dotsloader.loaders.LinearDotsLoader
             android:id="@+id/progressBar"
@@ -30,8 +30,6 @@
             app:loader_selectedColor="#FFA500"
             app:loader_selectedRadius="16dp"
             app:loader_showRunningShadow="false" />
-
-
     </LinearLayout>
 
 

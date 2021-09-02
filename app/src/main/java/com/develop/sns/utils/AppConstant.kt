@@ -57,10 +57,11 @@ object AppConstant {
 
     //LanguageId
     var LANGUAGE_ID = 1
+    var LANGUAGE = "en"
 
     //Language staticId
-    const val LANGUAGE_TYPE_TAMIL = 1
-    const val LANGUAGE_TYPE_ENGLISH = 2
+    const val LANGUAGE_TYPE_TAMIL = 2
+    const val LANGUAGE_TYPE_ENGLISH = 1
 
     //For Attachments
     val STORAGE = Environment.getExternalStorageDirectory()

@@ -46,7 +46,7 @@ class SignUpInfoActivity : SubModuleActivity(), AppUserListener {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        initialiseProgressBar(R.id.rl_progress_main)
+        initialiseProgressBar(binding.lnProgressbar)
         initToolBar()
         initClassReference();
         populateList()

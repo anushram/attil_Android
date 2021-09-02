@@ -38,7 +38,7 @@ class SignUpMobileActivity : SubModuleActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        initialiseProgressBar(R.id.rl_progress_main)
+        initialiseProgressBar(binding.lnProgressbar)
         initToolBar()
         getIntentValue()
         initClassReference()
@@ -124,7 +124,7 @@ class SignUpMobileActivity : SubModuleActivity() {
                     )
                     requestObject.put("phoneNumber", binding.etMobileNo.text.toString())
                     requestObject.put("role", "user")
-                    requestObject.put("preferredLanguage", "en")
+                    requestObject.put("preferredLanguage", language)
 
                     showProgressBar()
                     val url: String = AppUrlManager.getAPIUrl().toString() + "otp/generate"

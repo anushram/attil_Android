@@ -51,7 +51,7 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
         }
         setContentView(binding.root)
 
-        initialiseProgressBar(R.id.rl_progress_main)
+        initialiseProgressBar(binding.lnProgressbar)
         initClassReference()
         getIntentValue()
         handleUiElement()

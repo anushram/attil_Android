@@ -1,0 +1,18 @@
+<component name="libraryTable">
+  <library name="Gradle: com.github.addisonElliott:SegmentedButton:3.1.9@aar">
+    <ANNOTATIONS>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/68c78bb5ab053b0c47b9f64e8e27f135/SegmentedButton-3.1.9/annotations.zip!/" />
+    </ANNOTATIONS>
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/68c78bb5ab053b0c47b9f64e8e27f135/SegmentedButton-3.1.9/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/68c78bb5ab053b0c47b9f64e8e27f135/SegmentedButton-3.1.9/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/68c78bb5ab053b0c47b9f64e8e27f135/SegmentedButton-3.1.9/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.addisonElliott/SegmentedButton/3.1.9/329f3f70efcf88e53b637e105db4fb64b316885f/SegmentedButton-3.1.9-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.addisonElliott/SegmentedButton/3.1.9/8b37aa1a6d23eeb34425e9a49b45096576053e64/SegmentedButton-3.1.9-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

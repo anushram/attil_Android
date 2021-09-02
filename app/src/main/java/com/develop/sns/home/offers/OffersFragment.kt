@@ -48,6 +48,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
     val time = 4000
     var packageType = ""
     var offerType = ""
+    var language = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,6 +90,8 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
         try {
             binding.srlList.isRefreshing = false
             binding.srlList.isEnabled = false
+            language =
+                preferenceHelper?.getValueFromSharedPrefs(AppConstant.KEY_LANGUAGE).toString()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -115,6 +118,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
             if (AppUtils.isConnectedToInternet(requireActivity())) {
                 val requestObject = JSONObject()
                 requestObject.put("skip", 0)
+                Log.e("requestObj", requestObject.toString())
                 showProgressBar()
 
                 val url: String = AppUrlManager.getAPIUrl().toString() + "topOffer/allProducts"
@@ -700,7 +704,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
 
     private fun showProgressBar() {
         try {
-            binding.lnProgressbar.rlProgressMain.visibility = View.VISIBLE
+            binding.lnProgressbar.root.visibility = View.VISIBLE
             requireActivity().window.setFlags(
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
@@ -715,7 +719,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
             if (activity != null) {
                 requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
             }
-            binding.lnProgressbar.rlProgressMain.visibility = View.GONE
+            binding.lnProgressbar.root.visibility = View.GONE
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
         }

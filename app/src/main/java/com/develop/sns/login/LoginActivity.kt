@@ -48,7 +48,7 @@ class LoginActivity : SubModuleActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        initialiseProgressBar(R.id.rl_progress_main)
+        initialiseProgressBar(binding.lnProgressbar)
         initClassReference()
         checkFireBaseToken()
         handleUiElement()
@@ -202,30 +202,6 @@ class LoginActivity : SubModuleActivity() {
         }
     }
 
-    override fun showProgressBar() {
-        try {
-            if (lnProgressBar != null) {
-                lnProgressBar!!.visibility = View.VISIBLE
-                window.setFlags(
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-                )
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    override fun dismissProgressBar() {
-        try {
-            if (lnProgressBar != null) {
-                window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-                lnProgressBar!!.visibility = View.GONE
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
 
     private fun sendOtpService() {
         try {
@@ -238,7 +214,7 @@ class LoginActivity : SubModuleActivity() {
                     )
                     requestObject.put("phoneNumber", binding.etMobileNo.text.toString())
                     requestObject.put("role", "user")
-                    requestObject.put("preferredLanguage", "en")
+                    requestObject.put("preferredLanguage", language)
 
                     showProgressBar()
                     val url: String = AppUrlManager.getAPIUrl().toString() + "auth/otpLogin"
@@ -265,7 +241,7 @@ class LoginActivity : SubModuleActivity() {
 
     private fun parseGenerateOtpResponse(obj: JSONObject) {
         try {
-            Log.e("Login OTP RES",obj.toString())
+            Log.e("Login OTP RES", obj.toString())
             submitFlag = false
             if (obj.has("data") && !obj.isNull("data")) {
                 val dataObject = obj.getJSONObject("data")
@@ -318,7 +294,8 @@ class LoginActivity : SubModuleActivity() {
                     val requestObject = JSONObject()
                     requestObject.put("phoneNumber", binding.etMobileNo.getText().toString())
                     requestObject.put("password", binding.etPassword.getText().toString())
-                    requestObject.put("preferredLanguage", "en")
+                    requestObject.put("preferredLanguage", language)
+                    Log.e("requestObj", requestObject.toString())
                     showProgressBar()
                     val url: String = AppUrlManager.getAPIUrl().toString() + "auth/login"
                     loginViewModel?.makeLogin(

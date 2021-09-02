@@ -86,13 +86,14 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:layout_marginStart="-20dp"
                                 android:layout_weight="1"
+                                android:ellipsize="end"
                                 android:fontFamily="@font/notosans_bold"
                                 android:gravity="center"
+                                android:maxLines="1"
                                 android:text="@string/trending_offers"
                                 android:textColor="@color/text_color"
-                                android:textSize="18sp" />
+                                android:textSize="16sp" />
 
                             <ru.nikartm.support.ImageBadgeView
                                 android:id="@+id/ibv_cart"
@@ -301,7 +302,7 @@
             <include
                 android:id="@+id/ln_progressbar"
                 layout="@layout/progress_bar_layout"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
             <include
                 android:id="@+id/rl_internet"

@@ -42,7 +42,7 @@ class SignUpUserDetailActivity : SubModuleActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        initialiseProgressBar(R.id.rl_progress_main)
+        initialiseProgressBar(binding.lnProgressbar)
         initToolBar()
         getIntentValue();
         initClassReference()
@@ -106,11 +106,11 @@ class SignUpUserDetailActivity : SubModuleActivity() {
 
             binding.btnNext.setOnClickListener {
                 signUpDto?.gender = binding.rgGender.getButton(binding.rgGender.position).text
-                launchPasswordActivity();
+                launchPasswordActivity()
             }
 
             binding.rgGender.setOnPositionChangedListener { position ->
-                segmentPosition = position;
+                segmentPosition = position
             }
 
             binding.rootView.viewTreeObserver.addOnGlobalLayoutListener {
@@ -194,7 +194,7 @@ class SignUpUserDetailActivity : SubModuleActivity() {
                 if (AppUtils.isConnectedToInternet(context)) {
                     val requestObject = JSONObject()
                     requestObject.put("username", binding.etUserName.getText().toString())
-                    requestObject.put("preferredLanguage", "en")
+                    requestObject.put("preferredLanguage", language)
                     showProgressBar()
                     val url: String = AppUrlManager.getAPIUrl().toString() + "isUserNameExist"
                     signUpUserDetailViewModel?.checkUserNameAvailability(

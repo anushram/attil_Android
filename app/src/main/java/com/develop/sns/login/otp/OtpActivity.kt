@@ -40,7 +40,7 @@ class OtpActivity : SubModuleActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        initialiseProgressBar(R.id.rl_progress_main)
+        initialiseProgressBar(binding.lnProgressbar)
         getIntentValue()
         initToolBar()
         handleUiElement()
@@ -130,7 +130,7 @@ class OtpActivity : SubModuleActivity() {
                         preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_OTP_ID)
                     )
                     requestObject.put("isOtpVerified", true)
-                    requestObject.put("preferredLanguage", "en")
+                    requestObject.put("preferredLanguage", language)
                     Log.e("Request", requestObject.toString())
                     showProgressBar()
                     var url: String = ""

@@ -1,5 +1,6 @@
 package com.develop.sns.home
 
+import android.app.Activity
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.view.View
@@ -23,12 +24,14 @@ class HomeActivity : SubModuleActivity() {
     private var currentFragment = 0
     private val offersFragment = OffersFragment()
     private val profileFragment = ProfileFragment()
+    var fa: Activity? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        initialiseProgressBar(R.id.rl_progress_main)
+        fa = this;
+
         selectItem(AppConstant.OFFERS_FRAGMENT);
         initClassReference()
         handleUiElement()

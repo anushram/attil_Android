@@ -40,7 +40,20 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initClassReference()
         handleUiElement()
+    }
+
+    private fun initClassReference() {
+        try {
+            if (preferenceHelper!!.getIntFromSharedPrefs(AppConstant.KEY_LANGUAGE_ID) == AppConstant.LANGUAGE_TYPE_TAMIL) {
+                binding.tvLanguage.text = getString(R.string.tamil_title)
+            } else {
+                binding.tvLanguage.text = getString(R.string.english_title)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     private fun handleUiElement() {

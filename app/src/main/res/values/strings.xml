@@ -56,4 +56,5 @@
     <string name="add_to_cart">Add to Cart</string>
     <string name="tamil_title">தமிழ்</string>
     <string name="english_title">English</string>
+    <string name="language_title">Select Language</string>
 </resources>
