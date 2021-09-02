@@ -6,5 +6,6 @@
     android:layout_height="48dp"
     android:background="@color/primary"
     app:elevation="3dp"
+    app:titleTextAppearance="@style/ToolBarTitleStyle"
     app:subtitleTextAppearance="@style/ToolBarSubTitleStyle"
     app:theme="@style/ToolBarStyle" />
