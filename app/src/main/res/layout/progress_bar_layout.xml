@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/rl_progress_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_transparent_16"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <com.agrawalsuneet.dotsloader.loaders.LinearDotsLoader
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            app:loader_animDur="800"
+            app:loader_circleRadius="12dp"
+            app:loader_defaultColor="#C0FC65"
+            app:loader_dotsDist="12dp"
+            app:loader_expandOnSelect="true"
+            app:loader_isSingleDir="true"
+            app:loader_noOfDots="2"
+            app:loader_selectedColor="#FFA500"
+            app:loader_selectedRadius="16dp"
+            app:loader_showRunningShadow="false" />
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,20 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="AppBaseTheme" parent="AppTheme">
+
+    </style>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary</item>
+        <item name="colorAccent">@color/accent</item>
+        <item name="actionModeBackground">@color/primary</item>
+        <item name="android:dialogTheme">@style/AppDialogTheme</item>
+        <item name="android:navigationBarColor" tools:targetApi="lollipop">@color/black</item>
+        <item name="android:actionMenuTextAppearance">@style/MyMenuTextAppearance</item>
+        <item name="android:actionButtonStyle">@style/MyActionButtonStyle</item>
+        <item name="toolbarNavigationButtonStyle">@style/Toolbar.Button.Navigation.Tinted</item>
+        <item name="android:windowDisablePreview">true</item>
+    </style>
+
+</resources>

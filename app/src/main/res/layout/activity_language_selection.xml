@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="LoginViewModel"
+            type="com.develop.sns.login.LoginViewModel" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/root_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/md_grey_50"
+        android:orientation="vertical"
+        tools:context=".signup.info.SignUpInfoActivity">
+
+        <include
+            android:id="@+id/ln_toolbar"
+            layout="@layout/app_toolbar" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <include
+                android:id="@+id/ln_error"
+                layout="@layout/custom_error_snackbar"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <com.addisonelliott.segmentedbutton.SegmentedButtonGroup
+                    android:id="@+id/rg_language"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:background="@color/md_grey_200"
+                    android:elevation="4dp"
+                    android:padding="2dp"
+                    app:divider="@color/white"
+                    app:dividerPadding="10dp"
+                    app:dividerRadius="10dp"
+                    app:dividerWidth="2dp"
+                    app:draggable="false"
+                    app:position="1"
+                    app:radius="10dp"
+                    app:rippleColor="@color/accent"
+                    app:selectedBackground="@color/white"
+                    app:selectedBorderColor="@color/transparent"
+                    app:selectedBorderWidth="1dp"
+                    app:selectedButtonRadius="10dp"
+                    app:selectionAnimationDuration="1000">
+
+                    <com.addisonelliott.segmentedbutton.SegmentedButton
+                        android:id="@+id/sb_tamil"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/notosans_regular"
+                        android:padding="8dp"
+                        app:selectedTextColor="@color/text_color"
+                        app:selectedTextStyle="bold"
+                        app:text="@string/tamil_title"
+                        app:textColor="@color/text_color"
+                        app:textSize="15sp" />
+
+                    <com.addisonelliott.segmentedbutton.SegmentedButton
+                        android:id="@+id/sb_english"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/notosans_regular"
+                        android:padding="8dp"
+                        app:selectedTextColor="@color/text_color"
+                        app:selectedTextStyle="bold"
+                        app:text="@string/english_title"
+                        app:textColor="@color/text_color"
+                        app:textSize="15sp" />
+
+
+                </com.addisonelliott.segmentedbutton.SegmentedButtonGroup>
+
+            </LinearLayout>
+
+
+            <include
+                android:id="@+id/ln_progressbar"
+                layout="@layout/progress_bar_layout"
+                android:visibility="visible" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</layout>

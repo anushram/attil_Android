@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="HomeViewModel"
+            type="com.develop.sns.home.HomeViewModel" />
+
+    </data>
+
+    <LinearLayout
+        android:id="@+id/root_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical"
+        tools:context=".home.profile.fragment.ProfileFragment">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="8dp">
+
+                        <LinearLayout
+                            android:id="@+id/ln_picture"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="1dp"
+                            android:visibility="visible">
+
+                            <com.develop.sns.customviews.CircleImageView
+                                android:id="@+id/iv_profile_pic"
+                                android:layout_width="120dp"
+                                android:layout_height="120dp"
+                                android:layout_gravity="center"
+                                android:scaleType="centerInside"
+                                android:src="@drawable/profile_picture"
+                                android:visibility="visible" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tv_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="5dp"
+                            android:fontFamily="@font/notosans_bold"
+                            android:gravity="center"
+                            android:text="@string/app_name"
+                            android:textColor="@color/text_color"
+                            android:textSize="16sp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:background="@color/md_grey_100"
+                            android:orientation="horizontal"
+                            android:padding="8dp">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_gravity="center_vertical"
+
+                                android:gravity="center"
+                                android:src="@drawable/india_flag" />
+
+                            <TextView
+                                android:id="@+id/tv_mobile_no"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="start|center"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/notosans_light"
+                                android:gravity="start|center"
+                                android:paddingStart="8dp"
+                                android:text="9940044069"
+                                android:textColor="@color/text_color"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:id="@+id/tv_edit"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginEnd="12dp"
+                                android:fontFamily="@font/notosans_bold"
+                                android:gravity="center"
+                                android:text="Edit"
+                                android:textColor="@color/primary"
+                                android:textSize="14sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/ln_reset_password"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:background="@drawable/boundary_primary"
+                            android:backgroundTint="@color/md_grey_100"
+                            android:gravity="start|center"
+                            android:orientation="horizontal"
+                            android:padding="5dp">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_gravity="center_vertical"
+                                android:padding="4dp"
+                                android:src="@drawable/reset_password" />
+
+                            <TextView
+                                android:id="@+id/tv_reset_password"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="5dp"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/notosans_light"
+                                android:text="@string/reset_password"
+                                android:textColor="@color/text_color"
+                                android:textSize="15sp" />
+
+                            <ImageView
+                                android:id="@+id/iv_reset_password_arrow"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/right_arrow_white"
+                                app:tint="@color/text_color" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/ln_gender"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:background="@drawable/boundary_primary"
+                            android:backgroundTint="@color/md_grey_100"
+                            android:gravity="start|center"
+                            android:orientation="horizontal"
+                            android:padding="5dp">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_gravity="center_vertical"
+                                android:padding="4dp"
+                                android:src="@drawable/profile" />
+
+                            <TextView
+                                android:id="@+id/tv_gender"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="5dp"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/notosans_light"
+                                android:text="Male"
+                                android:textColor="@color/text_color"
+                                android:textSize="15sp" />
+
+                            <ImageView
+                                android:id="@+id/iv_gender_arrow"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:adjustViewBounds="true"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/right_arrow_white"
+                                app:tint="@color/text_color" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/ln_language"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:background="@drawable/boundary_primary"
+                            android:backgroundTint="@color/md_grey_100"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:padding="5dp">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_gravity="center_vertical"
+                                android:padding="4dp"
+                                android:src="@drawable/language" />
+
+                            <TextView
+                                android:id="@+id/tv_language"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginStart="5dp"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/notosans_light"
+                                android:text="English"
+                                android:textColor="@color/text_color"
+                                android:textSize="15sp" />
+
+                            <ImageView
+                                android:id="@+id/iv_language_arrow"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:adjustViewBounds="true"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/right_arrow_white"
+                                app:tint="@color/text_color" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/ln_notification"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:background="@drawable/boundary_primary"
+                            android:backgroundTint="@color/md_grey_100"
+                            android:gravity="start|center"
+                            android:orientation="horizontal"
+                            android:padding="5dp">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_gravity="center_vertical"
+                                android:padding="4dp"
+                                android:src="@drawable/bell" />
+
+                            <TextView
+                                android:id="@+id/tv_notification"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="5dp"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/notosans_light"
+                                android:text="Notification Settings"
+                                android:textColor="@color/text_color"
+                                android:textSize="15sp" />
+
+                            <ImageView
+                                android:id="@+id/iv_notification_arrow"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:adjustViewBounds="true"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/right_arrow_white"
+                                app:tint="@color/text_color" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/ln_logout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:background="@drawable/boundary_primary"
+                            android:backgroundTint="@color/md_grey_100"
+                            android:gravity="start|center"
+                            android:orientation="horizontal"
+                            android:padding="5dp">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_gravity="center_vertical"
+                                android:padding="4dp"
+                                android:src="@drawable/logout"
+                                app:tint="@color/red_700" />
+
+                            <TextView
+                                android:id="@+id/tv_logout"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="5dp"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/notosans_bold"
+                                android:text="Log Out"
+                                android:textColor="@color/red_700"
+                                android:textSize="15sp" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </ScrollView>
+
+            <include
+                android:id="@+id/ln_progressbar"
+                layout="@layout/progress_bar_layout"
+                android:visibility="visible" />
+
+
+        </RelativeLayout>
+    </LinearLayout>
+</layout>

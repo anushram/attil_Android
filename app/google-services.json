@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1093250527845",
+    "firebase_url": "https://attil-c61f9-default-rtdb.firebaseio.com",
+    "project_id": "attil-c61f9",
+    "storage_bucket": "attil-c61f9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1093250527845:android:bbd07b8f7017a103298c8c",
+        "android_client_info": {
+          "package_name": "com.develop.sns"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1093250527845-4u73i8ks9hbfloer3nh2e8p6lab3aesl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDp-19PgwDu4WsuJuvnE142c3JJzcF5N7k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1093250527845-4u73i8ks9hbfloer3nh2e8p6lab3aesl.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1093250527845-6ju4orgadggj606purekkeo0dgv99nbq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.attildelivery.illagu"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

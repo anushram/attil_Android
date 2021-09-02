@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="HomeViewModel"
+            type="com.develop.sns.home.HomeViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:focusable="false"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical"
+        tools:context=".home.HomeActivity">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white">
+
+            <FrameLayout
+                android:id="@+id/fl_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/coordinator_layout"
+                android:orientation="vertical"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
+                android:id="@+id/coordinator_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true">
+
+                <com.google.android.material.bottomnavigation.BottomNavigationView
+                    android:id="@+id/bottom_nav"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_gravity="bottom"
+                    app:elevation="0dp"
+                    app:itemBackground="@color/white">
+
+                    <LinearLayout
+                        android:id="@+id/cv_footer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:background="@drawable/bg_shadow"
+                        android:orientation="horizontal"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp">
+
+                        <LinearLayout
+                            android:id="@+id/ln_offers"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:visibility="visible">
+
+
+                            <ImageView
+                                android:id="@+id/iv_offers"
+                                android:layout_width="29dp"
+                                android:layout_height="29dp"
+                                android:layout_centerInParent="true"
+                                android:padding="2dp"
+                                android:src="@drawable/offer"
+                                app:tint="@color/grey" />
+
+
+                            <TextView
+                                android:id="@+id/tv_offers"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:fontFamily="@font/notosans_bold"
+                                android:text="@string/offers"
+                                android:textColor="@color/grey"
+                                android:textSize="10sp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/ln_products"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:visibility="visible">
+
+                            <ImageView
+                                android:id="@+id/iv_products"
+                                android:layout_width="29dp"
+                                android:layout_height="29dp"
+                                android:layout_centerInParent="true"
+                                android:padding="2dp"
+                                android:src="@drawable/product"
+                                app:tint="@color/grey" />
+
+                            <TextView
+                                android:id="@+id/tv_products"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:fontFamily="@font/notosans_bold"
+                                android:text="@string/products"
+                                android:textColor="@color/grey"
+                                android:textSize="10sp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/ln_orders"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:visibility="visible">
+
+
+                            <ImageView
+                                android:id="@+id/iv_orders"
+                                android:layout_width="29dp"
+                                android:layout_height="29dp"
+                                android:layout_centerInParent="true"
+                                android:padding="2dp"
+                                android:src="@drawable/order"
+                                app:tint="@color/grey" />
+
+
+                            <TextView
+                                android:id="@+id/tv_orders"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:fontFamily="@font/notosans_bold"
+                                android:text="@string/orders"
+                                android:textColor="@color/grey"
+                                android:textSize="10sp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/ln_profile"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:visibility="visible">
+
+                            <ImageView
+                                android:id="@+id/iv_profile"
+                                android:layout_width="29dp"
+                                android:layout_height="29dp"
+                                android:layout_centerInParent="true"
+                                android:padding="2dp"
+                                android:src="@drawable/profile"
+                                app:tint="@color/grey" />
+
+                            <TextView
+                                android:id="@+id/tv_profile"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:fontFamily="@font/notosans_bold"
+                                android:text="@string/profile"
+                                android:textColor="@color/grey"
+                                android:textSize="10sp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </com.google.android.material.bottomnavigation.BottomNavigationView>
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</layout>

@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="LoginViewModel"
+            type="com.develop.sns.login.LoginViewModel" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/root_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/md_grey_50"
+        android:orientation="vertical"
+        tools:context=".signup.info.SignUpInfoActivity">
+
+        <include
+            android:id="@+id/ln_toolbar"
+            layout="@layout/app_toolbar" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <include
+                android:id="@+id/ln_error"
+                layout="@layout/custom_error_snackbar"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/btn_next"
+                android:layout_margin="10dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:orientation="vertical"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:id="@+id/tv_success_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/notosans_bold"
+                        android:gravity="center"
+                        android:text="@string/give_your_username"
+                        android:textColor="@color/text_color"
+                        android:textSize="20sp" />
+
+                    <EditText
+                        android:id="@+id/et_user_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/boundary_gray"
+                        android:gravity="start"
+                        android:hint="@string/enter_your_username"
+                        android:imeOptions="actionDone"
+                        android:inputType="text"
+                        android:maxLength="50"
+                        android:maxLines="1"
+                        android:padding="8dp"
+                        android:textColorHint="#A5A5A5"
+                        android:textCursorDrawable="@null" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="50dp"
+                    android:orientation="vertical"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/notosans_bold"
+                        android:gravity="center"
+                        android:text="@string/pick_your_gender"
+                        android:textColor="@color/text_color"
+                        android:textSize="20sp" />
+
+                    <com.addisonelliott.segmentedbutton.SegmentedButtonGroup
+                        android:id="@+id/rg_gender"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:background="@color/md_grey_200"
+                        android:elevation="4dp"
+                        android:padding="2dp"
+                        app:divider="@color/white"
+                        app:dividerPadding="10dp"
+                        app:dividerRadius="10dp"
+                        app:dividerWidth="2dp"
+                        app:draggable="false"
+                        app:position="0"
+                        app:radius="10dp"
+                        app:rippleColor="@color/accent"
+                        app:selectedBackground="@color/white"
+                        app:selectedBorderColor="@color/transparent"
+                        app:selectedBorderWidth="1dp"
+                        app:selectedButtonRadius="10dp"
+                        app:selectionAnimationDuration="1000">
+
+                        <com.addisonelliott.segmentedbutton.SegmentedButton
+                            android:id="@+id/sb_male"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/notosans_regular"
+                            android:padding="8dp"
+                            app:selectedTextColor="@color/text_color"
+                            app:selectedTextStyle="bold"
+                            app:text="Male"
+                            app:textColor="@color/text_color"
+                            app:textSize="15sp" />
+
+                        <com.addisonelliott.segmentedbutton.SegmentedButton
+                            android:id="@+id/sb_female"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/notosans_regular"
+                            android:padding="8dp"
+                            app:selectedTextColor="@color/text_color"
+                            app:selectedTextStyle="bold"
+                            app:text="Female"
+                            app:textColor="@color/text_color"
+                            app:textSize="15sp" />
+
+                        <com.addisonelliott.segmentedbutton.SegmentedButton
+                            android:id="@+id/sb_other"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/notosans_regular"
+                            android:padding="8dp"
+                            app:selectedTextColor="@color/text_color"
+                            app:selectedTextStyle="bold"
+                            app:text="Other"
+                            app:textColor="@color/text_color"
+                            app:textSize="15sp" />
+
+                    </com.addisonelliott.segmentedbutton.SegmentedButtonGroup>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_next"
+                style="@style/ButtonNormal"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginBottom="16dp"
+                android:text="@string/next" />
+
+            <include
+                android:id="@+id/ln_progressbar"
+                layout="@layout/progress_bar_layout"
+                android:visibility="visible" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</layout>

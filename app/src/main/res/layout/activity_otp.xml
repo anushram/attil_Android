@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="SignUpOtp"
+            type="com.develop.sns.login.otp.OtpViewModel" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/root_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/ln_toolbar"
+            layout="@layout/app_toolbar" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <include
+                android:id="@+id/ln_error"
+                layout="@layout/custom_error_snackbar"
+                android:visibility="gone" />
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/ln_error">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_mobile_no"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:padding="8dp"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_top_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:padding="8dp"
+                        android:text="@string/otp_info"
+                        android:textColor="@color/text_color"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:visibility="visible" />
+
+
+                    <com.develop.sns.customviews.otpview.OtpView
+                        android:id="@+id/et_otp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="30dp"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginBottom="30dp"
+                        android:focusableInTouchMode="true"
+                        android:gravity="center"
+                        android:inputType="number"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="16sp"
+                        app:OtpHideLineWhenFilled="false"
+                        app:OtpItemCount="5"
+                        app:OtpItemSpacing="6dp"
+                        app:OtpLineColor="@color/colorAccent"
+                        app:OtpMaskingChar="&#9679;"
+                        app:OtpState_filled="true"
+                        app:OtpViewType="line" />
+
+                    <Button
+                        android:id="@+id/btn_resend_otp"
+                        style="@style/ButtonPrimary"
+                        android:layout_width="wrap_content"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
+                        android:text="@string/resend_otp"
+                        android:textSize="16sp"
+                        android:visibility="gone" />
+
+
+                </LinearLayout>
+
+            </ScrollView>
+
+            <include
+                android:id="@+id/ln_progressbar"
+                layout="@layout/progress_bar_layout"
+                android:visibility="visible" />
+        </RelativeLayout>
+
+    </LinearLayout>
+</layout>

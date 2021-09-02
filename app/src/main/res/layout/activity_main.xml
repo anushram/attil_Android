@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rl_splash"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:id="@+id/ln_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/iv_splash"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="45dp"
+                android:padding="15dp"
+                android:src="@drawable/logo" />
+
+        </LinearLayout>
+
+        <ProgressBar
+
+            style="?android:attr/progressBarStyle"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="90dp"
+            android:foregroundTint="@color/primary"
+            android:indeterminateDrawable="@drawable/progress_icon"
+            android:padding="5dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.agrawalsuneet.dotsloader.loaders.LinearDotsLoader
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="90dp"
+            android:visibility="gone"
+            app:loader_animDur="800"
+            app:loader_circleRadius="12dp"
+            app:loader_defaultColor="#C0FC65"
+            app:loader_dotsDist="12dp"
+            app:loader_expandOnSelect="true"
+            app:loader_isSingleDir="true"
+            app:loader_noOfDots="2"
+            app:loader_selectedColor="#FFA500"
+            app:loader_selectedRadius="16dp"
+            app:loader_showRunningShadow="false" />
+
+
+        <include
+            android:id="@+id/rl_internet"
+            layout="@layout/custom_snackbar"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+</LinearLayout>
