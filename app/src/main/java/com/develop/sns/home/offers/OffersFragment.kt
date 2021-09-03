@@ -2,7 +2,6 @@ package com.develop.sns.home.offers
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -14,7 +13,6 @@ import androidx.recyclerview.widget.*
 import com.develop.sns.R
 import com.develop.sns.customviews.GravitySnapHelper
 import com.develop.sns.databinding.FragmentOffersBinding
-import com.develop.sns.databinding.ProgressBarLayoutBinding
 import com.develop.sns.home.details.ItemDetailsActivity
 import com.develop.sns.home.dto.NormalOfferDto
 import com.develop.sns.home.dto.NormalOfferPriceDto
@@ -22,12 +20,11 @@ import com.develop.sns.home.offers.adapter.NormalOffersListAdapter
 import com.develop.sns.home.offers.adapter.TopOffersListAdapter
 import com.develop.sns.home.offers.listener.NormalOfferListener
 import com.develop.sns.home.offers.listener.TopOfferListener
-import com.develop.sns.networkhandler.AppUrlManager
 import com.develop.sns.utils.AppConstant
 import com.develop.sns.utils.AppUtils
 import com.develop.sns.utils.CommonClass
 import com.develop.sns.utils.PreferenceHelper
-import com.squareup.picasso.Picasso
+import com.google.gson.JsonObject
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -39,11 +36,10 @@ import kotlin.collections.ArrayList
 class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
 
     private val binding by lazy { FragmentOffersBinding.inflate(layoutInflater) }
-    private var preferenceHelper: PreferenceHelper? = null
-    private var offersViewModel: OffersViewModel? = null
+    private lateinit var preferenceHelper: PreferenceHelper
 
-    private var topOfferList: ArrayList<NormalOfferDto>? = null
-    private var normalOfferList: ArrayList<NormalOfferDto>? = null
+    private lateinit var topOfferList: ArrayList<NormalOfferDto>
+    private lateinit var normalOfferList: ArrayList<NormalOfferDto>
 
     val time = 4000
     var packageType = ""
@@ -52,14 +48,13 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        preferenceHelper = PreferenceHelper(requireActivity());
-        offersViewModel = OffersViewModel()
+        preferenceHelper = PreferenceHelper(requireActivity())
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         return binding.root
 
@@ -116,23 +111,19 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
     private fun getTopOffers() {
         try {
             if (AppUtils.isConnectedToInternet(requireActivity())) {
-                val requestObject = JSONObject()
-                requestObject.put("skip", 0)
+                val requestObject = JsonObject()
+                requestObject.addProperty("skip", 0)
                 Log.e("requestObj", requestObject.toString())
                 showProgressBar()
-
-                val url: String = AppUrlManager.getAPIUrl().toString() + "topOffer/allProducts"
-                offersViewModel?.getTopOffers(
-                    url,
-                    AppConstant.REST_CALL_POST,
+                val offersViewModel = OffersViewModel()
+                offersViewModel.getTopOffers(
                     requestObject,
-                    preferenceHelper?.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)
-                )?.observe(viewLifecycleOwner, Observer<JSONObject?> { jsonObject ->
-                    if (jsonObject != null) {
-                        //dismissProgressBar()
+                    preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!)
+                    .observe(viewLifecycleOwner, { jsonObject ->
+                        //getNormalOffers()
                         parseTopOffersResponse(jsonObject)
-                    }
-                })
+
+                    })
             } else {
                 CommonClass.showToastMessage(
                     requireActivity(),
@@ -341,25 +332,19 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
     private fun getNormalOffers() {
         try {
             if (AppUtils.isConnectedToInternet(requireActivity())) {
-                val requestObject = JSONObject()
-                requestObject.put("skip", 0)
-                requestObject.put("sortByPrice", 1)
-                requestObject.put("packageType", "")
-                requestObject.put("search", "")
-                requestObject.put("view", "")
-                //showProgressBar()
-                val url: String =
-                    AppUrlManager.getAPIUrl().toString() + "product/getAllNormalOffers"
-                offersViewModel?.getNormalOffers(
-                    url,
-                    AppConstant.REST_CALL_POST,
+                val requestObject = JsonObject()
+                requestObject.addProperty("skip", 0)
+                requestObject.addProperty("sortByPrice", 1)
+                requestObject.addProperty("packageType", "")
+                requestObject.addProperty("search", "")
+                requestObject.addProperty("view", "")
+                val offersViewModel = OffersViewModel()
+                offersViewModel.getNormalOffers(
                     requestObject,
-                    preferenceHelper?.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)
-                )?.observe(viewLifecycleOwner, Observer<JSONObject?> { jsonObject ->
-                    if (jsonObject != null) {
-                        dismissProgressBar()
-                        parseNormalOffersResponse(jsonObject)
-                    }
+                    preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!
+                ).observe(viewLifecycleOwner, Observer<JSONObject?> { jsonObject ->
+                    dismissProgressBar()
+                    parseNormalOffersResponse(jsonObject)
                 })
             } else {
                 CommonClass.showToastMessage(
@@ -651,23 +636,18 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
     private fun getCartCount() {
         try {
             if (AppUtils.isConnectedToInternet(requireActivity())) {
-                val requestObject = JSONObject()
-                requestObject.put(
+                val requestObject = JsonObject()
+                requestObject.addProperty(
                     "userId",
-                    preferenceHelper?.getValueFromSharedPrefs(AppConstant.KEY_USER_ID)
+                    preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_USER_ID)
                 )
 
-                val url: String =
-                    AppUrlManager.getAPIUrl().toString() + "customer/cartCount"
-                offersViewModel?.getCartCount(
-                    url,
-                    AppConstant.REST_CALL_POST,
+                val offersViewModel = OffersViewModel()
+                offersViewModel.getCartCount(
                     requestObject,
-                    preferenceHelper?.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)
-                )?.observe(viewLifecycleOwner, { jsonObject ->
-                    if (jsonObject != null) {
-                        parseCartCountResponse(jsonObject)
-                    }
+                    preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!
+                ).observe(viewLifecycleOwner, { jsonObject ->
+                    parseCartCountResponse(jsonObject)
                 })
             } else {
                 CommonClass.showToastMessage(

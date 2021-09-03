@@ -1,5 +1,6 @@
 package com.develop.sns
 
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.view.Window
@@ -32,23 +33,6 @@ open class ModuleActivity : AppCompatActivity() {
             e.printStackTrace()
         }
     }
-
-//    val sharedPreferenceValue: Unit
-//        get() {
-//            val preferenceHelper = PreferenceHelper(this@ModuleActivity)
-//            val config: Configuration = getBaseContext().getResources().getConfiguration()
-//            val lang: String? = preferenceHelper.getValueFromSharedPrefs("LANG")
-//            if ("" != lang && config.locale.language != lang) {
-//                val locale = Locale(lang)
-//                Locale.setDefault(locale)
-//                config.locale = locale
-//                getBaseContext().getResources().updateConfiguration(
-//                    config,
-//                    getBaseContext().getResources().getDisplayMetrics()
-//                )
-//            }
-//        }
-
 
     open fun getSharedPreferenceValue() {
         val preferenceHelper = PreferenceHelper(this@ModuleActivity)

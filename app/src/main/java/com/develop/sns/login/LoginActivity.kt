@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.text.method.PasswordTransformationMethod
 import android.util.Log
 import android.view.View
-import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
@@ -21,7 +20,6 @@ import com.develop.sns.R
 import com.develop.sns.SubModuleActivity
 import com.develop.sns.databinding.ActivityLoginBinding
 import com.develop.sns.login.otp.OtpActivity
-import com.develop.sns.networkhandler.AppUrlManager
 import com.develop.sns.signup.info.SignUpInfoActivity
 import com.develop.sns.utils.AppConstant
 import com.develop.sns.utils.AppUtils
@@ -30,6 +28,7 @@ import com.develop.sns.utils.PreferenceHelper
 import com.google.firebase.FirebaseApp
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.iid.FirebaseInstanceId
+import com.google.gson.JsonObject
 import org.json.JSONObject
 
 
@@ -37,7 +36,6 @@ class LoginActivity : SubModuleActivity() {
     private val context: Context = this@LoginActivity
     private val binding by lazy { ActivityLoginBinding.inflate(layoutInflater) }
 
-    private var loginViewModel: LoginViewModel? = null
     override var preferenceHelper: PreferenceHelper? = null
     private var submitFlag = false
     var gcmId = ""
@@ -56,7 +54,6 @@ class LoginActivity : SubModuleActivity() {
 
     private fun initClassReference() {
         try {
-            loginViewModel = LoginViewModel()
             preferenceHelper = PreferenceHelper(context)
             languageId = preferenceHelper!!.getIntFromSharedPrefs(AppConstant.KEY_LANGUAGE_ID)
             myAnim = AnimationUtils.loadAnimation(this, R.anim.zoom_in_out)
@@ -120,8 +117,8 @@ class LoginActivity : SubModuleActivity() {
             binding.btnLoginPassword.setOnClickListener(View.OnClickListener {
                 binding.rlPasswordView.visibility = View.VISIBLE
                 binding.btnLoginPassword.visibility = View.GONE
-                binding.tvOr.visibility = View.GONE
-                binding.lnLoginOtp.visibility = View.GONE
+                binding.tvOr.visibility = View.VISIBLE
+                binding.lnLoginOtp.visibility = View.VISIBLE
             })
 
             binding.cbShowPassword.setOnCheckedChangeListener { buttonView, isChecked ->
@@ -207,19 +204,19 @@ class LoginActivity : SubModuleActivity() {
         try {
             if (validateMob()) {
                 if (AppUtils.isConnectedToInternet(context)) {
-                    val requestObject = JSONObject()
-                    requestObject.put(
+                    val requestObject = JsonObject()
+                    requestObject.addProperty(
                         "deviceToken",
                         preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_GCM_ID)!!
                     )
-                    requestObject.put("phoneNumber", binding.etMobileNo.text.toString())
-                    requestObject.put("role", "user")
-                    requestObject.put("preferredLanguage", language)
+                    requestObject.addProperty("phoneNumber", binding.etMobileNo.text.toString())
+                    requestObject.addProperty("role", "user")
+                    requestObject.addProperty("preferredLanguage", language)
 
                     showProgressBar()
-                    val url: String = AppUrlManager.getAPIUrl().toString() + "auth/otpLogin"
-                    loginViewModel!!.sendOtpService(url, AppConstant.REST_CALL_POST, requestObject)
-                        ?.observe(this, Observer<JSONObject?> { currencyPojos ->
+                    val loginViewModel = LoginViewModel()
+                    loginViewModel.sendOtpService(requestObject)
+                        .observe(this, Observer<JSONObject?> { currencyPojos ->
                             if (currencyPojos != null) {
                                 dismissProgressBar()
                                 parseGenerateOtpResponse(currencyPojos)
@@ -291,24 +288,22 @@ class LoginActivity : SubModuleActivity() {
             hideKeyboard()
             if (validate()) {
                 if (AppUtils.isConnectedToInternet(context)) {
-                    val requestObject = JSONObject()
-                    requestObject.put("phoneNumber", binding.etMobileNo.getText().toString())
-                    requestObject.put("password", binding.etPassword.getText().toString())
-                    requestObject.put("preferredLanguage", language)
+                    val requestObject = JsonObject()
+                    requestObject.addProperty("phoneNumber",
+                        binding.etMobileNo.getText().toString())
+                    requestObject.addProperty("password", binding.etPassword.getText().toString())
+                    requestObject.addProperty("preferredLanguage", language)
                     Log.e("requestObj", requestObject.toString())
                     showProgressBar()
-                    val url: String = AppUrlManager.getAPIUrl().toString() + "auth/login"
-                    loginViewModel?.makeLogin(
-                        url,
-                        AppConstant.REST_CALL_POST,
-                        requestObject
-                    )?.observe(this, Observer<JSONObject?> { jsonObject ->
-                        Log.e("jsonObject", jsonObject.toString() + "")
-                        if (jsonObject != null) {
-                            dismissProgressBar()
-                            parseSignInResponse(jsonObject)
-                        }
-                    })
+                    val loginViewModel = LoginViewModel()
+                    loginViewModel.makeLogin(requestObject)
+                        ?.observe(this, { jsonObject ->
+                            Log.e("jsonObject", jsonObject.toString() + "")
+                            if (jsonObject != null) {
+                                dismissProgressBar()
+                                parseSignInResponse(jsonObject)
+                            }
+                        })
                 } else {
                     CommonClass.showToastMessage(
                         context,
@@ -424,8 +419,6 @@ class LoginActivity : SubModuleActivity() {
 
     companion object {
         private val TAG = LoginActivity::class.java.simpleName
-        private const val INTENT_SELECT_COUNTRY_CODE = 1001
-        private const val INTENT_SIGN_UP = 1005
     }
 
     open fun showErrorMessage(errorMessage: String?) {

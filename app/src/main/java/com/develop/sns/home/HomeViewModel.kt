@@ -9,15 +9,4 @@ import org.json.JSONObject
 class HomeViewModel : ViewModel() {
     private val apiRepository: ApiRepository = ApiRepository()
     private var mutableLiveData: MutableLiveData<JSONObject>? = null
-
-    fun sendOtpService(
-        url: String?,
-        restType: Int,
-        encryptedObjectBeforeToken: JSONObject?
-    ): LiveData<JSONObject>? {
-        if (mutableLiveData == null) {
-            mutableLiveData = apiRepository.serviceCall(url, restType, encryptedObjectBeforeToken,"")
-        }
-        return mutableLiveData
-    }
 }

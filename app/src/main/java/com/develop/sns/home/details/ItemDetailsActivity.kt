@@ -8,7 +8,6 @@ import android.util.Log
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.Toast
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.develop.sns.R
 import com.develop.sns.SubModuleActivity
@@ -18,12 +17,13 @@ import com.develop.sns.home.dto.NormalOfferDto
 import com.develop.sns.home.dto.NormalOfferPriceDto
 import com.develop.sns.home.offers.adapter.SliderAdapter
 import com.develop.sns.home.offers.listener.ItemListener
-import com.develop.sns.networkhandler.AppUrlManager
 import com.develop.sns.utils.AppConstant
 import com.develop.sns.utils.AppUtils
 import com.develop.sns.utils.CommonClass
 import com.develop.sns.utils.PreferenceHelper
-import org.json.JSONArray
+import com.google.gson.JsonArray
+import com.google.gson.JsonNull
+import com.google.gson.JsonObject
 import org.json.JSONObject
 
 
@@ -36,7 +36,6 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
     var itemMainDto: NormalOfferDto? = null
     private var itemDetailsListAdapter: ItemDetailsListAdapter? = null
     private lateinit var cartMap: HashMap<String, NormalOfferPriceDto>
-    private var itemDetailsViewModel: ItemDetailsViewModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,7 +68,6 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
 
     private fun initClassReference() {
         try {
-            itemDetailsViewModel = ItemDetailsViewModel()
             cartMap = CommonClass.getCartMap(context)
             calculateTotal(cartMap)
         } catch (e: Exception) {
@@ -94,42 +92,42 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
         try {
             if (AppUtils.isConnectedToInternet(context)) {
                 if (itemMainDto!!.packageType.equals("packed", true)) {
-                    val requestObject = JSONObject()
-                    requestObject.put(
+                    val requestObject = JsonObject()
+                    requestObject.addProperty(
                         "userId",
                         preferenceHelper?.getValueFromSharedPrefs(AppConstant.KEY_USER_ID)
                     )
-                    requestObject.put("cartId", JSONObject.NULL)
+                    requestObject.add("cartId", JsonNull.INSTANCE)
 
-                    val cartDetailsArray = JSONArray()
+                    val cartDetailsArray = JsonArray()
                     if (!cartMap.isEmpty()) {
                         for ((_, value) in cartMap) {
-                            val cartDetailsObject = JSONObject()
-                            cartDetailsObject.put("selectedItemCount", value.quantity)
-                            cartDetailsObject.put("priceId", value.id)
-                            cartDetailsArray.put(cartDetailsObject)
+                            val cartDetailsObject = JsonObject()
+                            cartDetailsObject.addProperty("selectedItemCount", value.quantity)
+                            cartDetailsObject.addProperty("priceId", value.id)
+                            cartDetailsArray.add(cartDetailsObject)
                         }
                     }
-                    requestObject.put("cartDetails", cartDetailsArray)
+                    requestObject.add("cartDetails", cartDetailsArray)
 
-                    requestObject.put("productId", itemMainDto!!.id)
+                    requestObject.addProperty("productId", itemMainDto!!.id)
 
                     Log.e("Packed Object", requestObject.toString())
                     initService(requestObject)
 
                 } else if (itemMainDto!!.packageType.equals("loose", true)) {
-                    val requestObject = JSONObject()
-                    requestObject.put(
+                    val requestObject = JsonObject()
+                    requestObject.addProperty(
                         "userId",
                         preferenceHelper?.getValueFromSharedPrefs(AppConstant.KEY_USER_ID)
                     )
-                    requestObject.put("cartId", JSONObject.NULL)
-                    requestObject.put("productId", itemMainDto!!.id)
+                    requestObject.add("cartId", JsonNull.INSTANCE)
+                    requestObject.addProperty("productId", itemMainDto!!.id)
 
-                    val cartDetailsArray = JSONArray()
+                    val cartDetailsArray = JsonArray()
                     if (cartMap.isNotEmpty()) {
                         for ((_, value) in cartMap) {
-                            val cartDetailsObject = JSONObject()
+                            val cartDetailsObject = JsonObject()
 
                             val qty = value.quantity?.toFloat()?.div(1000)
                             val qtyStr = "%.3f".format(qty)
@@ -137,21 +135,21 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
                             val minUnit = qtyStr.split(".")[1]
                             val maxUnit = qtyStr.split(".")[0]
 
-                            val selectedMin = JSONObject()
-                            selectedMin.put("measureType", value.minUnitMeasureType)
-                            selectedMin.put("unit", minUnit)
-                            cartDetailsObject.put("selectedMin", selectedMin)
+                            val selectedMin = JsonObject()
+                            selectedMin.addProperty("measureType", value.minUnitMeasureType)
+                            selectedMin.addProperty("unit", minUnit)
+                            cartDetailsObject.add("selectedMin", selectedMin)
 
-                            val selectedMax = JSONObject()
-                            selectedMax.put("measureType", value.maxUnitMeasureType)
-                            selectedMax.put("unit", maxUnit)
-                            cartDetailsObject.put("selectedMax", selectedMax)
+                            val selectedMax = JsonObject()
+                            selectedMax.addProperty("measureType", value.maxUnitMeasureType)
+                            selectedMax.addProperty("unit", maxUnit)
+                            cartDetailsObject.add("selectedMax", selectedMax)
 
-                            cartDetailsObject.put("priceId", value.id)
-                            cartDetailsArray.put(cartDetailsObject)
+                            cartDetailsObject.addProperty("priceId", value.id)
+                            cartDetailsArray.add(cartDetailsObject)
                         }
                     }
-                    requestObject.put("cartDetails", cartDetailsArray)
+                    requestObject.add("cartDetails", cartDetailsArray)
 
                     Log.e("Loose Object", requestObject.toString())
                     initService(requestObject)
@@ -169,14 +167,11 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
         }
     }
 
-    private fun initService(requestObject: JSONObject?) {
+    private fun initService(requestObject: JsonObject) {
         try {
-            Log.e("initService", "Comes")
-            val url = AppUrlManager.getAPIUrl().toString() + "customer/addtoCart"
             showProgressBar()
-            itemDetailsViewModel?.addToCart(
-                url,
-                AppConstant.REST_CALL_POST,
+            val itemDetailsViewModel = ItemDetailsViewModel()
+            itemDetailsViewModel.addToCart(
                 requestObject,
                 preferenceHelper?.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)
             )?.observe(this, { jsonObject ->

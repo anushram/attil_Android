@@ -3,48 +3,48 @@ package com.develop.sns.home.offers
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.develop.sns.repository.Api
 import com.develop.sns.repository.ApiRepository
+import com.google.gson.JsonObject
 import org.json.JSONObject
 
-class OffersViewModel : ViewModel() {
-    private val apiRepository: ApiRepository = ApiRepository()
-    private var mutableLiveData: MutableLiveData<JSONObject>? = null
-    private var normalMutableLiveData: MutableLiveData<JSONObject>? = null
-    private var countMutableLiveData: MutableLiveData<JSONObject>? = null
 
-    fun getTopOffers(
-        url: String?,
-        restType: Int,
-        requestObject: JSONObject?,
-        token: String?
-    ): LiveData<JSONObject>? {
-        if (mutableLiveData == null) {
-            mutableLiveData = apiRepository.serviceCall(url, restType, requestObject, token)
+class OffersViewModel : ViewModel() {
+
+    private val apiRepository: ApiRepository = ApiRepository()
+    private val api = Api.initRetrofit()
+
+    fun getTopOffers(requestObject: JsonObject, token: String): LiveData<JSONObject> {
+        lateinit var mutableLiveData: MutableLiveData<JSONObject>
+        try {
+            val call = api.topOffersCall("Bearer $token", requestObject)
+            mutableLiveData = apiRepository.callApi(call)
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
         return mutableLiveData
     }
 
-    fun getNormalOffers(
-        url: String?,
-        restType: Int,
-        requestObject: JSONObject?,
-        token: String?
-    ): LiveData<JSONObject>? {
-        if (normalMutableLiveData == null) {
-            normalMutableLiveData = apiRepository.serviceCall(url, restType, requestObject, token)
+
+    fun getNormalOffers(requestObject: JsonObject, token: String): LiveData<JSONObject> {
+        lateinit var mutableLiveData: MutableLiveData<JSONObject>
+        try {
+            val call = api.normalOffersCall("Bearer $token", requestObject)
+            mutableLiveData = apiRepository.callApi(call)
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
-        return normalMutableLiveData
+        return mutableLiveData
     }
 
-    fun getCartCount(
-        url: String?,
-        restType: Int,
-        requestObject: JSONObject?,
-        token: String?
-    ): LiveData<JSONObject>? {
-        if (countMutableLiveData == null) {
-            countMutableLiveData = apiRepository.serviceCall(url, restType, requestObject, token)
+    fun getCartCount(requestObject: JsonObject, token: String): LiveData<JSONObject> {
+        lateinit var mutableLiveData: MutableLiveData<JSONObject>
+        try {
+            val call = api.cartCount("Bearer $token", requestObject)
+            mutableLiveData = apiRepository.callApi(call)
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
-        return countMutableLiveData
+        return mutableLiveData
     }
 }

@@ -14,7 +14,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.develop.sns.databinding.ActivityMainBinding
 import com.develop.sns.home.HomeActivity
 import com.develop.sns.login.LoginActivity
-import com.develop.sns.networkhandler.AppUrlManager
 import com.develop.sns.utils.AppConstant
 import com.develop.sns.utils.AppUtils
 import com.develop.sns.utils.CommonClass
@@ -102,13 +101,8 @@ class MainActivity : SubModuleActivity() {
         try {
             if (AppUtils.isConnectedToInternet(context)) {
                 showProgressBar()
-                val url: String = AppUrlManager.getAPIUrl().toString() + "getSystemConfig"
                 val mainActivityViewModel = MainActivityViewModel()
-                mainActivityViewModel.getSystemConfig(
-                    url,
-                    AppConstant.REST_CALL_POST,
-                    null
-                )!!.observe(this) { jsonObject ->
+                mainActivityViewModel.getSystemConfig()!!.observe(this) { jsonObject ->
                     parseSystemConfigData(jsonObject)
                 }
 

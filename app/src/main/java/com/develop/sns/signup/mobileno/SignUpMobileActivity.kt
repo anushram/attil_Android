@@ -15,12 +15,11 @@ import com.develop.sns.R
 import com.develop.sns.SubModuleActivity
 import com.develop.sns.databinding.ActivitySignUpMobileBinding
 import com.develop.sns.login.otp.OtpActivity
-import com.develop.sns.networkhandler.AppUrlManager
 import com.develop.sns.signup.dto.SignUpDto
 import com.develop.sns.utils.AppConstant
 import com.develop.sns.utils.AppUtils
 import com.develop.sns.utils.CommonClass
-import com.develop.sns.utils.PreferenceHelper
+import com.google.gson.JsonObject
 import org.json.JSONObject
 
 
@@ -29,7 +28,6 @@ class SignUpMobileActivity : SubModuleActivity() {
     private val context: Context = this@SignUpMobileActivity
     private val binding by lazy { ActivitySignUpMobileBinding.inflate(layoutInflater) }
 
-    private var signUpMobileViewModel: SignUpMobileViewModel? = null
     private var submitFlag = false
     var otp = ""
     var signUpDto: SignUpDto? = null
@@ -76,7 +74,7 @@ class SignUpMobileActivity : SubModuleActivity() {
 
     private fun initClassReference() {
         try {
-            signUpMobileViewModel = SignUpMobileViewModel()
+
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -117,20 +115,18 @@ class SignUpMobileActivity : SubModuleActivity() {
         try {
             if (validateMob()) {
                 if (AppUtils.isConnectedToInternet(context)) {
-                    val requestObject = JSONObject()
-                    requestObject.put(
+                    val requestObject = JsonObject()
+                    requestObject.addProperty(
                         "deviceToken",
                         preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_GCM_ID)!!
                     )
-                    requestObject.put("phoneNumber", binding.etMobileNo.text.toString())
-                    requestObject.put("role", "user")
-                    requestObject.put("preferredLanguage", language)
+                    requestObject.addProperty("phoneNumber", binding.etMobileNo.text.toString())
+                    requestObject.addProperty("role", "user")
+                    requestObject.addProperty("preferredLanguage", language)
 
                     showProgressBar()
-                    val url: String = AppUrlManager.getAPIUrl().toString() + "otp/generate"
-                    signUpMobileViewModel!!.sendOtpService(
-                        url,
-                        AppConstant.REST_CALL_POST,
+                    val signUpMobileViewModel = SignUpMobileViewModel()
+                    signUpMobileViewModel.sendOtpService(
                         requestObject
                     )?.observe(this, Observer<JSONObject?> { currencyPojos ->
                         if (currencyPojos != null) {
