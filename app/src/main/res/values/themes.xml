@@ -87,7 +87,7 @@
         <!-- Customize color of navigation drawer icon and back arrow -->
         <item name="android:textSize">13sp</item>
         <item name="android:textColor">@color/md_grey_600</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/notosans_semibold</item>
     </style>
 
     <style name="ToolBarTitleStyle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
