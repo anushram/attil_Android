@@ -31,7 +31,7 @@ class SplashActivity : Activity() {
                     ContextCompat.getColor(this@SplashActivity, R.color.black)
             }
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
             }
         } catch (e: Exception) {
             e.printStackTrace()

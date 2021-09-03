@@ -72,6 +72,6 @@ class PreferenceHelper(var context: Context) {
     }
 
     init {
-        gcmPreferences = context.getSharedPreferences("NearKart", Context.MODE_PRIVATE)
+        gcmPreferences = context.getSharedPreferences("Attil", Context.MODE_PRIVATE)
     }
 }

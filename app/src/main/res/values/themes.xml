@@ -83,16 +83,16 @@
 
     </style>
 
-    <style name="ToolBarSubTitleStyle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
+    <style name="ToolBarSubTitleStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle">
         <!-- Customize color of navigation drawer icon and back arrow -->
         <item name="android:textSize">13sp</item>
         <item name="android:textColor">@color/md_grey_600</item>
         <item name="android:fontFamily">@font/notosans_semibold</item>
     </style>
 
-    <style name="ToolBarTitleStyle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
+    <style name="ToolBarTitleStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
         <!-- Customize color of navigation drawer icon and back arrow -->
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">15sp</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:fontFamily">@font/notosans_semibold</item>
 

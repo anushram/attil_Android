@@ -4,23 +4,21 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import com.develop.sns.R
 import com.develop.sns.SubModuleActivity
 import com.develop.sns.customviews.otpview.OnOtpCompletionListener
 import com.develop.sns.databinding.ActivityOtpBinding
-import com.develop.sns.networkhandler.AppUrlManager
 import com.develop.sns.signup.dto.SignUpDto
 import com.develop.sns.utils.AppConstant
 import com.develop.sns.utils.AppUtils
 import com.develop.sns.utils.CommonClass
+import com.google.gson.JsonObject
 import org.json.JSONObject
 import java.util.*
 
@@ -30,7 +28,6 @@ class OtpActivity : SubModuleActivity() {
     private val binding by lazy { ActivityOtpBinding.inflate(layoutInflater) }
 
     private var submitFlag = false
-    private var otpViewModel: OtpViewModel? = null
     private var mobileNo: String? = null
     private var otp: String? = null
     private var isSignUp: Boolean? = null
@@ -49,7 +46,6 @@ class OtpActivity : SubModuleActivity() {
 
     private fun getIntentValue() {
         try {
-            otpViewModel = OtpViewModel()
             val intent = intent
             mobileNo = intent.getStringExtra("mobileNo")
             otp = intent.getStringExtra("otp")
@@ -124,33 +120,37 @@ class OtpActivity : SubModuleActivity() {
         try {
             if (AppUtils.isConnectedToInternet(context)) {
                 try {
-                    val requestObject = JSONObject()
-                    requestObject.put(
+                    val requestObject = JsonObject()
+                    requestObject.addProperty(
                         "_id",
                         preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_OTP_ID)
                     )
-                    requestObject.put("isOtpVerified", true)
-                    requestObject.put("preferredLanguage", language)
+                    requestObject.addProperty("isOtpVerified", true)
+                    requestObject.addProperty("preferredLanguage", language)
                     Log.e("Request", requestObject.toString())
                     showProgressBar()
-                    var url: String = ""
+                    val otpViewModel = OtpViewModel()
                     if (isSignUp == true) {
-                        url = AppUrlManager.getAPIUrl().toString() + "otp/verify"
+                        otpViewModel.verifyOtpService(
+                            requestObject
+                        ).observe(this, { currencyPojos ->
+                            Log.e("currencyPojos", currencyPojos.toString() + "")
+                            if (currencyPojos != null) {
+                                dismissProgressBar()
+                                parseVerifyOtpResponse(currencyPojos)
+                            }
+                        })
                     } else {
-                        url = AppUrlManager.getAPIUrl().toString() + "auth/otpLoginVerify"
+                        otpViewModel.verifyLoginOtpService(
+                            requestObject
+                        ).observe(this, { currencyPojos ->
+                            Log.e("currencyPojos", currencyPojos.toString() + "")
+                            if (currencyPojos != null) {
+                                dismissProgressBar()
+                                parseVerifyOtpResponse(currencyPojos)
+                            }
+                        })
                     }
-
-                    otpViewModel!!.verifyOtpService(
-                        url,
-                        AppConstant.REST_CALL_POST,
-                        requestObject
-                    )?.observe(this, { currencyPojos ->
-                        Log.e("currencyPojos", currencyPojos.toString() + "")
-                        if (currencyPojos != null) {
-                            dismissProgressBar()
-                            parseVerifyOtpResponse(currencyPojos)
-                        }
-                    })
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }

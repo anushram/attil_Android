@@ -17,13 +17,13 @@ import androidx.lifecycle.Observer
 import com.develop.sns.R
 import com.develop.sns.SubModuleActivity
 import com.develop.sns.databinding.ActivitySignUpUserDetailBinding
-import com.develop.sns.networkhandler.AppUrlManager
 import com.develop.sns.signup.dto.SignUpDto
 import com.develop.sns.signup.password.SignUpPasswordActivity
 import com.develop.sns.utils.AppConstant
 import com.develop.sns.utils.AppUtils
 import com.develop.sns.utils.CommonClass
 import com.develop.sns.utils.PreferenceHelper
+import com.google.gson.JsonObject
 import org.json.JSONObject
 
 class SignUpUserDetailActivity : SubModuleActivity() {
@@ -32,7 +32,6 @@ class SignUpUserDetailActivity : SubModuleActivity() {
     private val binding by lazy { ActivitySignUpUserDetailBinding.inflate(layoutInflater) }
 
     override var preferenceHelper: PreferenceHelper? = null
-    private var signUpUserDetailViewModel: SignUpUserDetailViewModel? = null
     private var submitFlag = false
     private var isChecked = false
     var signUpDto: SignUpDto? = null
@@ -80,7 +79,6 @@ class SignUpUserDetailActivity : SubModuleActivity() {
 
     private fun initClassReference() {
         try {
-            signUpUserDetailViewModel = SignUpUserDetailViewModel()
             binding.tvSuccessText.text = getString(R.string.give_your_username)
             binding.tvSuccessText.setTextColor(ContextCompat.getColor(context, R.color.text_color))
         } catch (e: Exception) {
@@ -192,14 +190,12 @@ class SignUpUserDetailActivity : SubModuleActivity() {
         try {
             if (validate()) {
                 if (AppUtils.isConnectedToInternet(context)) {
-                    val requestObject = JSONObject()
-                    requestObject.put("username", binding.etUserName.getText().toString())
-                    requestObject.put("preferredLanguage", language)
+                    val requestObject = JsonObject()
+                    requestObject.addProperty("username", binding.etUserName.getText().toString())
+                    requestObject.addProperty("preferredLanguage", language)
                     showProgressBar()
-                    val url: String = AppUrlManager.getAPIUrl().toString() + "isUserNameExist"
-                    signUpUserDetailViewModel?.checkUserNameAvailability(
-                        url,
-                        AppConstant.REST_CALL_POST,
+                    val signUpUserDetailViewModel= SignUpUserDetailViewModel()
+                    signUpUserDetailViewModel.checkUserNameAvailability(
                         requestObject
                     )?.observe(this, Observer<JSONObject?> { jsonObject ->
                         Log.e("jsonObject", jsonObject.toString() + "")

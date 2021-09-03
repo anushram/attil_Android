@@ -3,21 +3,23 @@ package com.develop.sns.signup.userdetail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.develop.sns.repository.Api
 import com.develop.sns.repository.ApiRepository
+import com.google.gson.JsonObject
 import org.json.JSONObject
 
 class SignUpUserDetailViewModel : ViewModel() {
-    private val apiRepository: ApiRepository = ApiRepository()
-    private var mutableLiveData: MutableLiveData<JSONObject>? = null
 
-    fun checkUserNameAvailability(
-        url: String?,
-        restType: Int,
-        encryptedObjectBeforeToken: JSONObject?
-    ): LiveData<JSONObject>? {
-        if (mutableLiveData == null) {
-            mutableLiveData =
-                apiRepository.serviceCall(url, restType, encryptedObjectBeforeToken, "")
+    private val apiRepository: ApiRepository = ApiRepository()
+    private val api = Api.initRetrofit()
+
+    fun checkUserNameAvailability(requestObject: JsonObject): LiveData<JSONObject>? {
+        lateinit var mutableLiveData: MutableLiveData<JSONObject>
+        try {
+            val call = api.isUserNameExist("", requestObject)
+            mutableLiveData = apiRepository.callApi(call)
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
         return mutableLiveData
     }

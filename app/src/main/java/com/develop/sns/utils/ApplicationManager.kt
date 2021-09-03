@@ -6,18 +6,15 @@ import android.app.Application
 import android.content.Context
 import android.os.StrictMode
 import android.text.TextUtils
+import android.util.Log
 import androidx.multidex.MultiDex
-import com.android.volley.Request
-import com.android.volley.RequestQueue
-import com.android.volley.VolleyLog
-import com.android.volley.toolbox.Volley
 import java.util.*
 
 
 class ApplicationManager : Application() {
     private val context: Context = this@ApplicationManager
     var state = 0
-    private var preferenceHelper: PreferenceHelper? = null
+    private lateinit var preferenceHelper: PreferenceHelper
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(base)
         MultiDex.install(this)
@@ -39,23 +36,27 @@ class ApplicationManager : Application() {
 
     fun setUpPhoneLanguage() {
         try {
-            val languageId = preferenceHelper!!.getIntFromSharedPrefs(AppConstant.KEY_LANGUAGE_ID)
+            val languageId = preferenceHelper.getIntFromSharedPrefs(AppConstant.KEY_LANGUAGE_ID)
+            Log.e("AppMgr", languageId.toString())
             if (languageId == 0) {
                 val defaultLanguageCode = Locale.getDefault().language
+                Log.e("AppMgr LngCode", defaultLanguageCode.toString())
                 if (defaultLanguageCode == "ta") {
-                    preferenceHelper!!.saveIntValueToSharedPrefs(
+                    preferenceHelper.saveIntValueToSharedPrefs(
                         AppConstant.KEY_LANGUAGE_ID,
                         AppConstant.LANGUAGE_TYPE_TAMIL
                     )
+                    preferenceHelper.saveValueToSharedPrefs(AppConstant.KEY_LANGUAGE, "ta")
                 } else {
-                    preferenceHelper!!.saveIntValueToSharedPrefs(
+                    preferenceHelper.saveIntValueToSharedPrefs(
                         AppConstant.KEY_LANGUAGE_ID,
                         AppConstant.LANGUAGE_TYPE_ENGLISH
                     )
+                    preferenceHelper.saveValueToSharedPrefs(AppConstant.KEY_LANGUAGE, "en")
                 }
             } else {
                 setLangRecreate(
-                    preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_LANGUAGE).toString()
+                    preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_LANGUAGE)!!
                 )
             }
         } catch (e: Exception) {
@@ -75,50 +76,6 @@ class ApplicationManager : Application() {
         }
     }
 
-    //For service call volley
-    fun <T> addToRequestQueue(req: Request<T>, tag: String?) {
-        try {
-            req.tag = if (TextUtils.isEmpty(tag)) TAG else attr.tag
-            VolleyLog.d("Adding request to queue: %s", req.url)
-            getRequestQueue().add(req)
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        }
-    }
-
-
-    fun <T> addToRequestQueue(req: Request<T>) {
-        try {
-            req.setTag(TAG)
-            getRequestQueue().add(req)
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    /**
-     * Cancels all pending requests by the specified TAG, it is important to
-     * specify a TAG so that the pending/ongoing requests can be cancelled.
-     *
-     * @param tag
-     */
-    fun cancelPendingRequests(tag: Any?) {
-        try {
-            if (mRequestQueue != null) {
-                mRequestQueue!!.cancelAll(tag)
-            }
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    fun getRequestQueue(): RequestQueue {
-        if (mRequestQueue == null) {
-            mRequestQueue = Volley.newRequestQueue(applicationContext)
-        }
-        return mRequestQueue!!
-    }
-
     companion object {
 
         val TAG = ApplicationManager::class.java.simpleName
@@ -129,6 +86,5 @@ class ApplicationManager : Application() {
         @SuppressLint("StaticFieldLeak")
         @get:Synchronized
         lateinit var instance: ApplicationManager
-        private var mRequestQueue: RequestQueue? = null
     }
 }

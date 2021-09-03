@@ -12,13 +12,11 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.develop.sns.R
 import com.develop.sns.SubModuleActivity
 import com.develop.sns.databinding.ActivitySignUpBinding
 import com.develop.sns.listener.AppUserListener
-import com.develop.sns.networkhandler.AppUrlManager
 import com.develop.sns.signup.dto.SignUpDto
 import com.develop.sns.signup.mobileno.SignUpMobileActivity
 import com.develop.sns.signup.userdetail.SignUpUserDetailActivity
@@ -26,6 +24,7 @@ import com.develop.sns.utils.AppConstant
 import com.develop.sns.utils.AppUtils
 import com.develop.sns.utils.CommonClass
 import com.develop.sns.utils.PreferenceHelper
+import com.google.gson.JsonObject
 import com.talentmicro.icanrefer.dto.ModuleDto
 import org.json.JSONObject
 
@@ -36,11 +35,10 @@ class SignUpInfoActivity : SubModuleActivity(), AppUserListener {
     private val binding by lazy { ActivitySignUpBinding.inflate(layoutInflater) }
 
     override var preferenceHelper: PreferenceHelper? = null
-    val dataList: ArrayList<ModuleDto> = ArrayList()
+    private val dataList: ArrayList<ModuleDto> = ArrayList()
     var selectedPosition: Int = 0
     var isCompleted: Boolean = false
     var signUpDto: SignUpDto? = null
-    var signUpViewModel: SignUpViewModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,7 +76,6 @@ class SignUpInfoActivity : SubModuleActivity(), AppUserListener {
     private fun initClassReference() {
         try {
             signUpDto = SignUpDto()
-            signUpViewModel = SignUpViewModel()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -215,20 +212,16 @@ class SignUpInfoActivity : SubModuleActivity(), AppUserListener {
     private fun createAccount() {
         try {
             if (AppUtils.isConnectedToInternet(context)) {
-                val requestObject = JSONObject()
-                requestObject.put("_id", signUpDto?.id)
-                requestObject.put("username", signUpDto?.userId)
-                requestObject.put("password", signUpDto?.password)
-                requestObject.put("isPassword", signUpDto?.isPassword)
-                requestObject.put("gender", signUpDto?.gender)
+                val requestObject = JsonObject()
+                requestObject.addProperty("_id", signUpDto?.id)
+                requestObject.addProperty("username", signUpDto?.userId)
+                requestObject.addProperty("password", signUpDto?.password)
+                requestObject.addProperty("isPassword", signUpDto?.isPassword)
+                requestObject.addProperty("gender", signUpDto?.gender)
                 Log.e("Request Object", requestObject.toString())
                 showProgressBar()
-                val url: String = AppUrlManager.getAPIUrl().toString() + "createProfile"
-                signUpViewModel!!.createAccount(
-                    url,
-                    AppConstant.REST_CALL_POST,
-                    requestObject
-                )?.observe(this, { currencyPojos ->
+                val signUpViewModel = SignUpViewModel()
+                signUpViewModel.createAccount(requestObject).observe(this, { currencyPojos ->
                     if (currencyPojos != null) {
                         dismissProgressBar()
                         parseCreateAccountResponse(currencyPojos)

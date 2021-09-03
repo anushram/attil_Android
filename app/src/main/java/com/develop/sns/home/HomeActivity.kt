@@ -11,6 +11,7 @@ import com.develop.sns.R
 import com.develop.sns.SubModuleActivity
 import com.develop.sns.databinding.ActivityHomeBinding
 import com.develop.sns.home.offers.OffersFragment
+import com.develop.sns.home.product.ProductFragment
 import com.develop.sns.home.profile.fragment.ProfileFragment
 import com.develop.sns.utils.AppConstant
 
@@ -23,15 +24,17 @@ class HomeActivity : SubModuleActivity() {
     private val binding by lazy { ActivityHomeBinding.inflate(layoutInflater) }
     private var currentFragment = 0
     private val offersFragment = OffersFragment()
+    private val productFragment = ProductFragment()
     private val profileFragment = ProfileFragment()
     var fa: Activity? = null
-
+    var firstTime = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
         fa = this;
 
+        selectItem(AppConstant.PRODUCTS_FRAGMENT);
         selectItem(AppConstant.OFFERS_FRAGMENT);
         initClassReference()
         handleUiElement()
@@ -133,7 +136,7 @@ class HomeActivity : SubModuleActivity() {
                         PorterDuff.Mode.SRC_ATOP
                     )
 
-                    //launchActivitiesFragment()
+                    launchProductFragment()
                 }
                 AppConstant.ORDERS_FRAGMENT -> {
                     binding.tvOffers.setTextColor(ContextCompat.getColor(context, R.color.grey))
@@ -207,6 +210,18 @@ class HomeActivity : SubModuleActivity() {
             val transaction: FragmentTransaction = fragmentManager.beginTransaction()
             transaction.replace(R.id.fl_fragment, offersFragment)
             transaction.commitAllowingStateLoss()
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun launchProductFragment() {
+        try {
+            firstTime = false;
+            val fragmentManager: FragmentManager = supportFragmentManager
+            val transaction: FragmentTransaction = fragmentManager.beginTransaction()
+            transaction.replace(R.id.fl_fragment, productFragment)
+            transaction.commit()
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
         }

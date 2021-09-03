@@ -3,6 +3,7 @@ package com.develop.sns
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
@@ -39,10 +40,6 @@ open class SubModuleActivity : ModuleActivity() {
         getPreferenceValues()
     }
 
-    override fun onStart() {
-        super.onStart()
-    }
-
     private fun setUpScreen() {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -66,10 +63,10 @@ open class SubModuleActivity : ModuleActivity() {
     private fun getPreferenceValues() {
         try {
             preferenceHelper = PreferenceHelper(context)
-            //preferenceHelper!!.saveValueToSharedPrefs(AppConstant.KEY_LANGUAGE, "en")
             token = preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)
             languageId = preferenceHelper!!.getIntFromSharedPrefs(AppConstant.KEY_LANGUAGE_ID)
             language = preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_LANGUAGE)!!
+            Log.e("SubMod LngCode", language.toString())
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
         }
@@ -116,10 +113,6 @@ open class SubModuleActivity : ModuleActivity() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 
     companion object {
