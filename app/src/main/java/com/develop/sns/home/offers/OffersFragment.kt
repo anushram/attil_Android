@@ -120,7 +120,6 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
                     requestObject,
                     preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!)
                     .observe(viewLifecycleOwner, { jsonObject ->
-                        //getNormalOffers()
                         parseTopOffersResponse(jsonObject)
 
                     })
@@ -267,7 +266,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
                             }
                             topOfferDto.priceDetails = priceDetailsArray
 
-                            topOfferList!!.add(topOfferDto)
+                            topOfferList.add(topOfferDto)
                         }
                     }
                     populateTopOfferList()

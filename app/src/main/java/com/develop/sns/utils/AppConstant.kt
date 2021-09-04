@@ -54,6 +54,7 @@ object AppConstant {
     const val KEY_OTP_ID = "otpId"
     const val KEY_TOTAL_AMOUNT = "totalAmount"
     const val KEY_CART_ITEM = "cartItem"
+    const val KEY_PRODUCTS_OBJ = "productObj"
 
     //LanguageId
     var LANGUAGE_ID = 1
@@ -85,6 +86,9 @@ object AppConstant {
     const val PRODUCTS_FRAGMENT = 1
     const val ORDERS_FRAGMENT = 2
     const val PROFILE_FRAGMENT = 3
+
+    const val PRODUCT_FRAGMENT = 1
+    const val PACKED_FRAGMENT = 2
 
 
     //App text font

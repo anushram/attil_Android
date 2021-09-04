@@ -34,7 +34,6 @@ class HomeActivity : SubModuleActivity() {
 
         fa = this;
 
-        selectItem(AppConstant.PRODUCTS_FRAGMENT);
         selectItem(AppConstant.OFFERS_FRAGMENT);
         initClassReference()
         handleUiElement()
@@ -51,19 +50,19 @@ class HomeActivity : SubModuleActivity() {
     private fun handleUiElement() {
         try {
             binding.lnOffers.setOnClickListener(View.OnClickListener {
-                if (currentFragment !== AppConstant.OFFERS_FRAGMENT) selectItem(AppConstant.OFFERS_FRAGMENT)
+                if (currentFragment != AppConstant.OFFERS_FRAGMENT) selectItem(AppConstant.OFFERS_FRAGMENT)
             })
 
             binding.lnProducts.setOnClickListener(View.OnClickListener {
-                if (currentFragment !== AppConstant.PRODUCTS_FRAGMENT) selectItem(AppConstant.PRODUCTS_FRAGMENT)
+                if (currentFragment != AppConstant.PRODUCTS_FRAGMENT) selectItem(AppConstant.PRODUCTS_FRAGMENT)
             })
 
             binding.lnOrders.setOnClickListener(View.OnClickListener {
-                if (currentFragment !== AppConstant.ORDERS_FRAGMENT) selectItem(AppConstant.ORDERS_FRAGMENT)
+                if (currentFragment != AppConstant.ORDERS_FRAGMENT) selectItem(AppConstant.ORDERS_FRAGMENT)
             })
 
             binding.lnProfile.setOnClickListener(View.OnClickListener {
-                if (currentFragment !== AppConstant.PROFILE_FRAGMENT) selectItem(AppConstant.PROFILE_FRAGMENT)
+                if (currentFragment != AppConstant.PROFILE_FRAGMENT) selectItem(AppConstant.PROFILE_FRAGMENT)
             })
 
         } catch (e: java.lang.Exception) {

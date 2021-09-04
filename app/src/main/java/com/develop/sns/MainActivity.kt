@@ -1,9 +1,11 @@
 package com.develop.sns
 
 import android.app.Activity
-import android.content.ActivityNotFoundException
+import android.app.job.JobInfo
+import android.app.job.JobScheduler
+import android.content.ComponentName
 import android.content.Intent
-import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
@@ -14,6 +16,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.develop.sns.databinding.ActivityMainBinding
 import com.develop.sns.home.HomeActivity
 import com.develop.sns.login.LoginActivity
+import com.develop.sns.service.ProductsService
 import com.develop.sns.utils.AppConstant
 import com.develop.sns.utils.AppUtils
 import com.develop.sns.utils.CommonClass
@@ -28,13 +31,14 @@ class MainActivity : SubModuleActivity() {
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
-    override var preferenceHelper: PreferenceHelper? = null
     private var versionCode = 0
     override var languageId = 0
     private var notificationType = 0
     private var dataObject: String? = null
     var advertiseList: ArrayList<String>? = null
     private val i = 0
+    private lateinit var jobInfo: JobInfo
+    private val REFRESH_INTERVAL = (1 * 1000).toLong()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,7 +109,6 @@ class MainActivity : SubModuleActivity() {
                 mainActivityViewModel.getSystemConfig()!!.observe(this) { jsonObject ->
                     parseSystemConfigData(jsonObject)
                 }
-
             } else {
                 CommonClass.showToastMessage(
                     context,
@@ -218,32 +221,27 @@ class MainActivity : SubModuleActivity() {
         }
     }
 
-
-    private fun launchPlayStore() {
-        val appPackageName = packageName
-        try {
-            startActivity(
-                Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse("market://details?id=$appPackageName")
-                )
-            )
-        } catch (anfe: ActivityNotFoundException) {
-            startActivity(
-                Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse("http://play.google.com/store/apps/details?id=$appPackageName")
-                )
-            )
-        } finally {
-            finish()
-        }
-    }
-
     private fun checkForToken() {
         try {
             val token: String = preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!
-            if (token != null && token.trim { it <= ' ' }.length > 0) {
+            if (token.isNotEmpty()) {
+                jobInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    JobInfo.Builder(1, ComponentName(context, ProductsService::class.java))
+                        .setMinimumLatency(REFRESH_INTERVAL)
+                        .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY).build()
+                } else {
+                    JobInfo.Builder(1, ComponentName(context, ProductsService::class.java))
+                        .setPeriodic(REFRESH_INTERVAL)
+                        .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY).build()
+                }
+                val scheduler = context.getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
+                val resultCode = scheduler.schedule(jobInfo)
+
+                if (resultCode == JobScheduler.RESULT_SUCCESS) {
+                    Log.d(TAG, "Job scheduled")
+                } else {
+                    Log.d(TAG, "Job scheduling failed")
+                }
                 launchHomeActivity()
             } else {
                 launchLoginActivity()

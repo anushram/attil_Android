@@ -12,11 +12,23 @@ import org.json.JSONObject
 class ProductsViewModel : ViewModel() {
     private val apiRepository: ApiRepository = ApiRepository()
 
-    fun getTopOffers(requestObject: JsonObject, token: String): LiveData<JSONObject> {
+    fun getProducts( token: String): LiveData<JSONObject> {
         lateinit var mutableLiveData: MutableLiveData<JSONObject>
         try {
             val api = Api.initRetrofit()
-            val call = api.topOffersCall("Bearer $token", requestObject)
+            val call = api.getCategoryList("Bearer $token")
+            mutableLiveData = apiRepository.callApi(call)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return mutableLiveData
+    }
+
+    fun getProductFromCategory(requestObject: JsonObject, token: String): LiveData<JSONObject> {
+        lateinit var mutableLiveData: MutableLiveData<JSONObject>
+        try {
+            val api = Api.initRetrofit()
+            val call = api.getProductByCategory("Bearer $token",requestObject)
             mutableLiveData = apiRepository.callApi(call)
         } catch (e: Exception) {
             e.printStackTrace()
