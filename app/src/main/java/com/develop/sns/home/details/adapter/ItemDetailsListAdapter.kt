@@ -16,21 +16,22 @@ import com.develop.sns.utils.AppConstant
 import com.develop.sns.utils.PreferenceHelper
 import com.squareup.picasso.Picasso
 import org.json.JSONArray
+import kotlin.math.roundToInt
 
 
 class ItemDetailsListAdapter(
     val context: Context,
     val normalOfferDto: NormalOfferDto,
     private val priceDetailsList: ArrayList<NormalOfferPriceDto>?,
-    val itemListener: ItemListener
+    val itemListener: ItemListener,
 ) : RecyclerView.Adapter<ItemDetailsListAdapter.ViewHolder>() {
 
     var preferenceHelper = PreferenceHelper(context)
     var measureText = ""
-    var mrp = 0
-    var offerMrp = 0
-    var unit = 0
-    var diff = 0
+    var mrp = 0.0
+    var offerMrp = 0.0
+    var minUnit = 0.0
+    var diff = 0.0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -68,11 +69,11 @@ class ItemDetailsListAdapter(
                         .plus(priceDetailDto.maxUnitMeasureType)
 
 
-                    unit = priceDetailDto.minUnit!!
+                    minUnit = priceDetailDto.minUnit!!.toDouble()
                     if (!dataExists(jsonArray, priceDetailDto.minUnitMeasureType!!)) {
-                        unit = priceDetailDto.minUnit!! * 1000
+                        minUnit = priceDetailDto.minUnit!! * 1000.toDouble()
                     }
-                    val result: Int = unit / priceDetailDto.unit!!
+                    val result: Double = minUnit / priceDetailDto.unit!!.toDouble()
                     val normalPrice = priceDetailDto.normalPrice!!
                     mrp = result.times(normalPrice)
 
@@ -85,17 +86,17 @@ class ItemDetailsListAdapter(
                     tvMeasure.text = measureText
 
                     tvMrp.text =
-                        context.getString(R.string.Rs).plus("").plus(mrp)
+                        context.getString(R.string.Rs).plus("").plus("%.2f".format(mrp))
                     tvMrp.paintFlags = tvMrp.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
 
                     tvOfferPrice.text =
-                        context.getString(R.string.Rs).plus("").plus(offerMrp)
+                        context.getString(R.string.Rs).plus("").plus("%.2f".format(offerMrp))
 
-                    diff = mrp - offerMrp
+                    diff = (mrp - offerMrp)
                     tvSave.text =
                         context.getString(R.string.you_save).plus(" ")
                             .plus(context.getString(R.string.Rs)).plus("")
-                            .plus(diff)
+                            .plus("%.2f".format(diff))
 
                     lnBogeMain.visibility = View.GONE
                     ivBogo.visibility = View.GONE
@@ -111,8 +112,8 @@ class ItemDetailsListAdapter(
                     measureText =
                         priceDetailDto.unit.toString().plus(" ").plus(priceDetailDto.measureType)
 
-                    mrp = priceDetailDto.normalPrice!!
-                    offerMrp = priceDetailDto.attilPrice!!
+                    mrp = priceDetailDto.normalPrice!!.toDouble()
+                    offerMrp = priceDetailDto.attilPrice!!.toDouble()
 
                     tvOfferPercentage.visibility = View.VISIBLE
                     tvOfferPercentage.text =
@@ -121,17 +122,17 @@ class ItemDetailsListAdapter(
                     tvMeasure.text = measureText
 
                     tvMrp.text =
-                        context.getString(R.string.Rs).plus("").plus(mrp)
+                        context.getString(R.string.Rs).plus("").plus("%.2f".format(mrp))
                     tvMrp.paintFlags = tvMrp.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
 
                     tvOfferPrice.text =
-                        context.getString(R.string.Rs).plus("").plus(offerMrp)
+                        context.getString(R.string.Rs).plus("").plus("%.2f".format(offerMrp))
 
-                    diff = mrp - offerMrp
+                    diff = (mrp - offerMrp)
                     tvSave.text =
                         context.getString(R.string.you_save).plus(" ")
                             .plus(context.getString(R.string.Rs)).plus("")
-                            .plus(diff)
+                            .plus("%.2f".format(diff))
 
                     lnBogeMain.visibility = View.GONE
                     ivBogo.visibility = View.GONE
@@ -145,52 +146,52 @@ class ItemDetailsListAdapter(
                     measureText = priceDetailDto.unit.toString().plus(" ")
                         .plus(priceDetailDto.measureType)
 
-                    mrp = priceDetailDto.normalPrice!!
-                    offerMrp = priceDetailDto.attilPrice!!
+                    mrp = priceDetailDto.normalPrice!!.toDouble()
+                    offerMrp = priceDetailDto.attilPrice!!.toDouble()
 
                     tvOfferPercentage.visibility = View.GONE
                     lnBogeMain.visibility = View.GONE
                     ivBogo.visibility = View.VISIBLE
 
-                    diff = mrp - offerMrp
+                    diff = (mrp - offerMrp)
 
                     tvMeasure.text = measureText
 
                     tvMrp.text =
-                        context.getString(R.string.Rs).plus("").plus(mrp)
+                        context.getString(R.string.Rs).plus("").plus("%.2f".format(mrp))
                     tvMrp.paintFlags = tvMrp.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
 
                     tvOfferPrice.text =
-                        context.getString(R.string.Rs).plus("").plus(offerMrp)
+                        context.getString(R.string.Rs).plus("").plus("%.2f".format(offerMrp))
 
                     tvSave.text =
                         context.getString(R.string.you_save).plus(" ")
                             .plus(context.getString(R.string.Rs)).plus("")
-                            .plus(diff)
+                            .plus("%.2f".format(diff))
                 } else if (normalOfferDto.packageType.equals("packed", true)
                     && normalOfferDto.offerType.equals("BOGE", true)
                 ) {
                     measureText = priceDetailDto.unit.toString().plus(" ")
                         .plus(priceDetailDto.measureType)
 
-                    mrp = priceDetailDto.normalPrice!!
-                    offerMrp = priceDetailDto.attilPrice!!
+                    mrp = priceDetailDto.normalPrice!!.toDouble()
+                    offerMrp = priceDetailDto.attilPrice!!.toDouble()
 
-                    diff = mrp - offerMrp
+                    diff = (mrp - offerMrp)
 
                     tvMeasure.text = measureText
 
                     tvMrp.text =
-                        context.getString(R.string.Rs).plus("").plus(mrp)
+                        context.getString(R.string.Rs).plus("").plus("%.2f".format(mrp))
                     tvMrp.paintFlags = tvMrp.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
 
                     tvOfferPrice.text =
-                        context.getString(R.string.Rs).plus("").plus(offerMrp)
+                        context.getString(R.string.Rs).plus("").plus("%.2f".format(offerMrp))
 
                     tvSave.text =
                         context.getString(R.string.you_save).plus(" ")
                             .plus(context.getString(R.string.Rs)).plus("")
-                            .plus(diff)
+                            .plus("%.2f".format(diff))
 
                     tvOfferPercentage.visibility = View.GONE
                     lnBogeMain.visibility = View.VISIBLE

@@ -146,7 +146,7 @@ class LoginActivity : SubModuleActivity() {
 
             binding.btnSignIn.setOnClickListener(View.OnClickListener {
                 hideErrorMessage()
-                if (submitFlag == false) {
+                if (!submitFlag) {
                     submitFlag = true
                     logInService()
                 }
@@ -290,14 +290,14 @@ class LoginActivity : SubModuleActivity() {
                 if (AppUtils.isConnectedToInternet(context)) {
                     val requestObject = JsonObject()
                     requestObject.addProperty("phoneNumber",
-                        binding.etMobileNo.getText().toString())
-                    requestObject.addProperty("password", binding.etPassword.getText().toString())
+                        binding.etMobileNo.text.toString())
+                    requestObject.addProperty("password", binding.etPassword.text.toString())
                     requestObject.addProperty("preferredLanguage", language)
                     Log.e("requestObj", requestObject.toString())
                     showProgressBar()
                     val loginViewModel = LoginViewModel()
                     loginViewModel.makeLogin(requestObject)
-                        ?.observe(this, { jsonObject ->
+                        .observe(this, { jsonObject ->
                             Log.e("jsonObject", jsonObject.toString() + "")
                             if (jsonObject != null) {
                                 dismissProgressBar()
@@ -372,13 +372,13 @@ class LoginActivity : SubModuleActivity() {
     private fun validate(): Boolean {
         var flag = true
         try {
-            if (binding.etMobileNo.getText().toString().isEmpty()) {
+            if (binding.etMobileNo.text.toString().isEmpty()) {
                 binding.etMobileNo.requestFocus()
-                binding.etMobileNo.setError(resources.getString(R.string.required))
+                binding.etMobileNo.error = resources.getString(R.string.required)
                 flag = false
             } else if (binding.etPassword.text.toString().isEmpty()) {
                 binding.etPassword.requestFocus()
-                binding.etPassword.setError(resources.getString(R.string.required))
+                binding.etPassword.error = resources.getString(R.string.required)
                 flag = false
             }
         } catch (e: Exception) {

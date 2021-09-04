@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.develop.sns.repository.Api
 import com.develop.sns.repository.ApiRepository
-import com.google.gson.JsonNull
 import org.json.JSONObject
 
 class MainActivityViewModel : ViewModel() {
@@ -16,6 +15,17 @@ class MainActivityViewModel : ViewModel() {
         lateinit var mutableLiveData: MutableLiveData<JSONObject>
         try {
             val call = api.getSystemConfig()
+            mutableLiveData = apiRepository.callApi(call)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return mutableLiveData
+    }
+
+    fun getProductList(token: String): LiveData<JSONObject>? {
+        lateinit var mutableLiveData: MutableLiveData<JSONObject>
+        try {
+            val call = api.getCategoryList("Bearer $token")
             mutableLiveData = apiRepository.callApi(call)
         } catch (e: Exception) {
             e.printStackTrace()

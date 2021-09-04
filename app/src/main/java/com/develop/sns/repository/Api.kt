@@ -85,21 +85,30 @@ interface Api {
     @POST("getSystemConfig")
     fun getSystemConfig(): Call<ResponseBody>
 
+    @POST("productCategory/list/all")
+    fun getCategoryList(@Header("Authorization") authorization: String): Call<ResponseBody>
+
+    @POST("product/search/list/all")
+    fun getProductByCategory(
+        @Header("Authorization") authorization: String,
+        @Body requestObject: JsonObject,
+    ): Call<ResponseBody>
+
     companion object {
 
         fun initRetrofit(): Api {
             val api: Api
-            val logging = HttpLoggingInterceptor()
+            /*val logging = HttpLoggingInterceptor()
             logging.setLevel(HttpLoggingInterceptor.Level.BASIC)
             logging.setLevel(HttpLoggingInterceptor.Level.HEADERS);
             logging.setLevel(HttpLoggingInterceptor.Level.BODY);
             val httpClient = OkHttpClient.Builder()
-            httpClient.addInterceptor(logging)
+            httpClient.addInterceptor(logging)*/
 
             val retrofit: Retrofit = Retrofit.Builder()
                 .baseUrl(BuildConfig.BASE_API_URL)
                 .addConverterFactory(GsonConverterFactory.create())
-                .client(httpClient.build())
+                //.client(httpClient.build())
                 .build()
             api = retrofit.create(Api::class.java)
             return api

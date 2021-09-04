@@ -43,7 +43,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:fontFamily="@font/notosans_bold"
+                    android:fontFamily="@font/noto_sans_bold"
                     android:gravity="center"
                     android:padding="8dp"
                     android:text="@string/register_for_attil"

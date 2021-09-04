@@ -1,31 +1,31 @@
 package com.develop.sns.home.product
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
-import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import com.develop.sns.R
 import com.develop.sns.databinding.FragmentProductBinding
-import com.develop.sns.home.HomeActivity
-import com.develop.sns.home.product.ProductsViewModel
+import com.develop.sns.home.product.childfrag.PackedFragment
+import com.develop.sns.home.product.childfrag.ProductSubFragment
+import com.develop.sns.listener.BrandSelectListener
 import com.develop.sns.utils.AppConstant
-import com.develop.sns.utils.AppUtils
-import com.develop.sns.utils.CommonClass
 import com.develop.sns.utils.PreferenceHelper
-import com.google.gson.JsonObject
-import org.json.JSONObject
-import java.util.*
 
 
-class ProductFragment : Fragment() {
+class ProductFragment : Fragment(), BrandSelectListener {
 
     private val binding by lazy { FragmentProductBinding.inflate(layoutInflater) }
     private var preferenceHelper: PreferenceHelper? = null
     private var productsViewModel: ProductsViewModel = ProductsViewModel()
+
+    private var currentFragment = 0
+
+    private val productSubFragment = ProductSubFragment()
+    private val packedFragment = PackedFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,98 +36,78 @@ class ProductFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         return binding.root
-
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.e("Products", "Came")
-        initClassReference()
+        selectItem(AppConstant.PRODUCT_FRAGMENT);
         handleUiElement()
-        getTopOffers()
-    }
-
-
-    private fun initClassReference() {
-        try {
-
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
     }
 
     private fun handleUiElement() {
         try {
-
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    private fun getTopOffers() {
-        try {
-            if (AppUtils.isConnectedToInternet(requireActivity())) {
-                val requestObject = JsonObject()
-                requestObject.addProperty("skip", 0)
-                Log.e("requestObj", requestObject.toString())
-                if (HomeActivity().firstTime) {
-                    showProgressBar()
+            binding.rgType.setOnPositionChangedListener {
+                if (it == 0) {
+                    if (currentFragment != AppConstant.PRODUCT_FRAGMENT) selectItem(AppConstant.PRODUCT_FRAGMENT)
+                } else {
+                    if (currentFragment != AppConstant.PACKED_FRAGMENT) selectItem(AppConstant.PACKED_FRAGMENT)
                 }
-                productsViewModel.getTopOffers(
-                    requestObject,
-                    preferenceHelper?.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!)
-                    .observe(viewLifecycleOwner, { jsonObject ->
-                        if (jsonObject != null) {
-                            parseTopOffersResponse(jsonObject)
-                        }
-                    })
-            } else {
-                CommonClass.showToastMessage(
-                    requireActivity(),
-                    binding.rootView,
-                    resources.getString(R.string.no_internet),
-                    Toast.LENGTH_SHORT
-                )
             }
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    private fun parseTopOffersResponse(obj: JSONObject) {
+    private fun selectItem(fragment: Int) {
         try {
-            Log.e("ProductOffers", obj.toString())
-            HomeActivity().firstTime = true
-            dismissProgressBar()
+            currentFragment = fragment
+            when (fragment) {
+                AppConstant.PRODUCT_FRAGMENT -> {
+                    launchProductSubFragment()
+                }
+                AppConstant.PACKED_FRAGMENT -> {
+                    launchPackedFragment()
+                }
+                else -> {
+                }
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    private fun showProgressBar() {
+    private fun launchProductSubFragment() {
         try {
-            binding.lnProgressbar.root.visibility = View.VISIBLE
-            requireActivity().window.setFlags(
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-            )
-        } catch (e: java.lang.Exception) {
+            val fragmentManager: FragmentManager = childFragmentManager
+            val transaction: FragmentTransaction = fragmentManager.beginTransaction()
+            transaction.replace(R.id.fl_fragment, productSubFragment)
+            transaction.commitAllowingStateLoss()
+        } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    private fun dismissProgressBar() {
+    private fun launchPackedFragment() {
         try {
-            if (activity != null) {
-                requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-            }
-            binding.lnProgressbar.root.visibility = View.GONE
-        } catch (e: java.lang.Exception) {
+            val fragmentManager: FragmentManager = childFragmentManager
+            val transaction: FragmentTransaction = fragmentManager.beginTransaction()
+            transaction.replace(R.id.fl_fragment, packedFragment)
+            transaction.commitAllowingStateLoss()
+        } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
+    override fun onSelection() {
+        try {
+            val fragmentManager: FragmentManager = childFragmentManager
+            val transaction: FragmentTransaction = fragmentManager.beginTransaction()
+            transaction.replace(R.id.fl_fragment, packedFragment)
+            transaction.commitAllowingStateLoss()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 }

@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:fontFamily="@font/notosans_bold"
+                android:fontFamily="@font/noto_sans_bold"
                 android:maxLines="2"
                 android:textColor="@color/text_color"
                 android:textSize="16sp" />
@@ -44,7 +44,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:fontFamily="@font/notosans_regular"
+                android:fontFamily="@font/noto_sans_regular"
                 android:maxLines="2"
                 android:textColor="@color/md_grey_400"
                 android:textSize="14sp"

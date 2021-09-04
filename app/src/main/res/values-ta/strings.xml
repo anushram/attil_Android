@@ -56,4 +56,6 @@
     <string name="tamil_title"> தமிழ் </string>
     <string name="english_title"> ஆங்கிலம் </string>
     <string name="language_title"> மொழியைத் தேர்ந்தெடுக்கவும் </string>
+    <string name="packed">பேக் செய்யப்பட்டது</string>
+    <string name="varirities_arrow">வகைகள்</string>
 </resources>
