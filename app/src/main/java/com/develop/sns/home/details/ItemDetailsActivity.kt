@@ -429,4 +429,11 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
         TODO("Not yet implemented")
     }
 
+    override fun onBackPressed() {
+        CommonClass.removeCartMap(context)
+        cartMap = CommonClass.getCartMap(context)
+        calculateTotal(cartMap)
+        super.onBackPressed()
+    }
+
 }

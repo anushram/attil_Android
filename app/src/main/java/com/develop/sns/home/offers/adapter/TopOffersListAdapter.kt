@@ -18,7 +18,7 @@ class TopOffersListAdapter(
     val context: Context,
     val items: ArrayList<NormalOfferDto>?,
     val topOfferListener: TopOfferListener,
-    val screenWidth: Int
+    val screenWidth: Int,
 ) : RecyclerView.Adapter<TopOffersListAdapter.ViewHolder>() {
 
     var preferenceHelper = PreferenceHelper(context)
@@ -97,9 +97,10 @@ class TopOffersListAdapter(
                         .into(ivProduct);
                 }
 
-                measureText = context.getString(R.string.starts).plus(" @")
-                    .plus(item.priceDetails?.get(0)!!.unit).plus(" ")
-                    .plus(item.priceDetails?.get(0)!!.measureType)
+                measureText = item.priceDetails!![0].unit.toString().plus(" ")
+                    .plus(item.priceDetails!![0].measureType).plus(" @ ")
+                    .plus(context.getString(R.string.Rs)).plus("")
+                    .plus(item.priceDetails!![0].attilPrice)
                 tvMeasure.text = measureText
 
                 tvOfferPercentage.visibility = View.VISIBLE
