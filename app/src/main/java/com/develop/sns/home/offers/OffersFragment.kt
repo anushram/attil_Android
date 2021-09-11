@@ -5,8 +5,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.*
@@ -45,6 +48,19 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
     var packageType = ""
     var offerType = ""
     var language = ""
+
+    private var serviceFlag = false
+    private var searchQueryFlag = false
+    private var searchQuery = ""
+
+    private val limit = 20
+    private var startPage = 0
+
+    private var scrollPosition = 0
+    private var scrollSelectedPosition = 0
+    var totalCount = 0
+
+    private lateinit var searchPlate: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,6 +103,8 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
             binding.srlList.isEnabled = false
             language =
                 preferenceHelper?.getValueFromSharedPrefs(AppConstant.KEY_LANGUAGE).toString()
+            normalOfferList = ArrayList();
+            topOfferList = ArrayList()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -103,7 +121,79 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
                     binding.lnTopOffers.visibility = View.VISIBLE
                 }
             }
+
+            searchPlate = binding.svSearch.findViewById(R.id.search_src_text) as EditText
+            searchPlate.setOnEditorActionListener { v, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    //Do something
+                    searchQuery = v.text.toString()
+                    serviceFlag = false
+                    binding.svSearch.clearFocus()
+                    searchQueryFlag = true
+                    callService()
+                }
+                false
+            }
+            searchPlate.setOnEditorActionListener { v, actionId, event ->
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    //Do something
+                    searchQuery = v.text.toString()
+                    serviceFlag = false
+                    binding.svSearch.clearFocus()
+                    searchQueryFlag = true
+                }
+                false
+            }
+
+            binding.svSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String): Boolean {
+                    searchQuery = query
+                    serviceFlag = false
+                    searchQueryFlag = true
+                    //launchSearchHomeItemActivity(searchQuery)
+                    callService();
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String): Boolean {
+                    if (binding.svSearch.query.isEmpty()) {
+                        searchQuery = newText
+                        serviceFlag = false
+                        binding.svSearch.clearFocus()
+                        searchQueryFlag = true
+                        callService();
+                    }
+                    return false
+                }
+            })
         } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun callService() {
+        try {
+            resetPagination()
+            normalOfferList.clear()
+            getNormalOffers()
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun resetPagination() {
+        try {
+            this.startPage = 0
+            this.scrollSelectedPosition = 0
+            this.scrollPosition = 0
+            this.totalCount = 0
+            if (!searchQueryFlag) {
+                searchQuery = ""
+                searchPlate.setText("")
+                searchPlate.clearFocus()
+            }
+            this.normalOfferList.clear()
+        } catch (e: java.lang.Exception) {
             e.printStackTrace()
         }
     }
@@ -143,7 +233,6 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
             var offerType = ""
             if (obj.has("code") && obj.getInt("code") == 200) {
                 if (obj.has("status") && obj.getBoolean("status")) {
-                    topOfferList = ArrayList<NormalOfferDto>();
                     if (obj.has("data") && !obj.isNull("data")) {
                         val dataArray = obj.getJSONArray("data")
                         for (i in 0 until dataArray.length()) {
@@ -279,18 +368,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
                     );
                 }
             } else {
-                var statusCode = obj.getInt("statusCode")
-                if (statusCode == 401) {
-                    CommonClass.logoutSession(requireActivity());
-                    requireActivity().finish();
-                } else {
-                    CommonClass.showToastMessage(
-                        requireActivity(),
-                        binding.rootView,
-                        obj.getString("message"),
-                        Toast.LENGTH_SHORT
-                    )
-                }
+                CommonClass.handleErrorResponse(requireActivity(), obj, binding.rootView)
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -304,7 +382,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
                 binding.lvTopOffers.visibility = View.VISIBLE
                 binding.tvTopOfferNoData.visibility = View.GONE
                 val gridLayoutManager =
-                    LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
+                    LinearLayoutManager(requireActivity(), RecyclerView.HORIZONTAL, false)
                 binding.lvTopOffers.layoutManager = gridLayoutManager
 
                 val screenWidth = CommonClass.getScreenWidth(requireActivity())
@@ -335,7 +413,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
                 requestObject.addProperty("skip", 0)
                 requestObject.addProperty("sortByPrice", 1)
                 requestObject.addProperty("packageType", "")
-                requestObject.addProperty("search", "")
+                requestObject.addProperty("search", searchQuery)
                 requestObject.addProperty("view", "")
                 val offersViewModel = OffersViewModel()
                 offersViewModel.getNormalOffers(
@@ -363,8 +441,10 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
             Log.e("NormalOffers", obj.toString())
             if (obj.has("code") && obj.getInt("code") == 200) {
                 if (obj.has("status") && obj.getBoolean("status")) {
-                    normalOfferList = ArrayList<NormalOfferDto>();
+
                     if (obj.has("data") && !obj.isNull("data")) {
+                        serviceFlag = false;
+                        searchQueryFlag = false;
                         val dataArray = obj.getJSONArray("data")
                         for (i in 0 until dataArray.length()) {
                             val itemObject = dataArray.getJSONObject(i)
@@ -572,18 +652,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
                     );
                 }
             } else {
-                var statusCode = obj.getInt("statusCode")
-                if (statusCode == 401) {
-                    CommonClass.logoutSession(requireActivity());
-                    requireActivity().finish();
-                } else {
-                    CommonClass.showToastMessage(
-                        requireActivity(),
-                        binding.rootView,
-                        obj.getString("message"),
-                        Toast.LENGTH_SHORT
-                    )
-                }
+                CommonClass.handleErrorResponse(requireActivity(), obj, binding.rootView)
             }
         } catch (e: Exception) {
             e.printStackTrace()

@@ -13,25 +13,13 @@ class LoginViewModel : ViewModel() {
     private val api = Api.initRetrofit()
 
     fun sendOtpService(requestObject: JsonObject): LiveData<JSONObject> {
-        lateinit var mutableLiveData: MutableLiveData<JSONObject>
-        try {
-            val call = api.sendOtpLogin("", requestObject)
-            mutableLiveData = apiRepository.callApi(call)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return mutableLiveData
+        val call = api.sendOtpLogin("", requestObject)
+        return apiRepository.callApi(call)
     }
 
     fun makeLogin(requestObject: JsonObject): LiveData<JSONObject> {
-        lateinit var mutableLiveData: MutableLiveData<JSONObject>
-        try {
-            val call = api.loginService("", requestObject)
-            mutableLiveData = apiRepository.callApi(call)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return mutableLiveData
+        val call = api.loginService("", requestObject)
+        return apiRepository.callApi(call)
     }
 
 }

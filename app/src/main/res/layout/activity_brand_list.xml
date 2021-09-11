@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="HomeViewModel"
+            type="com.develop.sns.home.offers.OffersViewModel" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/root_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:focusable="false"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/ln_toolbar"
+            layout="@layout/app_toolbar" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <include
+                android:id="@+id/ln_error"
+                layout="@layout/custom_error_snackbar"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/ln_error"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="@color/md_grey_50"
+                    app:cardCornerRadius="2dp"
+                    app:cardUseCompatPadding="true">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="1dp">
+
+                        <com.develop.sns.customviews.CustomSearchView
+                            android:id="@+id/sv_search"
+                            android:layout_width="match_parent"
+                            android:layout_height="32dp"
+                            android:layout_weight="1"
+                            android:focusable="false"
+                            android:focusableInTouchMode="true"
+                            android:focusedByDefault="false"
+                            android:paddingStart="-16dp"
+                            android:paddingLeft="-16dp"
+                            app:iconifiedByDefault="false"
+                            app:queryBackground="@android:color/transparent"
+                            app:queryHint="@string/home_search_hint"
+                            app:showAsAction="always|collapseActionView"
+                            app:theme="@style/AppSearchView" />
+
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/lv_product_varities_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="visible" />
+
+                    <TextView
+                        android:id="@+id/tv_product_no_data"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:fontFamily="@font/noto_sans_bold"
+                        android:gravity="center"
+                        android:text="No item found"
+                        android:textColor="@color/text_color"
+                        android:textSize="15sp"
+                        android:visibility="gone" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <include
+                android:id="@+id/ln_progressbar"
+                layout="@layout/progress_bar_layout"
+                android:visibility="gone" />
+
+            <include
+                android:id="@+id/rl_internet"
+                layout="@layout/custom_snackbar"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</layout>

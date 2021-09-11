@@ -32,7 +32,6 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
     private val context: Context = this@ItemDetailsActivity
     private val binding by lazy { ActivityItemDetailsBinding.inflate(layoutInflater) }
 
-    override var preferenceHelper: PreferenceHelper? = null
     var itemMainDto: NormalOfferDto? = null
     private var itemDetailsListAdapter: ItemDetailsListAdapter? = null
     private lateinit var cartMap: HashMap<String, NormalOfferPriceDto>
@@ -188,10 +187,14 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
 
     private fun parseAddCartResponse(jsonObject: JSONObject) {
         try {
-            CommonClass.removeCartMap(context)
-            cartMap = CommonClass.getCartMap(context)
-            calculateTotal(cartMap)
-            handleResponse()
+            if (jsonObject.has("code") && jsonObject.getInt("code") == 200) {
+                CommonClass.removeCartMap(context)
+                cartMap = CommonClass.getCartMap(context)
+                calculateTotal(cartMap)
+                handleResponse()
+            } else {
+                CommonClass.handleErrorResponse(context, jsonObject, binding.rootView)
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }

@@ -1,5 +1,6 @@
 package com.develop.sns.repository
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import okhttp3.ResponseBody
 import org.json.JSONObject
@@ -19,11 +20,15 @@ class ApiRepository {
                     if (response.isSuccessful) {
                         val obj = JSONObject(response.body()?.string()!!)
                         mutableLiveData.value = obj
+                    } else {
+                        val obj = JSONObject(response.errorBody()?.string()!!)
+                        mutableLiveData.value = obj
                     }
                 }
 
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-
+                    val message: String = t.message.toString()
+                    Log.d("failure", message)
                 }
             })
         } catch (e: Exception) {

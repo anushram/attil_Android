@@ -225,26 +225,51 @@ class MainActivity : SubModuleActivity() {
         try {
             val token: String = preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!
             if (token.isNotEmpty()) {
-                jobInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    JobInfo.Builder(1, ComponentName(context, ProductsService::class.java))
-                        .setMinimumLatency(REFRESH_INTERVAL)
-                        .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY).build()
-                } else {
-                    JobInfo.Builder(1, ComponentName(context, ProductsService::class.java))
-                        .setPeriodic(REFRESH_INTERVAL)
-                        .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY).build()
-                }
-                val scheduler = context.getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
-                val resultCode = scheduler.schedule(jobInfo)
+                /* jobInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                     JobInfo.Builder(1, ComponentName(context, ProductsService::class.java))
+                         .setMinimumLatency(REFRESH_INTERVAL)
+                         .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY).build()
+                 } else {
+                     JobInfo.Builder(1, ComponentName(context, ProductsService::class.java))
+                         .setPeriodic(REFRESH_INTERVAL)
+                         .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY).build()
+                 }
+                 val scheduler = context.getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
+                 val resultCode = scheduler.schedule(jobInfo)
 
-                if (resultCode == JobScheduler.RESULT_SUCCESS) {
-                    Log.d(TAG, "Job scheduled")
-                } else {
-                    Log.d(TAG, "Job scheduling failed")
+                 if (resultCode == JobScheduler.RESULT_SUCCESS) {
+                     Log.d(TAG, "Job scheduled")
+                 } else {
+                     Log.d(TAG, "Job scheduling failed")
+                 }*/
+                val mainActivityModel = MainActivityViewModel()
+                mainActivityModel.getProductList(token)?.observeForever {
+                    dismissProgressBar()
+                    parseProductList(it)
                 }
-                launchHomeActivity()
             } else {
                 launchLoginActivity()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun parseProductList(jsonObject: JSONObject?) {
+        try {
+            /*val scheduler = context.getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
+            scheduler.cancel(1)*/
+            Log.e("ProducrList", jsonObject.toString())
+            if (jsonObject != null) {
+                if (jsonObject.has("code") && jsonObject.getInt("code") == 200) {
+                    preferenceHelper!!.saveValueToSharedPrefs(
+                        AppConstant.KEY_PRODUCTS_OBJ,
+                        jsonObject.toString()
+                    )
+                    launchHomeActivity()
+                } else {
+                    CommonClass.handleErrorResponse(context,jsonObject,binding.rootView)
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -304,25 +329,6 @@ class MainActivity : SubModuleActivity() {
         }
     }
 
-    //UserDetails
-    private fun getUserDetails(token: String) {
-        try {
-
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    private fun parseUserDetails(obj: JSONObject?) {
-        try {
-
-        } catch (e: Exception) {
-            e.printStackTrace()
-        } finally {
-            dismissProgressBar()
-        }
-    }
-
     override fun onStart() {
         try {
             super.onStart()
@@ -340,8 +346,7 @@ class MainActivity : SubModuleActivity() {
     }
 
     companion object {
-        private const val INTENT_LANGUAGE = 1001
         private const val INTENT_LOGIN = 1002
-        private const val INTENT_CHANGE_PASSWORD = 1003
+
     }
 }

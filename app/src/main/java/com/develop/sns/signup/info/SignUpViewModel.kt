@@ -12,14 +12,8 @@ class SignUpViewModel : ViewModel() {
     private val apiRepository: ApiRepository = ApiRepository()
     private val api = Api.initRetrofit()
 
-    fun createAccount(requestObject:JsonObject): LiveData<JSONObject> {
-        lateinit var mutableLiveData: MutableLiveData<JSONObject>
-        try {
-            val call = api.createProfile("", requestObject)
-            mutableLiveData = apiRepository.callApi(call)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return mutableLiveData
+    fun createAccount(requestObject: JsonObject): LiveData<JSONObject> {
+        val call = api.createProfile("", requestObject)
+        return apiRepository.callApi(call)
     }
 }

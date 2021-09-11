@@ -23,79 +23,73 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ScrollView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:padding="8dp">
 
-                    <LinearLayout
+                    <com.addisonelliott.segmentedbutton.SegmentedButtonGroup
+                        android:id="@+id/rg_type"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="8dp">
+                        android:layout_margin="4dp"
+                        android:background="@color/md_grey_200"
+                        android:elevation="4dp"
+                        android:padding="2dp"
+                        app:divider="@color/white"
+                        app:dividerPadding="10dp"
+                        app:dividerRadius="10dp"
+                        app:dividerWidth="0dp"
+                        app:draggable="false"
+                        app:position="0"
+                        app:radius="10dp"
+                        app:rippleColor="@color/text_color"
+                        app:selectedBackground="@color/text_color"
+                        app:selectedBorderColor="@color/transparent"
+                        app:selectedBorderWidth="0dp"
+                        app:selectedButtonRadius="10dp"
+                        app:selectionAnimationDuration="1000">
 
-                        <com.addisonelliott.segmentedbutton.SegmentedButtonGroup
-                            android:id="@+id/rg_type"
-                            android:layout_width="match_parent"
+                        <com.addisonelliott.segmentedbutton.SegmentedButton
+                            android:id="@+id/sb_products"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_margin="4dp"
-                            android:background="@color/md_grey_200"
-                            android:elevation="4dp"
-                            android:padding="2dp"
-                            app:divider="@color/white"
-                            app:dividerPadding="10dp"
-                            app:dividerRadius="10dp"
-                            app:dividerWidth="0dp"
-                            app:draggable="false"
-                            app:position="0"
-                            app:radius="10dp"
-                            app:rippleColor="@color/text_color"
-                            app:selectedBackground="@color/text_color"
-                            app:selectedBorderColor="@color/transparent"
-                            app:selectedBorderWidth="0dp"
-                            app:selectedButtonRadius="10dp"
-                            app:selectionAnimationDuration="1000">
+                            android:layout_weight="1"
+                            android:fontFamily="@font/noto_sans_bold"
+                            android:padding="8dp"
+                            app:selectedTextColor="@color/white"
+                            app:text="@string/products"
+                            app:textColor="@color/text_color"
+                            app:textSize="18sp" />
 
-                            <com.addisonelliott.segmentedbutton.SegmentedButton
-                                android:id="@+id/sb_products"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:fontFamily="@font/noto_sans_bold"
-                                android:padding="8dp"
-                                app:selectedTextColor="@color/white"
-                                app:text="@string/products"
-                                app:textColor="@color/text_color"
-                                app:textSize="18sp" />
+                        <com.addisonelliott.segmentedbutton.SegmentedButton
+                            android:id="@+id/sb_packed"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/noto_sans_bold"
+                            android:padding="8dp"
+                            app:selectedTextColor="@color/white"
+                            app:text="@string/packed"
+                            app:textColor="@color/text_color"
+                            app:textSize="18sp" />
 
-                            <com.addisonelliott.segmentedbutton.SegmentedButton
-                                android:id="@+id/sb_packed"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:fontFamily="@font/noto_sans_bold"
-                                android:padding="8dp"
-                                app:selectedTextColor="@color/white"
-                                app:text="@string/packed"
-                                app:textColor="@color/text_color"
-                                app:textSize="18sp" />
-
-                        </com.addisonelliott.segmentedbutton.SegmentedButtonGroup>
-
-                    </LinearLayout>
-
-                    <FrameLayout
-                        android:id="@+id/fl_fragment"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                    </com.addisonelliott.segmentedbutton.SegmentedButtonGroup>
 
                 </LinearLayout>
 
-            </ScrollView>
+                <FrameLayout
+                    android:id="@+id/fl_fragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
 
             <include
                 android:id="@+id/ln_progressbar"

@@ -1,17 +1,17 @@
 package com.develop.sns.home.product.childfrag
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.develop.sns.R
 import com.develop.sns.databinding.FragmentSubProductBinding
-import com.develop.sns.home.product.ProductFragment
+import com.develop.sns.home.product.VarietyListActivity
 import com.develop.sns.home.product.ProductsViewModel
 import com.develop.sns.home.product.adapter.CategoryMainListAdapter
 import com.develop.sns.home.product.adapter.CategoryProductListAdapter
@@ -47,7 +47,7 @@ class ProductSubFragment : Fragment(), CategoryMainListener, CategoryProductList
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         preferenceHelper = PreferenceHelper(requireActivity())
-        onAttachToParentFragment(getParentFragment()!!);
+        onAttachToParentFragment(requireParentFragment());
     }
 
     override fun onCreateView(
@@ -157,18 +157,7 @@ class ProductSubFragment : Fragment(), CategoryMainListener, CategoryProductList
                     );
                 }
             } else {
-                var statusCode = obj.getInt("statusCode")
-                if (statusCode == 401) {
-                    CommonClass.logoutSession(requireActivity());
-                    requireActivity().finish();
-                } else {
-                    CommonClass.showToastMessage(
-                        requireActivity(),
-                        binding.rootView,
-                        obj.getString("message"),
-                        Toast.LENGTH_SHORT
-                    )
-                }
+                CommonClass.handleErrorResponse(requireActivity(), obj, binding.rootView)
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -261,6 +250,7 @@ class ProductSubFragment : Fragment(), CategoryMainListener, CategoryProductList
                     if (obj.has("data") && !obj.isNull("data")) {
                         val dataArray = obj.getJSONArray("data")
                         for (i in 0 until dataArray.length()) {
+                            //for (i in 0 until 2) {
                             val itemObject = dataArray.getJSONObject(i)
                             val categoryProductDto = CategoryProductDto()
 
@@ -301,28 +291,11 @@ class ProductSubFragment : Fragment(), CategoryMainListener, CategoryProductList
                 } else {
                     binding.lvProductList.visibility = View.GONE
                     binding.tvProductNoData.visibility = View.VISIBLE
-                    CommonClass.showToastMessage(
-                        requireActivity(),
-                        binding.rootView,
-                        obj.getString("message"),
-                        Toast.LENGTH_SHORT
-                    );
                 }
             } else {
                 binding.lvProductList.visibility = View.GONE
                 binding.tvProductNoData.visibility = View.VISIBLE
-                val statusCode = obj.getInt("statusCode")
-                if (statusCode == 401) {
-                    CommonClass.logoutSession(requireActivity());
-                    requireActivity().finish();
-                } else {
-                    CommonClass.showToastMessage(
-                        requireActivity(),
-                        binding.rootView,
-                        obj.getString("message"),
-                        Toast.LENGTH_SHORT
-                    )
-                }
+                //CommonClass.handleErrorResponse(requireActivity(), obj, binding.rootView)
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -336,7 +309,7 @@ class ProductSubFragment : Fragment(), CategoryMainListener, CategoryProductList
                 binding.tvProductNoData.visibility = View.GONE
 
                 val gridLayoutManager =
-                    GridLayoutManager(requireActivity(), 2, LinearLayoutManager.HORIZONTAL, false)
+                    GridLayoutManager(requireActivity(), 2, RecyclerView.VERTICAL, false)
                 binding.lvProductList.layoutManager = gridLayoutManager
 
                 val screenWidth = CommonClass.getScreenWidth(requireActivity())
@@ -353,6 +326,35 @@ class ProductSubFragment : Fragment(), CategoryMainListener, CategoryProductList
             }
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+    override fun selectCategoryProductItem(categoryMainDto: CategoryProductDto, position: Int) {
+        try {
+            //mBrandSelectionSetListener.onSelection()
+            launchVarietyActivity(categoryMainDto);
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun launchVarietyActivity(categoryMainDto: CategoryProductDto) {
+        try {
+            val intent = Intent(context, VarietyListActivity::class.java)
+            intent.putExtra("categoryMainDto", categoryMainDto)
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+            startActivity(intent)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun onAttachToParentFragment(fragment: Fragment) {
+        try {
+            mBrandSelectionSetListener = fragment as BrandSelectListener
+        } catch (e: ClassCastException) {
+            throw ClassCastException(
+                "$fragment must implement OnPlayerSelectionSetListener")
         }
     }
 
@@ -376,23 +378,6 @@ class ProductSubFragment : Fragment(), CategoryMainListener, CategoryProductList
             binding.lnProgressbar.root.visibility = View.GONE
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
-        }
-    }
-
-    override fun selectCategoryProductItem(categoryMainDto: CategoryProductDto, position: Int) {
-        try {
-            mBrandSelectionSetListener.onSelection()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    fun onAttachToParentFragment(fragment: Fragment) {
-        try {
-            mBrandSelectionSetListener = fragment as BrandSelectListener
-        } catch (e: ClassCastException) {
-            throw ClassCastException(
-                "$fragment must implement OnPlayerSelectionSetListener")
         }
     }
 

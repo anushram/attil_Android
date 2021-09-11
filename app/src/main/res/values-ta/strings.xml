@@ -58,4 +58,6 @@
     <string name="language_title"> மொழியைத் தேர்ந்தெடுக்கவும் </string>
     <string name="packed">பேக் செய்யப்பட்டது</string>
     <string name="varirities_arrow">வகைகள்</string>
+    <string name="brands">Brands</string>
+    <string name="no_item_found">No item found</string>
 </resources>

@@ -16,7 +16,7 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".home.profile.LanguageSelectionActivity"></activity>
+
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -66,6 +66,18 @@
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".signup.password.SignUpPasswordActivity"
+            android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".home.profile.LanguageSelectionActivity"
+            android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".home.product.VarietyListActivity"
+            android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".home.product.BrandListActivity"
             android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
             android:windowSoftInputMode="adjustPan" />
 

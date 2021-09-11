@@ -12,25 +12,13 @@ class MainActivityViewModel : ViewModel() {
     private val api = Api.initRetrofit()
 
     fun getSystemConfig(): LiveData<JSONObject>? {
-        lateinit var mutableLiveData: MutableLiveData<JSONObject>
-        try {
-            val call = api.getSystemConfig()
-            mutableLiveData = apiRepository.callApi(call)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return mutableLiveData
+        val call = api.getSystemConfig()
+        return apiRepository.callApi(call)
     }
 
     fun getProductList(token: String): LiveData<JSONObject>? {
-        lateinit var mutableLiveData: MutableLiveData<JSONObject>
-        try {
-            val call = api.getCategoryList("Bearer $token")
-            mutableLiveData = apiRepository.callApi(call)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return mutableLiveData
+        val call = api.getCategoryList("Bearer $token")
+        return apiRepository.callApi(call)
     }
 
 }

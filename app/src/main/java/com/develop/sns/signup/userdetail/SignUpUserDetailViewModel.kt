@@ -14,13 +14,7 @@ class SignUpUserDetailViewModel : ViewModel() {
     private val api = Api.initRetrofit()
 
     fun checkUserNameAvailability(requestObject: JsonObject): LiveData<JSONObject>? {
-        lateinit var mutableLiveData: MutableLiveData<JSONObject>
-        try {
-            val call = api.isUserNameExist("", requestObject)
-            mutableLiveData = apiRepository.callApi(call)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return mutableLiveData
+        val call = api.isUserNameExist("", requestObject)
+        return apiRepository.callApi(call)
     }
 }
