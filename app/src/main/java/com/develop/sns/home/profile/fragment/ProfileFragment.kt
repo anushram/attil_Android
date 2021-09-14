@@ -31,7 +31,7 @@ class ProfileFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         return binding.root
 
@@ -114,9 +114,12 @@ class ProfileFragment : Fragment() {
         try {
             val languageId: Int =
                 preferenceHelper!!.getIntFromSharedPrefs(AppConstant.KEY_LANGUAGE_ID)
+            val language: String =
+                preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_LANGUAGE)!!
 
             preferenceHelper!!.clear();
             preferenceHelper!!.saveIntValueToSharedPrefs(AppConstant.KEY_LANGUAGE_ID, languageId);
+            preferenceHelper!!.saveValueToSharedPrefs(AppConstant.KEY_LANGUAGE, language);
 
             val intent = Intent(activity, MainActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)

@@ -8,7 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.develop.sns.R
 import com.develop.sns.databinding.TopOfferListItemTmplBinding
-import com.develop.sns.home.dto.NormalOfferDto
+import com.develop.sns.home.offers.dto.NormalOfferDto
 import com.develop.sns.home.offers.listener.TopOfferListener
 import com.develop.sns.utils.PreferenceHelper
 import com.squareup.picasso.Picasso

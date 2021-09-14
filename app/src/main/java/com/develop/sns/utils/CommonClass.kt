@@ -13,7 +13,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.develop.sns.MainActivity
 import com.develop.sns.R
-import com.develop.sns.home.dto.NormalOfferPriceDto
+import com.develop.sns.home.offers.dto.NormalOfferPriceDto
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken

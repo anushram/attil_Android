@@ -254,8 +254,6 @@ class MainActivity : SubModuleActivity() {
                             })
                     }
                 } else {
-                    val token: String =
-                        preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!
                     val mainActivityModel = MainActivityViewModel()
                     mainActivityModel.getProductList(token)?.observeForever {
                         dismissProgressBar()

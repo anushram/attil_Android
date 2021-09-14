@@ -2,21 +2,19 @@ package com.develop.sns.home.details.adapter
 
 import android.content.Context
 import android.graphics.Paint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.develop.sns.R
 import com.develop.sns.databinding.ItemDetailsListItemTmplBinding
-import com.develop.sns.home.dto.NormalOfferDto
-import com.develop.sns.home.dto.NormalOfferPriceDto
+import com.develop.sns.home.offers.dto.NormalOfferDto
+import com.develop.sns.home.offers.dto.NormalOfferPriceDto
 import com.develop.sns.home.offers.listener.ItemListener
 import com.develop.sns.utils.AppConstant
 import com.develop.sns.utils.PreferenceHelper
 import com.squareup.picasso.Picasso
 import org.json.JSONArray
-import kotlin.math.roundToInt
 
 
 class ItemDetailsListAdapter(

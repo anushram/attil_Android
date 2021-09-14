@@ -197,5 +197,7 @@
         <item name="android:tint">@color/md_grey_400</item>
         <item name="android:fontFamily">@font/noto_sans_regular</item>
     </style>
-
+    <style name="MyRadioButtonStyle" parent="@android:style/Widget.CompoundButton.RadioButton">
+        <item name="android:button">@drawable/custom_radio_drawable</item>
+    </style>
 </resources>

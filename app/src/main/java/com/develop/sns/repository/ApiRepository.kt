@@ -12,7 +12,7 @@ class ApiRepository {
     fun callApi(call: Call<ResponseBody>): MutableLiveData<JSONObject> {
         val mutableLiveData = MutableLiveData<JSONObject>()
         try {
-            call.enqueue(object : Callback<ResponseBody> {
+            call.enqueue(object : CallbackWithRetry<ResponseBody>(call) {
                 override fun onResponse(
                     call: Call<ResponseBody>,
                     response: retrofit2.Response<ResponseBody>,
