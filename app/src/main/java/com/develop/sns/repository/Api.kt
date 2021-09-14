@@ -12,6 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.POST
+import java.util.concurrent.TimeUnit
 
 
 interface Api {
@@ -115,6 +116,8 @@ interface Api {
             //logging.setLevel(HttpLoggingInterceptor.Level.HEADERS)
             logging.setLevel(HttpLoggingInterceptor.Level.BODY)
             val httpClient = OkHttpClient.Builder()
+                .connectTimeout(60000, TimeUnit.SECONDS)
+                .readTimeout(60000, TimeUnit.SECONDS)
             httpClient.addInterceptor(logging)
 
             val retrofit: Retrofit = Retrofit.Builder()
