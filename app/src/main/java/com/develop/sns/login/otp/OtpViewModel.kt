@@ -14,24 +14,12 @@ class OtpViewModel : ViewModel() {
     private val api = Api.initRetrofit()
 
     fun verifyOtpService(requestObject: JsonObject): LiveData<JSONObject> {
-        lateinit var mutableLiveData: MutableLiveData<JSONObject>
-        try {
-            val call = api.verifyOtp("", requestObject)
-            mutableLiveData = apiRepository.callApi(call)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return mutableLiveData
+        val call = api.verifyOtp("", requestObject)
+        return apiRepository.callApi(call)
     }
 
     fun verifyLoginOtpService(requestObject: JsonObject): LiveData<JSONObject> {
-        lateinit var mutableLiveData: MutableLiveData<JSONObject>
-        try {
-            val call = api.otpLoginVerify("", requestObject)
-            mutableLiveData = apiRepository.callApi(call)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return mutableLiveData
+        val call = api.otpLoginVerify("", requestObject)
+        return apiRepository.callApi(call)
     }
 }

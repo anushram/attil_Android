@@ -15,36 +15,18 @@ class OffersViewModel : ViewModel() {
     private val api = Api.initRetrofit()
 
     fun getTopOffers(requestObject: JsonObject, token: String): LiveData<JSONObject> {
-        lateinit var mutableLiveData: MutableLiveData<JSONObject>
-        try {
-            val call = api.topOffersCall("Bearer $token", requestObject)
-            mutableLiveData = apiRepository.callApi(call)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return mutableLiveData
+        val call = api.topOffersCall("Bearer $token", requestObject)
+        return apiRepository.callApi(call)
     }
 
 
     fun getNormalOffers(requestObject: JsonObject, token: String): LiveData<JSONObject> {
-        lateinit var mutableLiveData: MutableLiveData<JSONObject>
-        try {
-            val call = api.normalOffersCall("Bearer $token", requestObject)
-            mutableLiveData = apiRepository.callApi(call)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return mutableLiveData
+        val call = api.normalOffersCall("Bearer $token", requestObject)
+        return apiRepository.callApi(call)
     }
 
     fun getCartCount(requestObject: JsonObject, token: String): LiveData<JSONObject> {
-        lateinit var mutableLiveData: MutableLiveData<JSONObject>
-        try {
-            val call = api.cartCount("Bearer $token", requestObject)
-            mutableLiveData = apiRepository.callApi(call)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return mutableLiveData
+        val call = api.cartCount("Bearer $token", requestObject)
+        return apiRepository.callApi(call)
     }
 }

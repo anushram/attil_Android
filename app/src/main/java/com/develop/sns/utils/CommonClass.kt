@@ -9,6 +9,7 @@ import android.os.Build
 import android.view.Gravity
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.develop.sns.MainActivity
 import com.develop.sns.R
@@ -16,6 +17,7 @@ import com.develop.sns.home.dto.NormalOfferPriceDto
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import org.json.JSONObject
 import java.io.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -62,7 +64,7 @@ class CommonClass {
                 snackBarView.setBackgroundColor(
                     ContextCompat.getColor(
                         context,
-                        R.color.md_orange_700
+                        R.color.red_A700
                     )
                 )
                 val textView: TextView =
@@ -178,6 +180,21 @@ class CommonClass {
                 e.printStackTrace();
             }
             return cartMap;
+        }
+
+        fun handleErrorResponse(context: Context, jsonObject: JSONObject, view: View) {
+            val statusCode = jsonObject.getInt("statusCode")
+            if (statusCode == 401) {
+                logoutSession(context)
+                (context as Activity).finish()
+            } else {
+                showToastMessage(
+                    context,
+                    view,
+                    jsonObject.getString("message"),
+                    Toast.LENGTH_SHORT
+                )
+            }
         }
     }
 }

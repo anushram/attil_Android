@@ -11,29 +11,26 @@ import org.json.JSONObject
 
 class ProductsViewModel : ViewModel() {
     private val apiRepository: ApiRepository = ApiRepository()
+    val api = Api.initRetrofit()
 
-    fun getProducts( token: String): LiveData<JSONObject> {
-        lateinit var mutableLiveData: MutableLiveData<JSONObject>
-        try {
-            val api = Api.initRetrofit()
-            val call = api.getCategoryList("Bearer $token")
-            mutableLiveData = apiRepository.callApi(call)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return mutableLiveData
+    fun getProducts(token: String): LiveData<JSONObject> {
+        val call = api.getCategoryList("Bearer $token")
+        return apiRepository.callApi(call)
     }
 
     fun getProductFromCategory(requestObject: JsonObject, token: String): LiveData<JSONObject> {
-        lateinit var mutableLiveData: MutableLiveData<JSONObject>
-        try {
-            val api = Api.initRetrofit()
-            val call = api.getProductByCategory("Bearer $token",requestObject)
-            mutableLiveData = apiRepository.callApi(call)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return mutableLiveData
+        val call = api.getProductByCategory("Bearer $token", requestObject)
+        return apiRepository.callApi(call)
+    }
+
+    fun getProductFromVariety(requestObject: JsonObject, token: String): LiveData<JSONObject> {
+        val call = api.getProductByVarities("Bearer $token", requestObject)
+        return apiRepository.callApi(call)
+    }
+
+    fun getProductBrands(requestObject: JsonObject, token: String): LiveData<JSONObject> {
+        val call = api.getProductBrands("Bearer $token", requestObject)
+        return apiRepository.callApi(call)
     }
 
 }

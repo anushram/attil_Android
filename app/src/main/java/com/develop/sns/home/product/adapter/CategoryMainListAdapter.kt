@@ -58,7 +58,7 @@ class CategoryMainListAdapter(
                 }
 
                 lnMain.setOnClickListener {
-                    topOfferListener.selectCategoryMainItem(item, position)
+                    topOfferListener.selectCategoryItem(item, position)
                 }
 
             }

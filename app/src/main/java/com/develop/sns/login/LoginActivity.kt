@@ -16,9 +16,11 @@ import android.widget.TextView.OnEditorActionListener
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.Observer
+import com.develop.sns.MainActivityViewModel
 import com.develop.sns.R
 import com.develop.sns.SubModuleActivity
 import com.develop.sns.databinding.ActivityLoginBinding
+import com.develop.sns.home.HomeActivity
 import com.develop.sns.login.otp.OtpActivity
 import com.develop.sns.signup.info.SignUpInfoActivity
 import com.develop.sns.utils.AppConstant
@@ -42,9 +44,13 @@ class LoginActivity : SubModuleActivity() {
     var otp = ""
     lateinit var myAnim: Animation
 
+    var fa: Activity? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        fa = this
 
         initialiseProgressBar(binding.lnProgressbar)
         initClassReference()
@@ -67,7 +73,7 @@ class LoginActivity : SubModuleActivity() {
     private fun checkFireBaseToken() {
         try {
             gcmId = preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_GCM_ID)!!
-            if (gcmId.trim { it <= ' ' }.length == 0) {
+            if (gcmId.trim { it <= ' ' }.isEmpty()) {
                 gcmId = getFireBaseToken()
 
                 val secretKey = gcmId.substring(0, 32)
@@ -160,13 +166,10 @@ class LoginActivity : SubModuleActivity() {
             binding.rlLoginMainLayout.viewTreeObserver.addOnGlobalLayoutListener {
                 val rec = Rect()
                 binding.rlLoginMainLayout.getWindowVisibleDisplayFrame(rec)
-
                 //finding screen height
                 val screenHeight = binding.rlLoginMainLayout.rootView.height
-
                 //finding keyboard height
                 val keypadHeight = screenHeight - rec.bottom
-
                 if (keypadHeight > screenHeight * 0.15) {
 
                 } else {
@@ -280,7 +283,9 @@ class LoginActivity : SubModuleActivity() {
         intent.putExtra("mobileNo", binding.etMobileNo.text.toString())
         intent.putExtra("otp", otp)
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
-        resultLauncher.launch(intent)
+        //resultLauncher.launch(intent)
+        startActivity(intent)
+        overridePendingTransition(0, 0)
     }
 
     private fun logInService() {
@@ -300,7 +305,6 @@ class LoginActivity : SubModuleActivity() {
                         .observe(this, { jsonObject ->
                             Log.e("jsonObject", jsonObject.toString() + "")
                             if (jsonObject != null) {
-                                dismissProgressBar()
                                 parseSignInResponse(jsonObject)
                             }
                         })
@@ -323,6 +327,12 @@ class LoginActivity : SubModuleActivity() {
             submitFlag = false
             Log.e("LoginResponse", obj.toString())
             if (obj.has("data") && !obj.isNull("data")) {
+                preferenceHelper!!.saveValueToSharedPrefs(AppConstant.KEY_USER_NAME,
+                    binding.etMobileNo.text.toString().trim())
+                if (binding.etPassword.text.toString().trim().isNotEmpty()) {
+                    preferenceHelper!!.saveValueToSharedPrefs(AppConstant.KEY_USER_PWD,
+                        binding.etPassword.text.toString().trim())
+                }
                 val dataObject = obj.getJSONObject("data")
                 if (dataObject.has("access_token") && !dataObject.isNull("access_token")) {
                     preferenceHelper!!.saveValueToSharedPrefs(
@@ -345,7 +355,13 @@ class LoginActivity : SubModuleActivity() {
                     )
                 }
 
-                handleResponse()
+                //handleResponse()
+                val mainActivityModel = MainActivityViewModel()
+                mainActivityModel.getProductList(preferenceHelper!!.getValueFromSharedPrefs(
+                    AppConstant.KEY_TOKEN)!!)?.observeForever {
+                    dismissProgressBar()
+                    parseProductList(it)
+                }
             } else {
                 CommonClass.showToastMessage(
                     context,
@@ -354,6 +370,38 @@ class LoginActivity : SubModuleActivity() {
                     Toast.LENGTH_SHORT
                 );
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun parseProductList(jsonObject: JSONObject?) {
+        try {
+            /*val scheduler = context.getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
+            scheduler.cancel(1)*/
+            Log.e("ProducrList", jsonObject.toString())
+            if (jsonObject != null) {
+                if (jsonObject.has("code") && jsonObject.getInt("code") == 200) {
+                    preferenceHelper!!.saveValueToSharedPrefs(
+                        AppConstant.KEY_PRODUCTS_OBJ,
+                        jsonObject.toString()
+                    )
+                    launchHomeActivity()
+                } else {
+                    CommonClass.handleErrorResponse(context, jsonObject, binding.rlLoginMainLayout)
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun launchHomeActivity() {
+        try {
+            val intent = Intent(this@LoginActivity, HomeActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+            startActivity(intent)
+            finish()
         } catch (e: Exception) {
             e.printStackTrace()
         }

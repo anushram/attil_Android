@@ -9,6 +9,8 @@ import java.util.*
 class CategoryProductDto : Serializable {
     var id = ""
     var commonName = ""
+    var productName: String = ""
+    var productCode: String = ""
     var commonImage: String = ""
     var commonProductId: String = ""
     var varieties: Int = 0

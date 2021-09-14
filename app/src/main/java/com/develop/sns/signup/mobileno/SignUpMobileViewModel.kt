@@ -14,13 +14,7 @@ class SignUpMobileViewModel : ViewModel() {
     private val api = Api.initRetrofit()
 
     fun sendOtpService(requestObject: JsonObject): LiveData<JSONObject> {
-        lateinit var mutableLiveData: MutableLiveData<JSONObject>
-        try {
-            val call = api.generateOtp("", requestObject)
-            mutableLiveData = apiRepository.callApi(call)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return mutableLiveData
+        val call = api.generateOtp("", requestObject)
+        return apiRepository.callApi(call)
     }
 }

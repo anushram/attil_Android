@@ -16,11 +16,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.develop.sns.databinding.ActivityMainBinding
 import com.develop.sns.home.HomeActivity
 import com.develop.sns.login.LoginActivity
+import com.develop.sns.login.LoginViewModel
 import com.develop.sns.service.ProductsService
 import com.develop.sns.utils.AppConstant
 import com.develop.sns.utils.AppUtils
 import com.develop.sns.utils.CommonClass
 import com.develop.sns.utils.PreferenceHelper
+import com.google.gson.JsonObject
 import org.json.JSONObject
 import java.util.*
 
@@ -225,26 +227,87 @@ class MainActivity : SubModuleActivity() {
         try {
             val token: String = preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!
             if (token.isNotEmpty()) {
-                jobInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    JobInfo.Builder(1, ComponentName(context, ProductsService::class.java))
-                        .setMinimumLatency(REFRESH_INTERVAL)
-                        .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY).build()
+                if (preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_USER_NAME) != null
+                    && preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_USER_NAME)!!
+                        .trim().isNotEmpty()
+                    && preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_USER_PWD) != null
+                    && preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_USER_PWD)!!.trim()
+                        .isNotEmpty()
+                ) {
+                    if (AppUtils.isConnectedToInternet(context)) {
+                        val requestObject = JsonObject()
+                        requestObject.addProperty("phoneNumber",
+                            preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_USER_NAME)!!)
+                        requestObject.addProperty("password",
+                            preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_USER_PWD)!!)
+                        requestObject.addProperty("preferredLanguage", language)
+                        Log.e("requestObj", requestObject.toString())
+                        showProgressBar()
+                        val loginViewModel = LoginViewModel()
+                        loginViewModel.makeLogin(requestObject)
+                            .observe(this, { jsonObject ->
+                                Log.e("jsonObject", jsonObject.toString() + "")
+                                if (jsonObject != null) {
+                                    dismissProgressBar()
+                                    parseSignInResponse(jsonObject)
+                                }
+                            })
+                    }
                 } else {
-                    JobInfo.Builder(1, ComponentName(context, ProductsService::class.java))
-                        .setPeriodic(REFRESH_INTERVAL)
-                        .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY).build()
+                    val token: String =
+                        preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!
+                    val mainActivityModel = MainActivityViewModel()
+                    mainActivityModel.getProductList(token)?.observeForever {
+                        dismissProgressBar()
+                        parseProductList(it)
+                    }
                 }
-                val scheduler = context.getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
-                val resultCode = scheduler.schedule(jobInfo)
-
-                if (resultCode == JobScheduler.RESULT_SUCCESS) {
-                    Log.d(TAG, "Job scheduled")
-                } else {
-                    Log.d(TAG, "Job scheduling failed")
-                }
-                launchHomeActivity()
             } else {
                 launchLoginActivity()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun parseSignInResponse(obj: JSONObject) {
+        try {
+            Log.e("LoginResponse", obj.toString())
+            if (obj.has("data") && !obj.isNull("data")) {
+                val dataObject = obj.getJSONObject("data")
+                if (dataObject.has("access_token") && !dataObject.isNull("access_token")) {
+                    preferenceHelper!!.saveValueToSharedPrefs(
+                        AppConstant.KEY_TOKEN,
+                        dataObject.getString("access_token")
+                    )
+                }
+            }
+            val token: String = preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!
+            val mainActivityModel = MainActivityViewModel()
+            mainActivityModel.getProductList(token)?.observeForever {
+                dismissProgressBar()
+                parseProductList(it)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun parseProductList(jsonObject: JSONObject?) {
+        try {
+            /*val scheduler = context.getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
+            scheduler.cancel(1)*/
+            Log.e("ProducrList", jsonObject.toString())
+            if (jsonObject != null) {
+                if (jsonObject.has("code") && jsonObject.getInt("code") == 200) {
+                    preferenceHelper!!.saveValueToSharedPrefs(
+                        AppConstant.KEY_PRODUCTS_OBJ,
+                        jsonObject.toString()
+                    )
+                    launchHomeActivity()
+                } else {
+                    CommonClass.handleErrorResponse(context, jsonObject, binding.rootView)
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -304,25 +367,6 @@ class MainActivity : SubModuleActivity() {
         }
     }
 
-    //UserDetails
-    private fun getUserDetails(token: String) {
-        try {
-
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    private fun parseUserDetails(obj: JSONObject?) {
-        try {
-
-        } catch (e: Exception) {
-            e.printStackTrace()
-        } finally {
-            dismissProgressBar()
-        }
-    }
-
     override fun onStart() {
         try {
             super.onStart()
@@ -340,8 +384,7 @@ class MainActivity : SubModuleActivity() {
     }
 
     companion object {
-        private const val INTENT_LANGUAGE = 1001
         private const val INTENT_LOGIN = 1002
-        private const val INTENT_CHANGE_PASSWORD = 1003
+
     }
 }

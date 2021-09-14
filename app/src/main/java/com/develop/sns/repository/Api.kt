@@ -94,6 +94,18 @@ interface Api {
         @Body requestObject: JsonObject,
     ): Call<ResponseBody>
 
+    @POST("product/search/varities/all")
+    fun getProductByVarities(
+        @Header("Authorization") authorization: String,
+        @Body requestObject: JsonObject,
+    ): Call<ResponseBody>
+
+    @POST("product/search/list/brands")
+    fun getProductBrands(
+        @Header("Authorization") authorization: String,
+        @Body requestObject: JsonObject,
+    ): Call<ResponseBody>
+
     companion object {
 
         fun initRetrofit(): Api {

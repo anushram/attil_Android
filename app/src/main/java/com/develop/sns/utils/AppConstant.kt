@@ -55,6 +55,8 @@ object AppConstant {
     const val KEY_TOTAL_AMOUNT = "totalAmount"
     const val KEY_CART_ITEM = "cartItem"
     const val KEY_PRODUCTS_OBJ = "productObj"
+    const val KEY_USER_NAME = "userName"
+    const val KEY_USER_PWD = "userPwd"
 
     //LanguageId
     var LANGUAGE_ID = 1

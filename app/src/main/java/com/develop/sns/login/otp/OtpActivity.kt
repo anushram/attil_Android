@@ -10,10 +10,14 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import com.develop.sns.MainActivityViewModel
 import com.develop.sns.R
 import com.develop.sns.SubModuleActivity
 import com.develop.sns.customviews.otpview.OnOtpCompletionListener
 import com.develop.sns.databinding.ActivityOtpBinding
+import com.develop.sns.home.HomeActivity
+import com.develop.sns.home.product.VarietyListActivity
+import com.develop.sns.login.LoginActivity
 import com.develop.sns.signup.dto.SignUpDto
 import com.develop.sns.utils.AppConstant
 import com.develop.sns.utils.AppUtils
@@ -146,7 +150,7 @@ class OtpActivity : SubModuleActivity() {
                         ).observe(this, { currencyPojos ->
                             Log.e("currencyPojos", currencyPojos.toString() + "")
                             if (currencyPojos != null) {
-                                dismissProgressBar()
+                                //dismissProgressBar()
                                 parseVerifyOtpResponse(currencyPojos)
                             }
                         })
@@ -213,7 +217,17 @@ class OtpActivity : SubModuleActivity() {
                         signUpDto?.mobileNo = dataObject.getString("phoneNumber")
                     }
                 }
-                handleResponse()
+
+                if (isSignUp == false) {
+                    val mainActivityModel = MainActivityViewModel()
+                    mainActivityModel.getProductList(preferenceHelper!!.getValueFromSharedPrefs(
+                        AppConstant.KEY_TOKEN)!!)?.observeForever {
+                        dismissProgressBar()
+                        parseProductList(it)
+                    }
+                } else {
+                    handleResponse()
+                }
             } else {
                 CommonClass.showToastMessage(
                     context,
@@ -222,6 +236,41 @@ class OtpActivity : SubModuleActivity() {
                     Toast.LENGTH_SHORT
                 )
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun parseProductList(jsonObject: JSONObject?) {
+        try {
+            Log.e("ProducrList", jsonObject.toString())
+            if (jsonObject != null) {
+                if (jsonObject.has("code") && jsonObject.getInt("code") == 200) {
+                    preferenceHelper!!.saveValueToSharedPrefs(
+                        AppConstant.KEY_PRODUCTS_OBJ,
+                        jsonObject.toString()
+                    )
+
+                    if (LoginActivity().fa != null) {
+                        LoginActivity().fa!!.finish()
+                    }
+                    launchHomeActivity()
+                } else {
+                    CommonClass.handleErrorResponse(context, jsonObject, binding.rootView)
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun launchHomeActivity() {
+        try {
+            finishAffinity()
+            val intent = Intent(this@OtpActivity, HomeActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+            startActivity(intent)
+            finish()
         } catch (e: Exception) {
             e.printStackTrace()
         }
