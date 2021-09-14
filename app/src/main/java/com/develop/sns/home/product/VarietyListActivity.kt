@@ -3,10 +3,17 @@ package com.develop.sns.home.product
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.annotation.NonNull
+import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,14 +35,34 @@ class VarietyListActivity : SubModuleActivity(), CategoryProductListener {
     private val context: Context = this@VarietyListActivity
     private val binding by lazy { ActivityVarietyListBinding.inflate(layoutInflater) }
 
-    lateinit var categoryProductDto: CategoryProductDto
+    private lateinit var categoryProductDto: CategoryProductDto
 
     private lateinit var productVaritiesList: ArrayList<CategoryProductDto>
     private lateinit var categoryVarietyListAdapter: CategoryVarietyListAdapter
 
+    private lateinit var searchPlate: EditText
+    private lateinit var close: ImageView
+
+    private var serviceFlag = false
+    private var searchQueryFlag = false
+    private var searchQuery = ""
+
+    private val limit = 20
+    private var startPage = 0
+
+    private var scrollPosition = 0
+    private var scrollSelectedPosition = 0
+    private var totalCount = 0
+
+    private lateinit var linearLayoutManager: GridLayoutManager
+
+    var fa: Activity? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        fa = this;
 
         initialiseProgressBar(binding.lnProgressbar)
         initToolBar()
@@ -63,7 +90,7 @@ class VarietyListActivity : SubModuleActivity(), CategoryProductListener {
 
     private fun initClassReference() {
         try {
-
+            productVaritiesList = ArrayList()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -74,7 +101,7 @@ class VarietyListActivity : SubModuleActivity(), CategoryProductListener {
             val intent = intent
             categoryProductDto =
                 intent.getSerializableExtra("categoryMainDto") as CategoryProductDto;
-            getProductByVariety(categoryProductDto);
+            getProductByVariety();
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -82,26 +109,117 @@ class VarietyListActivity : SubModuleActivity(), CategoryProductListener {
 
     private fun handleUiElement() {
         try {
+            searchPlate = binding.svSearch.findViewById(R.id.search_src_text) as EditText
+            close = binding.svSearch.findViewById(R.id.search_close_btn) as ImageView
+            searchPlate.setOnEditorActionListener { v, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    hideKeyboard()
+                    searchQuery = v.text.toString()
+                    serviceFlag = false
+                    searchQueryFlag = true
+                    resetPagination()
+                }
+                false
+            }
 
+            binding.svSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String): Boolean {
+                    searchQuery = query
+                    serviceFlag = false
+                    searchQueryFlag = true
+                    binding.svSearch.clearFocus()
+                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                    resetPagination()
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String): Boolean {
+                    if (newText.isEmpty()) {
+                        searchQuery = newText
+                        serviceFlag = false
+                        binding.svSearch.clearFocus()
+                        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                        searchQueryFlag = true
+                        resetPagination()
+                    }
+                    return false
+                }
+            })
+
+            binding.lvProductVaritiesList.addOnScrollListener(object :
+                RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    val visibleItemCount: Int = linearLayoutManager.childCount
+                    val totalItemCount: Int = linearLayoutManager.itemCount
+                    val firstVisibleItemPosition: Int =
+                        linearLayoutManager.findFirstVisibleItemPosition()
+                    val lastVisibleItemPosition: Int =
+                        linearLayoutManager.findLastVisibleItemPosition()
+                    val rvRect = Rect()
+                    binding.lvProductVaritiesList.getGlobalVisibleRect(rvRect)
+                    scrollPosition = firstVisibleItemPosition
+
+                    if (visibleItemCount + firstVisibleItemPosition >= totalItemCount && firstVisibleItemPosition >= 0 && totalItemCount >= limit) {
+                        scrollSelectedPosition = lastVisibleItemPosition
+                        scrollPosition = scrollSelectedPosition
+                    }
+                }
+
+                override fun onScrollStateChanged(
+                    @NonNull recyclerView: RecyclerView,
+                    newState: Int,
+                ) {
+                    super.onScrollStateChanged(recyclerView, newState)
+                    if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        Log.d("-----", "end");
+                        startPage++
+                        Log.e("StartPage", startPage.toString())
+                        getProductByVariety();
+                    }
+                }
+            })
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    private fun getProductByVariety(categoryProductDto: CategoryProductDto) {
+
+    private fun resetPagination() {
+        try {
+            this.startPage = 0
+            this.scrollSelectedPosition = 0
+            this.scrollPosition = 0
+            this.totalCount = 0
+            if (!searchQueryFlag) {
+                searchQuery = ""
+                searchPlate.setText("")
+                searchPlate.clearFocus()
+            }
+            productVaritiesList = ArrayList()
+            productVaritiesList.clear()
+            Log.e("ResetSize", productVaritiesList.size.toString())
+            categoryVarietyListAdapter.notifyDataSetChanged()
+            getProductByVariety()
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun getProductByVariety() {
         try {
             if (AppUtils.isConnectedToInternet(context)) {
                 val requestObject = JsonObject()
-                requestObject.addProperty("skip", 0)
-                requestObject.addProperty("search", "")
+                requestObject.addProperty("skip", startPage)
+                requestObject.addProperty("search", searchQuery)
                 requestObject.addProperty("commonProductId", categoryProductDto.commonProductId)
-                Log.e("RequestObj", requestObject.toString())
+                Log.e("VarietyRequestObj", requestObject.toString())
                 val productsViewModel = ProductsViewModel()
                 productsViewModel.getProductFromVariety(requestObject,
                     preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!)
                     .observe(this, { jsonObject ->
                         if (jsonObject != null) {
-                            parseProductByCategoryResponse(jsonObject)
+                            parseProductVarietyResponse(jsonObject)
                         }
                     })
             } else {
@@ -117,13 +235,14 @@ class VarietyListActivity : SubModuleActivity(), CategoryProductListener {
         }
     }
 
-    private fun parseProductByCategoryResponse(obj: JSONObject) {
+    private fun parseProductVarietyResponse(obj: JSONObject) {
         try {
             Log.e("ProductCategory", obj.toString())
             if (obj.has("code") && obj.getInt("code") == 200) {
                 if (obj.has("status") && obj.getBoolean("status")) {
-                    productVaritiesList = ArrayList()
                     if (obj.has("data") && !obj.isNull("data")) {
+                        serviceFlag = false
+                        searchQueryFlag = false
                         val dataArray = obj.getJSONArray("data")
                         for (i in 0 until dataArray.length()) {
                             val itemObject = dataArray.getJSONObject(i)
@@ -167,22 +286,9 @@ class VarietyListActivity : SubModuleActivity(), CategoryProductListener {
 
                         }
                     }
-                    populateProductVarietyData()
-                } else {
-                    binding.lvProductVaritiesList.visibility = View.GONE
-                    binding.tvProductNoData.visibility = View.VISIBLE
-                    CommonClass.showToastMessage(
-                        context,
-                        binding.rootView,
-                        obj.getString("message"),
-                        Toast.LENGTH_SHORT
-                    );
                 }
-            } else {
-                binding.lvProductVaritiesList.visibility = View.GONE
-                binding.tvProductNoData.visibility = View.VISIBLE
-                CommonClass.handleErrorResponse(context, obj, binding.rootView)
             }
+            populateProductVarietyData()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -194,19 +300,9 @@ class VarietyListActivity : SubModuleActivity(), CategoryProductListener {
                 binding.lvProductVaritiesList.visibility = View.VISIBLE
                 binding.tvProductNoData.visibility = View.GONE
 
-                val gridLayoutManager =
+                linearLayoutManager =
                     GridLayoutManager(context, 2, RecyclerView.VERTICAL, false)
-                binding.lvProductVaritiesList.layoutManager = gridLayoutManager
-
-                GridLayoutManager(
-                    this, // context
-                    2, // span count
-                    RecyclerView.VERTICAL, // orientation
-                    false // reverse layout
-                ).apply {
-                    // specify the layout manager for recycler view
-                    binding.lvProductVaritiesList.layoutManager = this
-                }
+                binding.lvProductVaritiesList.layoutManager = linearLayoutManager
 
                 val screenWidth = CommonClass.getScreenWidth(context as Activity)
                 categoryVarietyListAdapter = CategoryVarietyListAdapter(

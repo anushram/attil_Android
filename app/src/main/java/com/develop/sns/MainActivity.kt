@@ -16,11 +16,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.develop.sns.databinding.ActivityMainBinding
 import com.develop.sns.home.HomeActivity
 import com.develop.sns.login.LoginActivity
+import com.develop.sns.login.LoginViewModel
 import com.develop.sns.service.ProductsService
 import com.develop.sns.utils.AppConstant
 import com.develop.sns.utils.AppUtils
 import com.develop.sns.utils.CommonClass
 import com.develop.sns.utils.PreferenceHelper
+import com.google.gson.JsonObject
 import org.json.JSONObject
 import java.util.*
 
@@ -225,30 +227,66 @@ class MainActivity : SubModuleActivity() {
         try {
             val token: String = preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!
             if (token.isNotEmpty()) {
-                /* jobInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                     JobInfo.Builder(1, ComponentName(context, ProductsService::class.java))
-                         .setMinimumLatency(REFRESH_INTERVAL)
-                         .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY).build()
-                 } else {
-                     JobInfo.Builder(1, ComponentName(context, ProductsService::class.java))
-                         .setPeriodic(REFRESH_INTERVAL)
-                         .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY).build()
-                 }
-                 val scheduler = context.getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
-                 val resultCode = scheduler.schedule(jobInfo)
-
-                 if (resultCode == JobScheduler.RESULT_SUCCESS) {
-                     Log.d(TAG, "Job scheduled")
-                 } else {
-                     Log.d(TAG, "Job scheduling failed")
-                 }*/
-                val mainActivityModel = MainActivityViewModel()
-                mainActivityModel.getProductList(token)?.observeForever {
-                    dismissProgressBar()
-                    parseProductList(it)
+                if (preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_USER_NAME) != null
+                    && preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_USER_NAME)!!
+                        .trim().isNotEmpty()
+                    && preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_USER_PWD) != null
+                    && preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_USER_PWD)!!.trim()
+                        .isNotEmpty()
+                ) {
+                    if (AppUtils.isConnectedToInternet(context)) {
+                        val requestObject = JsonObject()
+                        requestObject.addProperty("phoneNumber",
+                            preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_USER_NAME)!!)
+                        requestObject.addProperty("password",
+                            preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_USER_PWD)!!)
+                        requestObject.addProperty("preferredLanguage", language)
+                        Log.e("requestObj", requestObject.toString())
+                        showProgressBar()
+                        val loginViewModel = LoginViewModel()
+                        loginViewModel.makeLogin(requestObject)
+                            .observe(this, { jsonObject ->
+                                Log.e("jsonObject", jsonObject.toString() + "")
+                                if (jsonObject != null) {
+                                    dismissProgressBar()
+                                    parseSignInResponse(jsonObject)
+                                }
+                            })
+                    }
+                } else {
+                    val token: String =
+                        preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!
+                    val mainActivityModel = MainActivityViewModel()
+                    mainActivityModel.getProductList(token)?.observeForever {
+                        dismissProgressBar()
+                        parseProductList(it)
+                    }
                 }
             } else {
                 launchLoginActivity()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun parseSignInResponse(obj: JSONObject) {
+        try {
+            Log.e("LoginResponse", obj.toString())
+            if (obj.has("data") && !obj.isNull("data")) {
+                val dataObject = obj.getJSONObject("data")
+                if (dataObject.has("access_token") && !dataObject.isNull("access_token")) {
+                    preferenceHelper!!.saveValueToSharedPrefs(
+                        AppConstant.KEY_TOKEN,
+                        dataObject.getString("access_token")
+                    )
+                }
+            }
+            val token: String = preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!
+            val mainActivityModel = MainActivityViewModel()
+            mainActivityModel.getProductList(token)?.observeForever {
+                dismissProgressBar()
+                parseProductList(it)
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -268,7 +306,7 @@ class MainActivity : SubModuleActivity() {
                     )
                     launchHomeActivity()
                 } else {
-                    CommonClass.handleErrorResponse(context,jsonObject,binding.rootView)
+                    CommonClass.handleErrorResponse(context, jsonObject, binding.rootView)
                 }
             }
         } catch (e: Exception) {

@@ -1,11 +1,18 @@
 package com.develop.sns.home.product
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.annotation.NonNull
+import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.*
 import com.develop.sns.R
@@ -41,9 +48,30 @@ class BrandListActivity : SubModuleActivity(), NormalOfferListener {
     var packageType = ""
     var offerType = ""
 
+    private lateinit var searchPlate: EditText
+    private lateinit var close: ImageView
+
+    private var serviceFlag = false
+    private var searchQueryFlag = false
+    private var searchQuery = ""
+
+    private val limit = 20
+    private var startPage = 0
+
+    private var scrollPosition = 0
+    private var scrollSelectedPosition = 0
+    private var totalCount = 0
+
+    private lateinit var linearLayoutManager: LinearLayoutManager
+    private lateinit var normalOffersListAdapter: NormalOffersListAdapter
+
+    var fa: Activity? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        fa = this;
 
         initialiseProgressBar(binding.lnProgressbar)
         initToolBar()
@@ -72,6 +100,7 @@ class BrandListActivity : SubModuleActivity(), NormalOfferListener {
     private fun initClassReference() {
         try {
             language = preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_LANGUAGE)!!
+            normalOfferList = ArrayList()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -82,7 +111,7 @@ class BrandListActivity : SubModuleActivity(), NormalOfferListener {
             val intent = intent
             categoryProductDto =
                 intent.getSerializableExtra("categoryMainDto") as CategoryProductDto
-            getNormalOffers(categoryProductDto)
+            getNormalOffers()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -90,18 +119,109 @@ class BrandListActivity : SubModuleActivity(), NormalOfferListener {
 
     private fun handleUiElement() {
         try {
+            searchPlate = binding.svSearch.findViewById(R.id.search_src_text) as EditText
+            close = binding.svSearch.findViewById(R.id.search_close_btn) as ImageView
+            searchPlate.setOnEditorActionListener { v, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    hideKeyboard()
+                    searchQuery = v.text.toString()
+                    serviceFlag = false
+                    searchQueryFlag = true
+                    resetPagination()
+                }
+                false
+            }
 
+            binding.svSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String): Boolean {
+                    searchQuery = query
+                    serviceFlag = false
+                    searchQueryFlag = true
+                    binding.svSearch.clearFocus()
+                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                    resetPagination()
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String): Boolean {
+                    if (newText.isEmpty()) {
+                        searchQuery = newText
+                        serviceFlag = false
+                        binding.svSearch.clearFocus()
+                        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                        searchQueryFlag = true
+                        resetPagination()
+                    }
+                    return false
+                }
+            })
+
+            binding.lvProductVaritiesList.addOnScrollListener(object :
+                RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    val visibleItemCount: Int = linearLayoutManager.childCount
+                    val totalItemCount: Int = linearLayoutManager.itemCount
+                    val firstVisibleItemPosition: Int =
+                        linearLayoutManager.findFirstVisibleItemPosition()
+                    val lastVisibleItemPosition: Int =
+                        linearLayoutManager.findLastVisibleItemPosition()
+                    val rvRect = Rect()
+                    binding.lvProductVaritiesList.getGlobalVisibleRect(rvRect)
+                    scrollPosition = firstVisibleItemPosition
+
+                    if (visibleItemCount + firstVisibleItemPosition >= totalItemCount && firstVisibleItemPosition >= 0 && totalItemCount >= limit) {
+                        scrollSelectedPosition = lastVisibleItemPosition
+                        scrollPosition = scrollSelectedPosition
+                    }
+                }
+
+                override fun onScrollStateChanged(
+                    @NonNull recyclerView: RecyclerView,
+                    newState: Int,
+                ) {
+                    super.onScrollStateChanged(recyclerView, newState)
+                    if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        Log.d("-----", "end");
+                        startPage++
+                        Log.e("StartPage", startPage.toString())
+                        getNormalOffers()
+                    }
+                }
+            })
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    private fun getNormalOffers(categoryProductDto: CategoryProductDto) {
+
+    private fun resetPagination() {
+        try {
+            this.startPage = 0
+            this.scrollSelectedPosition = 0
+            this.scrollPosition = 0
+            this.totalCount = 0
+            if (!searchQueryFlag) {
+                searchQuery = ""
+                searchPlate.setText("")
+                searchPlate.clearFocus()
+            }
+            normalOfferList = ArrayList()
+            this.normalOfferList.clear()
+            Log.e("ResetSize", normalOfferList.size.toString())
+            normalOffersListAdapter.notifyDataSetChanged()
+            getNormalOffers()
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun getNormalOffers() {
         try {
             if (AppUtils.isConnectedToInternet(context)) {
                 val requestObject = JsonObject()
-                requestObject.addProperty("skip", 0)
-                requestObject.addProperty("search", "")
+                requestObject.addProperty("skip", startPage)
+                requestObject.addProperty("search", searchQuery)
                 requestObject.addProperty("commonProductId", categoryProductDto.commonProductId)
                 requestObject.addProperty("productName", categoryProductDto.productName)
                 val productsViewModel = ProductsViewModel()
@@ -130,8 +250,9 @@ class BrandListActivity : SubModuleActivity(), NormalOfferListener {
             Log.e("Brands", obj.toString())
             if (obj.has("code") && obj.getInt("code") == 200) {
                 if (obj.has("status") && obj.getBoolean("status")) {
-                    normalOfferList = ArrayList<NormalOfferDto>();
                     if (obj.has("data") && !obj.isNull("data")) {
+                        serviceFlag = false
+                        searchQueryFlag = false
                         val dataArray = obj.getJSONArray("data")
                         for (i in 0 until dataArray.length()) {
                             val itemObject = dataArray.getJSONObject(i)
@@ -329,18 +450,9 @@ class BrandListActivity : SubModuleActivity(), NormalOfferListener {
                             normalOfferList!!.add(normalOfferDto)
                         }
                     }
-                    populateNormalOfferList()
-                } else {
-                    CommonClass.showToastMessage(
-                        context,
-                        binding.rootView,
-                        obj.getString("message"),
-                        Toast.LENGTH_SHORT
-                    );
                 }
-            } else {
-                CommonClass.handleErrorResponse(context, obj, binding.rootView)
             }
+            populateNormalOfferList()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -348,12 +460,14 @@ class BrandListActivity : SubModuleActivity(), NormalOfferListener {
 
     private fun populateNormalOfferList() {
         try {
-            if (normalOfferList != null && !normalOfferList.isNullOrEmpty()) {
+            if (!normalOfferList.isNullOrEmpty()) {
                 binding.lvProductVaritiesList.visibility = View.VISIBLE
                 binding.tvProductNoData.visibility = View.GONE
-                binding.lvProductVaritiesList.layoutManager = LinearLayoutManager(context)
-                binding.lvProductVaritiesList.adapter =
+                linearLayoutManager = LinearLayoutManager(context)
+                binding.lvProductVaritiesList.layoutManager = linearLayoutManager
+                normalOffersListAdapter =
                     NormalOffersListAdapter(context, normalOfferList, this@BrandListActivity)
+                binding.lvProductVaritiesList.adapter = normalOffersListAdapter
             } else {
                 binding.lvProductVaritiesList.visibility = View.GONE
                 binding.tvProductNoData.visibility = View.VISIBLE

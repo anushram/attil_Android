@@ -76,7 +76,7 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_marginTop="8dp">
 
@@ -84,7 +84,7 @@
                         android:id="@+id/lv_product_varities_list"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:visibility="visible" />
+                        android:visibility="gone" />
 
                     <TextView
                         android:id="@+id/tv_product_no_data"

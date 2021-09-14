@@ -110,17 +110,17 @@ interface Api {
 
         fun initRetrofit(): Api {
             val api: Api
-            val logging = HttpLoggingInterceptor()
+            /*val logging = HttpLoggingInterceptor()
             logging.setLevel(HttpLoggingInterceptor.Level.BASIC)
             logging.setLevel(HttpLoggingInterceptor.Level.HEADERS);
             logging.setLevel(HttpLoggingInterceptor.Level.BODY);
             val httpClient = OkHttpClient.Builder()
-            httpClient.addInterceptor(logging)
+            httpClient.addInterceptor(logging)*/
 
             val retrofit: Retrofit = Retrofit.Builder()
                 .baseUrl(BuildConfig.BASE_API_URL)
                 .addConverterFactory(GsonConverterFactory.create())
-                .client(httpClient.build())
+                //.client(httpClient.build())
                 .build()
             api = retrofit.create(Api::class.java)
             return api

@@ -12,11 +12,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.develop.sns.R
 import com.develop.sns.SubModuleActivity
 import com.develop.sns.databinding.ActivityItemDetailsBinding
+import com.develop.sns.home.HomeActivity
 import com.develop.sns.home.details.adapter.ItemDetailsListAdapter
 import com.develop.sns.home.dto.NormalOfferDto
 import com.develop.sns.home.dto.NormalOfferPriceDto
 import com.develop.sns.home.offers.adapter.SliderAdapter
 import com.develop.sns.home.offers.listener.ItemListener
+import com.develop.sns.home.product.BrandListActivity
+import com.develop.sns.home.product.VarietyListActivity
 import com.develop.sns.utils.AppConstant
 import com.develop.sns.utils.AppUtils
 import com.develop.sns.utils.CommonClass
@@ -420,6 +423,12 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
 
     private fun handleResponse() {
         try {
+            if (VarietyListActivity().fa != null) {
+                VarietyListActivity().fa!!.finish()
+            }
+            if (BrandListActivity().fa != null) {
+                BrandListActivity().fa!!.finish()
+            }
             val intent = Intent()
             setResult(RESULT_OK, intent)
             finish()

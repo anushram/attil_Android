@@ -1,18 +1,24 @@
 package com.develop.sns.home.offers
 
 import android.app.Activity
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.Intent
+import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.NonNull
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.*
+import androidx.recyclerview.widget.RecyclerView
 import com.develop.sns.R
 import com.develop.sns.customviews.GravitySnapHelper
 import com.develop.sns.databinding.FragmentOffersBinding
@@ -35,7 +41,6 @@ import java.util.*
 import kotlin.Comparator
 import kotlin.collections.ArrayList
 
-
 class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
 
     private val binding by lazy { FragmentOffersBinding.inflate(layoutInflater) }
@@ -44,6 +49,8 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
     private lateinit var topOfferList: ArrayList<NormalOfferDto>
     private lateinit var normalOfferList: ArrayList<NormalOfferDto>
 
+    private lateinit var normalOffersListAdapter: NormalOffersListAdapter
+
     val time = 4000
     var packageType = ""
     var offerType = ""
@@ -51,6 +58,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
 
     private var serviceFlag = false
     private var searchQueryFlag = false
+    private var isClose = false
     private var searchQuery = ""
 
     private val limit = 20
@@ -58,9 +66,12 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
 
     private var scrollPosition = 0
     private var scrollSelectedPosition = 0
-    var totalCount = 0
+    private var totalCount = 0
 
     private lateinit var searchPlate: EditText
+    private lateinit var close: ImageView
+
+    private lateinit var linearLayoutManager: LinearLayoutManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,6 +95,8 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
 
     override fun onResume() {
         super.onResume()
+        binding.svSearch.clearFocus()
+        hideKeyboard()
         callApi()
     }
 
@@ -110,8 +123,26 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
         }
     }
 
+    fun hideKeyboard() {
+        try {
+            val view = requireActivity().currentFocus
+            if (view != null) {
+                (requireActivity().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
+                    view.windowToken,
+                    InputMethodManager.HIDE_NOT_ALWAYS)
+            }
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+    }
+
     private fun handleUiElement() {
         try {
+
+            binding.lnFilter.setOnClickListener {
+
+            }
+
             binding.svSearch.setOnQueryTextFocusChangeListener { _, hasFocus ->
                 if (hasFocus) {
                     // searchView expanded
@@ -123,63 +154,82 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
             }
 
             searchPlate = binding.svSearch.findViewById(R.id.search_src_text) as EditText
+            close = binding.svSearch.findViewById(R.id.search_close_btn) as ImageView
             searchPlate.setOnEditorActionListener { v, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    //Do something
+                    hideKeyboard()
                     searchQuery = v.text.toString()
                     serviceFlag = false
-                    binding.svSearch.clearFocus()
                     searchQueryFlag = true
-                    callService()
-                }
-                false
-            }
-            searchPlate.setOnEditorActionListener { v, actionId, event ->
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    //Do something
-                    searchQuery = v.text.toString()
-                    serviceFlag = false
-                    binding.svSearch.clearFocus()
-                    searchQueryFlag = true
+                    resetPagination()
                 }
                 false
             }
 
             binding.svSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
+                    Log.e("OnQuery", "Submit")
                     searchQuery = query
                     serviceFlag = false
                     searchQueryFlag = true
-                    //launchSearchHomeItemActivity(searchQuery)
-                    callService();
+                    binding.svSearch.clearFocus()
+                    requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                    resetPagination()
                     return false
                 }
 
                 override fun onQueryTextChange(newText: String): Boolean {
-                    if (binding.svSearch.query.isEmpty()) {
+                    Log.e("OnQuery", "Change")
+                    if (newText.isEmpty()) {
                         searchQuery = newText
                         serviceFlag = false
                         binding.svSearch.clearFocus()
+                        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
                         searchQueryFlag = true
-                        callService();
+                        resetPagination()
                     }
                     return false
                 }
             })
+
+            binding.lvNormalOffers.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    val visibleItemCount: Int = linearLayoutManager.childCount
+                    val totalItemCount: Int = linearLayoutManager.itemCount
+                    val firstVisibleItemPosition: Int =
+                        linearLayoutManager.findFirstVisibleItemPosition()
+                    val lastVisibleItemPosition: Int =
+                        linearLayoutManager.findLastVisibleItemPosition()
+                    val rvRect = Rect()
+                    binding.lvNormalOffers.getGlobalVisibleRect(rvRect)
+                    scrollPosition = firstVisibleItemPosition
+
+                    if (visibleItemCount + firstVisibleItemPosition >= totalItemCount && firstVisibleItemPosition >= 0 && totalItemCount >= limit) {
+                        scrollSelectedPosition = lastVisibleItemPosition
+                        scrollPosition = scrollSelectedPosition
+                    }
+                }
+
+                override fun onScrollStateChanged(
+                    @NonNull recyclerView: RecyclerView,
+                    newState: Int,
+                ) {
+                    super.onScrollStateChanged(recyclerView, newState)
+                    if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        Log.d("-----", "end");
+                        startPage++
+                        Log.e("StartPage", startPage.toString())
+                        getNormalOffers()
+                    }
+                }
+            })
+
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    private fun callService() {
-        try {
-            resetPagination()
-            normalOfferList.clear()
-            getNormalOffers()
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        }
-    }
 
     private fun resetPagination() {
         try {
@@ -192,7 +242,10 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
                 searchPlate.setText("")
                 searchPlate.clearFocus()
             }
+            normalOfferList = ArrayList()
             this.normalOfferList.clear()
+            Log.e("ResetSize", normalOfferList.size.toString())
+            getNormalOffers()
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
         }
@@ -410,11 +463,12 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
         try {
             if (AppUtils.isConnectedToInternet(requireActivity())) {
                 val requestObject = JsonObject()
-                requestObject.addProperty("skip", 0)
+                requestObject.addProperty("skip", startPage)
                 requestObject.addProperty("sortByPrice", 1)
                 requestObject.addProperty("packageType", "")
                 requestObject.addProperty("search", searchQuery)
                 requestObject.addProperty("view", "")
+                Log.e("Normal request", requestObject.toString())
                 val offersViewModel = OffersViewModel()
                 offersViewModel.getNormalOffers(
                     requestObject,
@@ -441,7 +495,6 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
             Log.e("NormalOffers", obj.toString())
             if (obj.has("code") && obj.getInt("code") == 200) {
                 if (obj.has("status") && obj.getBoolean("status")) {
-
                     if (obj.has("data") && !obj.isNull("data")) {
                         serviceFlag = false;
                         searchQueryFlag = false;
@@ -642,16 +695,12 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
                             normalOfferList!!.add(normalOfferDto)
                         }
                     }
-                    populateNormalOfferList()
-                } else {
-                    CommonClass.showToastMessage(
-                        requireActivity(),
-                        binding.rootView,
-                        obj.getString("message"),
-                        Toast.LENGTH_SHORT
-                    );
+
                 }
+                populateNormalOfferList()
             } else {
+                binding.lvNormalOffers.visibility = View.GONE
+                binding.tvNormalOfferNoData.visibility = View.VISIBLE
                 CommonClass.handleErrorResponse(requireActivity(), obj, binding.rootView)
             }
         } catch (e: Exception) {
@@ -662,12 +711,14 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
     private fun populateNormalOfferList() {
         try {
             binding.lnNormalOffers.visibility = View.VISIBLE
-            if (normalOfferList != null && !normalOfferList.isNullOrEmpty()) {
+            if (!normalOfferList.isNullOrEmpty()) {
                 binding.lvNormalOffers.visibility = View.VISIBLE
                 binding.tvNormalOfferNoData.visibility = View.GONE
-                binding.lvNormalOffers.layoutManager = LinearLayoutManager(requireActivity())
-                binding.lvNormalOffers.adapter =
+                linearLayoutManager = LinearLayoutManager(requireActivity())
+                binding.lvNormalOffers.layoutManager = linearLayoutManager
+                normalOffersListAdapter =
                     NormalOffersListAdapter(requireActivity(), normalOfferList, this@OffersFragment)
+                binding.lvNormalOffers.adapter = normalOffersListAdapter
             } else {
                 binding.lvNormalOffers.visibility = View.GONE
                 binding.tvNormalOfferNoData.visibility = View.VISIBLE
