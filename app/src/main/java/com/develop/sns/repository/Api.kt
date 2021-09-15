@@ -112,7 +112,7 @@ interface Api {
         fun initRetrofit(): Api {
             val api: Api
             val logging = HttpLoggingInterceptor()
-            logging.setLevel(HttpLoggingInterceptor.Level.BASIC)
+            //logging.setLevel(HttpLoggingInterceptor.Level.BASIC)
             //logging.setLevel(HttpLoggingInterceptor.Level.HEADERS)
             logging.setLevel(HttpLoggingInterceptor.Level.BODY)
             val httpClient = OkHttpClient.Builder()
