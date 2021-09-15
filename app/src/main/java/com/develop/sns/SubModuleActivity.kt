@@ -5,7 +5,6 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.Window
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
@@ -19,7 +18,6 @@ import java.util.*
 
 open class SubModuleActivity : ModuleActivity() {
 
-    private val TAG = SubModuleActivity::class.java.simpleName
     private val context: SubModuleActivity = this@SubModuleActivity
 
     private val binding by lazy { ActivitySubModuleBinding.inflate(layoutInflater) }
@@ -66,7 +64,7 @@ open class SubModuleActivity : ModuleActivity() {
             token = preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)
             languageId = preferenceHelper!!.getIntFromSharedPrefs(AppConstant.KEY_LANGUAGE_ID)
             language = preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_LANGUAGE)!!
-            Log.e("SubMod LngCode", language.toString())
+            Log.e("SubMod LngCode", language)
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
         }

@@ -124,7 +124,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
             binding.srlList.isRefreshing = false
             binding.srlList.isEnabled = false
             language =
-                preferenceHelper?.getValueFromSharedPrefs(AppConstant.KEY_LANGUAGE).toString()
+                preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_LANGUAGE)!!
             normalOfferList = ArrayList();
             topOfferList = ArrayList()
         } catch (e: Exception) {
