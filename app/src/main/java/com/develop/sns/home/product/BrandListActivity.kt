@@ -19,8 +19,8 @@ import com.develop.sns.R
 import com.develop.sns.SubModuleActivity
 import com.develop.sns.databinding.ActivityBrandListBinding
 import com.develop.sns.home.details.ItemDetailsActivity
-import com.develop.sns.home.dto.NormalOfferDto
-import com.develop.sns.home.dto.NormalOfferPriceDto
+import com.develop.sns.home.offers.dto.NormalOfferDto
+import com.develop.sns.home.offers.dto.NormalOfferPriceDto
 import com.develop.sns.home.offers.adapter.NormalOffersListAdapter
 import com.develop.sns.home.offers.listener.NormalOfferListener
 import com.develop.sns.utils.AppConstant

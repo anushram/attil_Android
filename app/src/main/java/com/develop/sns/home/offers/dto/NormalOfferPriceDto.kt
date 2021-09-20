@@ -1,4 +1,4 @@
-package com.develop.sns.home.dto
+package com.develop.sns.home.offers.dto
 
 import java.io.Serializable
 

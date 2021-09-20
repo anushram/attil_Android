@@ -80,6 +80,10 @@
             android:name=".home.product.BrandListActivity"
             android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
             android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".home.offers.FilterActivity"
+            android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
+            android:windowSoftInputMode="adjustPan" />
 
         <service
             android:name=".service.ProductsService"

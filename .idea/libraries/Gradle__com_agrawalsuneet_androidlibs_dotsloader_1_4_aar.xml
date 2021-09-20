@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.agrawalsuneet.androidlibs:dotsloader:1.4@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/06cd2e84001dee7661809463989c40db/dotsloader-1.4/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/06cd2e84001dee7661809463989c40db/dotsloader-1.4/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/06cd2e84001dee7661809463989c40db/dotsloader-1.4/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1ad8617b5413d45f0816ee25d2105631/dotsloader-1.4/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1ad8617b5413d45f0816ee25d2105631/dotsloader-1.4/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1ad8617b5413d45f0816ee25d2105631/dotsloader-1.4/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.agrawalsuneet.androidlibs/dotsloader/1.4/4306f2d8680948ffcaf1e2b01adda06876fd42c1/dotsloader-1.4-javadoc.jar!/" />

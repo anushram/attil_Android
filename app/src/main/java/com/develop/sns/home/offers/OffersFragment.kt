@@ -23,10 +23,10 @@ import com.develop.sns.R
 import com.develop.sns.customviews.GravitySnapHelper
 import com.develop.sns.databinding.FragmentOffersBinding
 import com.develop.sns.home.details.ItemDetailsActivity
-import com.develop.sns.home.dto.NormalOfferDto
-import com.develop.sns.home.dto.NormalOfferPriceDto
 import com.develop.sns.home.offers.adapter.NormalOffersListAdapter
 import com.develop.sns.home.offers.adapter.TopOffersListAdapter
+import com.develop.sns.home.offers.dto.NormalOfferDto
+import com.develop.sns.home.offers.dto.NormalOfferPriceDto
 import com.develop.sns.home.offers.listener.NormalOfferListener
 import com.develop.sns.home.offers.listener.TopOfferListener
 import com.develop.sns.utils.AppConstant
@@ -73,6 +73,12 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
 
     private lateinit var linearLayoutManager: LinearLayoutManager
 
+    var filterType = 0
+    var filterPrice = 0
+    var filterView = 0
+
+    private var isOnActivityRes = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         preferenceHelper = PreferenceHelper(requireActivity())
@@ -94,10 +100,13 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
     }
 
     override fun onResume() {
+        Log.e("onResume", "Comes")
         super.onResume()
         binding.svSearch.clearFocus()
         hideKeyboard()
-        callApi()
+        if (!isOnActivityRes) {
+            callApi()
+        }
     }
 
     private fun callApi() {
@@ -115,7 +124,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
             binding.srlList.isRefreshing = false
             binding.srlList.isEnabled = false
             language =
-                preferenceHelper?.getValueFromSharedPrefs(AppConstant.KEY_LANGUAGE).toString()
+                preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_LANGUAGE)!!
             normalOfferList = ArrayList();
             topOfferList = ArrayList()
         } catch (e: Exception) {
@@ -138,9 +147,8 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
 
     private fun handleUiElement() {
         try {
-
             binding.lnFilter.setOnClickListener {
-
+                launchFilterActivity()
             }
 
             binding.svSearch.setOnQueryTextFocusChangeListener { _, hasFocus ->
@@ -225,6 +233,33 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
                 }
             })
 
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    var filterLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            Log.e("onACR", "Comes")
+            isOnActivityRes = true
+            if (result.resultCode == Activity.RESULT_OK) {
+                // There are no request codes
+                val data: Intent? = result.data
+                filterType = data!!.getIntExtra("filterType", 0)
+                filterPrice = data.getIntExtra("filterPrice", 0)
+                filterView = data.getIntExtra("filterView", 0)
+                resetPagination()
+            }
+        }
+
+    private fun launchFilterActivity() {
+        try {
+            val intent = Intent(context, FilterActivity::class.java)
+            intent.putExtra("filterType", filterType)
+            intent.putExtra("filterPrice", filterPrice)
+            intent.putExtra("filterView", filterView)
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+            filterLauncher.launch(intent)
         } catch (e: Exception) {
             e.printStackTrace()
         }

@@ -29,6 +29,7 @@ class ApiRepository {
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                     val message: String = t.message.toString()
                     Log.d("failure", message)
+
                 }
             })
         } catch (e: Exception) {

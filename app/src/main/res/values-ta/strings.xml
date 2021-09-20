@@ -60,4 +60,16 @@
     <string name="varirities_arrow">வகைகள்</string>
     <string name="brands">Brands</string>
     <string name="no_item_found">No item found</string>
+    <string name="type">Type</string>
+    <string name="local_products">Local Products</string>
+    <string name="branded_products">Branded Products</string>
+    <string name="price">Price</string>
+    <string name="low_to_high">Low to High</string>
+    <string name="high_to_low">High to Low</string>
+    <string name="view">View</string>
+    <string name="filters">Filters</string>
+    <string name="mostly_viewed">Mostly Viewed</string>
+    <string name="new_arrivals">New Arrivals</string>
+    <string name="top_selling">Top Selling</string>
+    <string name="clear">Clear</string>
 </resources>

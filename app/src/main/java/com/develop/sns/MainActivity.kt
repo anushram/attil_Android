@@ -1,11 +1,7 @@
 package com.develop.sns
 
 import android.app.Activity
-import android.app.job.JobInfo
-import android.app.job.JobScheduler
-import android.content.ComponentName
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
@@ -17,39 +13,26 @@ import com.develop.sns.databinding.ActivityMainBinding
 import com.develop.sns.home.HomeActivity
 import com.develop.sns.login.LoginActivity
 import com.develop.sns.login.LoginViewModel
-import com.develop.sns.service.ProductsService
 import com.develop.sns.utils.AppConstant
 import com.develop.sns.utils.AppUtils
 import com.develop.sns.utils.CommonClass
-import com.develop.sns.utils.PreferenceHelper
 import com.google.gson.JsonObject
 import org.json.JSONObject
 import java.util.*
 
 
 class MainActivity : SubModuleActivity() {
-    private val TAG = MainActivity::class.java.simpleName
     private val context: MainActivity = this@MainActivity
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
-
-    private var versionCode = 0
-    override var languageId = 0
-    private var notificationType = 0
-    private var dataObject: String? = null
-    var advertiseList: ArrayList<String>? = null
-    private val i = 0
-    private lateinit var jobInfo: JobInfo
-    private val REFRESH_INTERVAL = (1 * 1000).toLong()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         getIntentValue()
-        initClassReference()
         getAndroidDeviceId()
-        getSystemConfig()
         handleUiElement()
+        getSystemConfig()
 
     }
 
@@ -61,23 +44,10 @@ class MainActivity : SubModuleActivity() {
         }
     }
 
-    private fun initClassReference() {
-        try {
-            preferenceHelper = PreferenceHelper(context)
-            languageId = preferenceHelper!!.getIntFromSharedPrefs(AppConstant.KEY_LANGUAGE_ID)
-            advertiseList = ArrayList()
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        }
-    }
-
     private fun getAndroidDeviceId() {
         try {
             val deviceId = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
             preferenceHelper!!.saveValueToSharedPrefs(AppConstant.KEY_DEVICE_ID, deviceId)
-            preferenceHelper!!.saveValueToSharedPrefs(AppConstant.KEY_DDI, deviceId)
-            val languageId = preferenceHelper!!.getIntFromSharedPrefs(AppConstant.KEY_LANGUAGE_ID)
-            AppConstant.LANGUAGE_ID = languageId
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
         }
@@ -88,18 +58,6 @@ class MainActivity : SubModuleActivity() {
 
         } catch (e: Exception) {
             e.printStackTrace()
-        }
-    }
-
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            INTENT_LOGIN -> if (resultCode == Activity.RESULT_OK) {
-                checkForToken()
-            } else {
-                finish()
-            }
         }
     }
 
@@ -254,8 +212,6 @@ class MainActivity : SubModuleActivity() {
                             })
                     }
                 } else {
-                    val token: String =
-                        preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!
                     val mainActivityModel = MainActivityViewModel()
                     mainActivityModel.getProductList(token)?.observeForever {
                         dismissProgressBar()
@@ -295,8 +251,6 @@ class MainActivity : SubModuleActivity() {
 
     private fun parseProductList(jsonObject: JSONObject?) {
         try {
-            /*val scheduler = context.getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
-            scheduler.cancel(1)*/
             Log.e("ProducrList", jsonObject.toString())
             if (jsonObject != null) {
                 if (jsonObject.has("code") && jsonObject.getInt("code") == 200) {
@@ -317,7 +271,6 @@ class MainActivity : SubModuleActivity() {
     var resultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                // There are no request codes
                 val data: Intent? = result.data
                 checkForToken()
             } else {
@@ -348,7 +301,7 @@ class MainActivity : SubModuleActivity() {
 
     override fun showProgressBar() {
         try {
-            binding.progressBar.setVisibility(View.VISIBLE)
+            binding.progressBar.visibility = View.VISIBLE
             window.setFlags(
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
@@ -361,7 +314,7 @@ class MainActivity : SubModuleActivity() {
     override fun dismissProgressBar() {
         try {
             window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-            binding.progressBar.setVisibility(View.GONE)
+            binding.progressBar.visibility = View.GONE
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -384,7 +337,6 @@ class MainActivity : SubModuleActivity() {
     }
 
     companion object {
-        private const val INTENT_LOGIN = 1002
 
     }
 }

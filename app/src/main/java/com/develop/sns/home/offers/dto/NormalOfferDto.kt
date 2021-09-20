@@ -1,6 +1,5 @@
-package com.develop.sns.home.dto
+package com.develop.sns.home.offers.dto
 
-import com.talentmicro.icanrefer.dto.ModuleDto
 import java.io.Serializable
 
 class NormalOfferDto : Serializable {
