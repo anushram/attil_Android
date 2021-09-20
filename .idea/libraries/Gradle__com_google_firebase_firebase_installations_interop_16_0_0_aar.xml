@@ -2,8 +2,8 @@
   <library name="Gradle: com.google.firebase:firebase-installations-interop:16.0.0@aar">
     <CLASSES>
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/6b810bbe2037b5d990a1dadb73356cc8/firebase-installations-interop-16.0.0/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/0436c5bdb77a0ef5dee3e6afa7279285/firebase-installations-interop-16.0.0/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/0436c5bdb77a0ef5dee3e6afa7279285/firebase-installations-interop-16.0.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/0436c5bdb77a0ef5dee3e6afa7279285/firebase-installations-interop-16.0.0/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/0436c5bdb77a0ef5dee3e6afa7279285/firebase-installations-interop-16.0.0/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>

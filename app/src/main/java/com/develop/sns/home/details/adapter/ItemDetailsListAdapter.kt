@@ -2,6 +2,7 @@ package com.develop.sns.home.details.adapter
 
 import android.content.Context
 import android.graphics.Paint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -57,7 +58,8 @@ class ItemDetailsListAdapter(
                     .placeholder(R.drawable.product)
                     .error(R.drawable.product)
                     .into(ivProduct);
-
+                Log.e("PackageType", normalOfferDto.packageType!!)
+                Log.e("OfferType", normalOfferDto.offerType!!)
                 if (normalOfferDto.packageType.equals("loose", true)
                     && normalOfferDto.offerType.equals("normal", true)
                 ) {
@@ -204,28 +206,96 @@ class ItemDetailsListAdapter(
                         .plus(priceDetailDto.bogeMeasureType)
                 }
 
-                if (priceDetailDto.quantity!! > 0) {
-                    btnAdd.visibility = View.GONE
-                    lnAdd.visibility = View.VISIBLE
-                    tvCount.text = priceDetailDto.quantity.toString()
+                if (normalOfferDto.packageType.equals("loose", true)
+                    && normalOfferDto.offerType.equals("normal", true)
+                ) {
+                    Log.e("Quantity", priceDetailDto.quantity.toString())
+                    if (priceDetailDto.quantity!! > 0) {
+                        btnAdd.visibility = View.GONE
+                        lnLooseAdd.visibility = View.VISIBLE
+                        lnAdd.visibility = View.GONE
+                        val kg = priceDetailDto.quantity!!.toDouble() * 0.001
+                        var minUnit = "0"
+                        var maxUnit = "0"
+                        //if (kg > 0) {
+                        val qtyStr = "%.3f".format(kg)
+                        minUnit = qtyStr.split(".")[1]
+                        maxUnit = qtyStr.split(".")[0]
+                        Log.e("min", minUnit)
+                        Log.e("max", maxUnit)
+                        //}
+                        if (minUnit.equals("000")) {
+                            minUnit = "0"
+                        }
+                        tvGmCount.text = minUnit
+                        tvKgCount.text = maxUnit
+                    } else {
+                        btnAdd.visibility = View.VISIBLE
+                        lnAdd.visibility = View.GONE
+                        lnLooseAdd.visibility = View.GONE
+                    }
                 } else {
-                    btnAdd.visibility = View.VISIBLE
-                    lnAdd.visibility = View.GONE
+                    if (priceDetailDto.quantity!! > 0) {
+                        btnAdd.visibility = View.GONE
+                        lnLooseAdd.visibility = View.GONE
+                        lnAdd.visibility = View.VISIBLE
+                        tvCount.text = priceDetailDto.quantity.toString()
+                    } else {
+                        btnAdd.visibility = View.VISIBLE
+                        lnAdd.visibility = View.GONE
+                        lnLooseAdd.visibility = View.GONE
+                    }
                 }
 
                 btnAdd.setOnClickListener {
                     btnAdd.visibility = View.GONE
-                    lnAdd.visibility = View.VISIBLE
+                    if (normalOfferDto.packageType.equals("loose", true)
+                        && normalOfferDto.offerType.equals("normal", true)
+                    ) {
+                        lnLooseAdd.visibility = View.VISIBLE
+                        lnAdd.visibility = View.GONE
+                    } else {
+                        lnLooseAdd.visibility = View.GONE
+                        lnAdd.visibility = View.VISIBLE
+                    }
                     itemListener.selectItem(position, priceDetailDto, true)
                 }
 
                 lnIncrease.setOnClickListener {
-                    itemListener.changeCount(position, priceDetailDto, true);
+                    itemListener.changeCount(position, priceDetailDto, true)
                 }
 
                 lnDecrease.setOnClickListener {
-                    itemListener.changeCount(position, priceDetailDto, false);
+                    itemListener.changeCount(position, priceDetailDto, false)
                 }
+
+                lnGmIncrease.setOnClickListener {
+                    itemListener.changeCountGmOrKg(position, priceDetailDto,
+                        isAdd = true,
+                        isGm = true)
+                }
+
+                lnGmDecrease.setOnClickListener {
+                    itemListener.changeCountGmOrKg(position, priceDetailDto,
+                        isAdd = false,
+                        isGm = true)
+                }
+
+                lnKgIncrease.setOnClickListener {
+                    itemListener.changeCountGmOrKg(position,
+                        priceDetailDto,
+                        isAdd = true,
+                        isGm = false)
+                }
+
+                lnKgDecrease.setOnClickListener {
+                    itemListener.changeCountGmOrKg(position,
+                        priceDetailDto,
+                        isAdd = false,
+                        isGm = false)
+                }
+
+
             }
         }
 

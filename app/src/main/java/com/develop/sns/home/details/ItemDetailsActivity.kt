@@ -13,9 +13,9 @@ import com.develop.sns.R
 import com.develop.sns.SubModuleActivity
 import com.develop.sns.databinding.ActivityItemDetailsBinding
 import com.develop.sns.home.details.adapter.ItemDetailsListAdapter
+import com.develop.sns.home.offers.adapter.SliderAdapter
 import com.develop.sns.home.offers.dto.NormalOfferDto
 import com.develop.sns.home.offers.dto.NormalOfferPriceDto
-import com.develop.sns.home.offers.adapter.SliderAdapter
 import com.develop.sns.home.offers.listener.ItemListener
 import com.develop.sns.home.product.BrandListActivity
 import com.develop.sns.home.product.VarietyListActivity
@@ -257,10 +257,11 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
     override fun selectItem(position: Int, itemDto: NormalOfferPriceDto?, isSelect: Boolean) {
         try {
             val quantity: Int = itemDto!!.quantity!!
+            Log.e("selectItem", quantity.toString())
             if (itemDetailsListAdapter != null) {
-                itemDto!!.selectedFlag = isSelect
+                itemDto.selectedFlag = isSelect
 
-                if (itemMainDto!!.packageType.equals("loose")
+                if (itemMainDto!!.packageType.equals("loose", true)
                     && itemMainDto!!.offerType.equals("normal", true)
                 ) {
                     if (quantity.toFloat() <= itemDto.maxUnit!! * 1000.toFloat()) {
@@ -354,6 +355,112 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
                 }
             }
         } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    override fun changeCountGmOrKg(
+        position: Int,
+        itemDto: NormalOfferPriceDto?,
+        isAdd: Boolean,
+        isGm: Boolean,
+    ) {
+        try {
+            if (itemDetailsListAdapter != null) {
+                var quantity: Int = itemDto!!.quantity!!
+                if (itemMainDto!!.packageType.equals(
+                        "loose",
+                        true
+                    ) && itemMainDto!!.offerType.equals(
+                        "normal",
+                        true
+                    )
+                ) {
+                    val qty = quantity.toFloat().div(1000)
+                    val qtyStr = "%.3f".format(qty)
+
+                    val minUnit = qtyStr.split(".")[1]
+                    val maxUnit = qtyStr.split(".")[0]
+
+                    if (isGm) {
+                        var minQuantity = Integer.parseInt(minUnit)
+                        minQuantity = if (isAdd) {
+                            val value: Int = minQuantity + 50
+                            value
+                        } else {
+                            val value: Int = minQuantity - 50
+                            value
+                        }
+                        var maxQuantity = Integer.parseInt(maxUnit)
+                        quantity = minQuantity + (maxQuantity * 1000)
+                        if (quantity.toFloat() < itemDto.maxUnit!! * 1000.toFloat()) {
+                            if (quantity.toFloat() < itemDto.minUnit!!.toFloat()) {
+                                Log.e("Less Than", "Min")
+                                Log.e("Less Than", "Comes Here")
+                                itemDto.selectedFlag = false
+                                maxQuantity = Integer.parseInt(maxUnit)
+                                val qty1 = itemDto.minUnit!! + (maxQuantity * 1000)
+                                itemDto.quantity = qty1
+                                removeItem(itemDto)
+                                addItem(itemDto)
+                            } else {
+                                /*if (minQuantity.toFloat() < 1000.toFloat()) {
+                                    if (minQuantity.toFloat() < itemDto.minUnit!!.toFloat()) {
+                                        itemDto.selectedFlag = false
+                                        val maxQuantity = Integer.parseInt(maxUnit)
+                                        val qty = itemDto.minUnit!! + (maxQuantity * 1000)
+                                        itemDto.quantity = qty
+                                        removeItem(itemDto)
+                                        addItem(itemDto)
+                                    } else {
+                                        itemDto.selectedFlag = true
+                                        val maxQuantity = Integer.parseInt(maxUnit)
+                                        val qty = minQuantity + (maxQuantity * 1000)
+                                        itemDto.quantity = qty
+                                        addItem(itemDto)
+                                    }
+                                }*/
+                                itemDto.selectedFlag = true
+                                maxQuantity = Integer.parseInt(maxUnit)
+                                val qty2 = minQuantity + (maxQuantity * 1000)
+                                itemDto.quantity = qty2
+                                removeItem(itemDto)
+                                addItem(itemDto)
+                            }
+                        } else {
+                            itemDto.selectedFlag = true
+                            maxQuantity = Integer.parseInt(maxUnit)
+                            val qty3 = (maxQuantity * 1000)
+                            itemDto.quantity = qty3
+                            addItem(itemDto)
+                        }
+                        itemDetailsListAdapter!!.notifyItemChanged(position, itemDto)
+                    } else {
+                        var maxQuantity = Integer.parseInt(maxUnit)
+                        maxQuantity = if (isAdd) {
+                            val value: Int = maxQuantity + 1
+                            value
+                        } else {
+                            val value: Int = maxQuantity - 1
+                            value
+                        }
+                        if (maxQuantity.toFloat() < itemDto.maxUnit!!.toFloat()) {
+                            itemDto.selectedFlag = true
+                            val minQuantity = Integer.parseInt(minUnit)
+                            val qty4 = minQuantity + (maxQuantity * 1000)
+                            itemDto.quantity = qty4
+                            addItem(itemDto)
+                        } else {
+                            itemDto.selectedFlag = false
+                            itemDto.quantity = itemDto.maxUnit!! * 1000
+                            removeItem(itemDto)
+                            addItem(itemDto)
+                        }
+                        itemDetailsListAdapter!!.notifyItemChanged(position, itemDto)
+                    }
+                }
+            }
+        } catch (e: Exception) {
             e.printStackTrace()
         }
     }

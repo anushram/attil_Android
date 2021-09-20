@@ -2,9 +2,9 @@
   <library name="Gradle: com.google.firebase:firebase-installations:16.2.2@aar">
     <CLASSES>
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/2fb7b1261255769f2c6b037e0e807dbf/firebase-installations-16.2.2/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/4770cea0c77eed7dd4b3393e91a60782/firebase-installations-16.2.2/res" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/4770cea0c77eed7dd4b3393e91a60782/firebase-installations-16.2.2/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/4770cea0c77eed7dd4b3393e91a60782/firebase-installations-16.2.2/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/4770cea0c77eed7dd4b3393e91a60782/firebase-installations-16.2.2/res" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.firebase/firebase-installations/16.2.2/88bd8b4341de874064ffe2792e33165c81fcd12a/firebase-installations-16.2.2-javadoc.jar!/" />

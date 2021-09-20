@@ -4,6 +4,14 @@ import com.develop.sns.home.offers.dto.NormalOfferPriceDto
 
 interface ItemListener {
     fun changeCount(position: Int, itemDto: NormalOfferPriceDto?, isAdd: Boolean)
+
+    fun changeCountGmOrKg(
+        position: Int,
+        itemDto: NormalOfferPriceDto?,
+        isAdd: Boolean,
+        isGm: Boolean,
+    )
+
     fun selectItem(position: Int, itemDto: NormalOfferPriceDto?, isSelect: Boolean)
     fun takeActions(position: Int)
 }
