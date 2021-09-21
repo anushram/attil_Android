@@ -81,7 +81,9 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
                 onBackPressed()
             }
             binding.btnAddCart.setOnClickListener {
-                addToCart()
+                if (!cartMap.isEmpty()) {
+                    addToCart()
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -398,11 +400,11 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
                                 Log.e("Less Than", "Min")
                                 Log.e("Less Than", "Comes Here")
                                 itemDto.selectedFlag = false
-                                maxQuantity = Integer.parseInt(maxUnit)
-                                val qty1 = itemDto.minUnit!! + (maxQuantity * 1000)
-                                itemDto.quantity = qty1
+                                /* maxQuantity = Integer.parseInt(maxUnit)
+                                 val qty1 = itemDto.minUnit!! + (maxQuantity * 1000)*/
+                                itemDto.quantity = 0
                                 removeItem(itemDto)
-                                addItem(itemDto)
+                                //addItem(itemDto)
                             } else {
                                 /*if (minQuantity.toFloat() < 1000.toFloat()) {
                                     if (minQuantity.toFloat() < itemDto.minUnit!!.toFloat()) {
@@ -493,7 +495,7 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
     private fun calculateTotal(cartMap: HashMap<String, NormalOfferPriceDto>) {
         try {
             var totalPrice: Float = 0F
-            if (cartMap != null && !cartMap.isEmpty()) {
+            if (!cartMap.isEmpty()) {
                 for ((key, value) in cartMap) {
                     println("$key = ${value.quantity.toString().plus(" ").plus(value.attilPrice)}")
                     if (value.packageType.equals("loose", true) && value.offerType.equals(
