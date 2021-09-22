@@ -32,6 +32,10 @@ class ItemDetailsListAdapter(
     var minUnit = 0.0
     var diff = 0.0
 
+    companion object {
+        var clickGmPlusCount = 0
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemDetailsListItemTmplBinding.inflate(inflater, parent, false)
@@ -210,30 +214,22 @@ class ItemDetailsListAdapter(
                     && normalOfferDto.offerType.equals("normal", true)
                 ) {
                     Log.e("Quantity", priceDetailDto.quantity.toString())
-                    if (priceDetailDto.quantity!! > 0) {
-                        btnAdd.visibility = View.GONE
-                        lnLooseAdd.visibility = View.VISIBLE
-                        lnAdd.visibility = View.GONE
-                        val kg = priceDetailDto.quantity!!.toDouble() * 0.001
-                        var minUnit = "0"
-                        var maxUnit = "0"
-                        //if (kg > 0) {
-                        val qtyStr = "%.3f".format(kg)
-                        minUnit = qtyStr.split(".")[1]
-                        maxUnit = qtyStr.split(".")[0]
-                        Log.e("min", minUnit)
-                        Log.e("max", maxUnit)
-                        //}
-                        if (minUnit.equals("000")) {
-                            minUnit = "0"
-                        }
-                        tvGmCount.text = minUnit
-                        tvKgCount.text = maxUnit
-                    } else {
-                        btnAdd.visibility = View.VISIBLE
-                        lnAdd.visibility = View.GONE
-                        lnLooseAdd.visibility = View.GONE
+                    btnAdd.visibility = View.GONE
+                    lnLooseAdd.visibility = View.VISIBLE
+                    lnAdd.visibility = View.GONE
+                    val kg = priceDetailDto.quantity!!.toDouble() * 0.001
+                    var minUnit = "0"
+                    var maxUnit = "0"
+                    val qtyStr = "%.3f".format(kg)
+                    minUnit = qtyStr.split(".")[1]
+                    maxUnit = qtyStr.split(".")[0]
+                    Log.e("min", minUnit)
+                    Log.e("max", maxUnit)
+                    if (minUnit.equals("000")) {
+                        minUnit = "0"
                     }
+                    tvGmCount.text = minUnit
+                    tvKgCount.text = maxUnit
                 } else {
                     if (priceDetailDto.quantity!! > 0) {
                         btnAdd.visibility = View.GONE
@@ -270,29 +266,32 @@ class ItemDetailsListAdapter(
                 }
 
                 lnGmIncrease.setOnClickListener {
-                    itemListener.changeCountGmOrKg(position, priceDetailDto,
+                    itemListener.changeCountGmOrKg(
+                        position, priceDetailDto,
                         isAdd = true,
-                        isGm = true)
+                        isGm = true,
+                        ++clickGmPlusCount
+                    )
                 }
 
                 lnGmDecrease.setOnClickListener {
                     itemListener.changeCountGmOrKg(position, priceDetailDto,
                         isAdd = false,
-                        isGm = true)
+                        isGm = true, 0)
                 }
 
                 lnKgIncrease.setOnClickListener {
                     itemListener.changeCountGmOrKg(position,
                         priceDetailDto,
                         isAdd = true,
-                        isGm = false)
+                        isGm = false, 0)
                 }
 
                 lnKgDecrease.setOnClickListener {
                     itemListener.changeCountGmOrKg(position,
                         priceDetailDto,
                         isAdd = false,
-                        isGm = false)
+                        isGm = false, 0)
                 }
 
 
