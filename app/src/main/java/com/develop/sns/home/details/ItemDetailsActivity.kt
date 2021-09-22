@@ -81,7 +81,9 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
                 onBackPressed()
             }
             binding.btnAddCart.setOnClickListener {
-                addToCart()
+                if (!cartMap.isEmpty()) {
+                    addToCart()
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -364,17 +366,17 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
         itemDto: NormalOfferPriceDto?,
         isAdd: Boolean,
         isGm: Boolean,
+        count: Int,
     ) {
+        Log.e("Count", count.toString())
         try {
             if (itemDetailsListAdapter != null) {
                 var quantity: Int = itemDto!!.quantity!!
                 if (itemMainDto!!.packageType.equals(
                         "loose",
-                        true
-                    ) && itemMainDto!!.offerType.equals(
+                        true) && itemMainDto!!.offerType.equals(
                         "normal",
-                        true
-                    )
+                        true)
                 ) {
                     val qty = quantity.toFloat().div(1000)
                     val qtyStr = "%.3f".format(qty)
@@ -385,12 +387,18 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
                     if (isGm) {
                         var minQuantity = Integer.parseInt(minUnit)
                         minQuantity = if (isAdd) {
-                            val value: Int = minQuantity + 50
-                            value
+                            if (count == 1) {
+                                val value: Int = itemDto.minUnit!!
+                                value
+                            } else {
+                                val value: Int = minQuantity + 50
+                                value
+                            }
                         } else {
                             val value: Int = minQuantity - 50
                             value
                         }
+
                         var maxQuantity = Integer.parseInt(maxUnit)
                         quantity = minQuantity + (maxQuantity * 1000)
                         if (quantity.toFloat() < itemDto.maxUnit!! * 1000.toFloat()) {
@@ -398,28 +406,10 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
                                 Log.e("Less Than", "Min")
                                 Log.e("Less Than", "Comes Here")
                                 itemDto.selectedFlag = false
-                                maxQuantity = Integer.parseInt(maxUnit)
-                                val qty1 = itemDto.minUnit!! + (maxQuantity * 1000)
-                                itemDto.quantity = qty1
+                                itemDto.quantity = 0
                                 removeItem(itemDto)
-                                addItem(itemDto)
+                                ItemDetailsListAdapter.clickGmPlusCount = 0
                             } else {
-                                /*if (minQuantity.toFloat() < 1000.toFloat()) {
-                                    if (minQuantity.toFloat() < itemDto.minUnit!!.toFloat()) {
-                                        itemDto.selectedFlag = false
-                                        val maxQuantity = Integer.parseInt(maxUnit)
-                                        val qty = itemDto.minUnit!! + (maxQuantity * 1000)
-                                        itemDto.quantity = qty
-                                        removeItem(itemDto)
-                                        addItem(itemDto)
-                                    } else {
-                                        itemDto.selectedFlag = true
-                                        val maxQuantity = Integer.parseInt(maxUnit)
-                                        val qty = minQuantity + (maxQuantity * 1000)
-                                        itemDto.quantity = qty
-                                        addItem(itemDto)
-                                    }
-                                }*/
                                 itemDto.selectedFlag = true
                                 maxQuantity = Integer.parseInt(maxUnit)
                                 val qty2 = minQuantity + (maxQuantity * 1000)
@@ -493,7 +483,7 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
     private fun calculateTotal(cartMap: HashMap<String, NormalOfferPriceDto>) {
         try {
             var totalPrice: Float = 0F
-            if (cartMap != null && !cartMap.isEmpty()) {
+            if (!cartMap.isEmpty()) {
                 for ((key, value) in cartMap) {
                     println("$key = ${value.quantity.toString().plus(" ").plus(value.attilPrice)}")
                     if (value.packageType.equals("loose", true) && value.offerType.equals(

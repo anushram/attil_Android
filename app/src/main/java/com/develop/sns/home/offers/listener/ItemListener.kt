@@ -10,6 +10,7 @@ interface ItemListener {
         itemDto: NormalOfferPriceDto?,
         isAdd: Boolean,
         isGm: Boolean,
+        count: Int,
     )
 
     fun selectItem(position: Int, itemDto: NormalOfferPriceDto?, isSelect: Boolean)
