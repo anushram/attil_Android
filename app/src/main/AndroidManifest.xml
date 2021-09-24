@@ -16,7 +16,6 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -82,6 +81,10 @@
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".home.offers.FilterActivity"
+            android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".cart.CartItemActivity"
             android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
             android:windowSoftInputMode="adjustPan" />
 
