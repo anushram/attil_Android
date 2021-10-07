@@ -364,10 +364,6 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                                         cartDetailsDto.cartItemId = cartObject.getString("_id")
                                     }
 
-                                    if (cartObject.has("_id") && !cartObject.isNull("_id")) {
-                                        cartDetailsDto.cartItemId = cartObject.getString("_id")
-                                    }
-
                                     if (cartObject.has("selectedMin") && !cartObject.isNull("selectedMin")) {
                                         val minUnitObject = cartObject.getJSONObject("selectedMin")
 

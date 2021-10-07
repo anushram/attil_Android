@@ -218,6 +218,15 @@
                 </LinearLayout>
             </LinearLayout>
 
+            <com.develop.sns.customviews.CustomRecyclerView
+                android:id="@+id/lv_items"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:overScrollMode="never"
+                android:scrollbars="vertical"
+                android:scrollingCache="false"
+                android:visibility="gone" />
+
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </LinearLayout>
