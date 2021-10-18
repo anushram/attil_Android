@@ -108,11 +108,7 @@ interface Api {
     ): Call<ResponseBody>
 
     @POST("customer/viewCart")
-<<<<<<< Updated upstream
     fun getCartItems(
-=======
-    fun getCartList(
->>>>>>> Stashed changes
         @Header("Authorization") authorization: String,
         @Body requestObject: JsonObject,
     ): Call<ResponseBody>

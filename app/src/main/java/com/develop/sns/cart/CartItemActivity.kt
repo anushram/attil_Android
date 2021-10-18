@@ -101,8 +101,8 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                     preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_USER_ID)
                 )
                 Log.e("Normal request", requestObject.toString())
-                val offersViewModel = CartViewModel()
-                offersViewModel.getCartItem(
+                val cartViewModel = CartViewModel()
+                cartViewModel.getCartItem(
                     requestObject,
                     preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!
                 ).observe(this, { jsonObject ->
