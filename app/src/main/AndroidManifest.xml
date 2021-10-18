@@ -84,7 +84,11 @@
             android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
             android:windowSoftInputMode="adjustPan" />
         <activity
+<<<<<<< Updated upstream
             android:name=".cart.CartItemActivity"
+=======
+            android:name=".home.cart.CartListActivity"
+>>>>>>> Stashed changes
             android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
             android:windowSoftInputMode="adjustPan" />
 

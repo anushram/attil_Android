@@ -76,7 +76,6 @@ class OtpActivity : SubModuleActivity() {
         }
     }
 
-
     private fun initToolBar() {
         try {
             (binding.lnToolbar.toolbar as Toolbar).setTitle(getResources().getString(R.string.otp_verification))

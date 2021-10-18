@@ -23,6 +23,7 @@ import com.develop.sns.R
 import com.develop.sns.cart.CartItemActivity
 import com.develop.sns.customviews.GravitySnapHelper
 import com.develop.sns.databinding.FragmentOffersBinding
+import com.develop.sns.home.cart.CartListActivity
 import com.develop.sns.home.details.ItemDetailsActivity
 import com.develop.sns.home.offers.adapter.NormalOffersListAdapter
 import com.develop.sns.home.offers.adapter.TopOffersListAdapter
@@ -140,7 +141,8 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
             if (view != null) {
                 (requireActivity().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
                     view.windowToken,
-                    InputMethodManager.HIDE_NOT_ALWAYS)
+                    InputMethodManager.HIDE_NOT_ALWAYS
+                )
             }
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
@@ -151,6 +153,10 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
         try {
             binding.lnFilter.setOnClickListener {
                 launchFilterActivity()
+            }
+
+            binding.ibvCart.setOnClickListener {
+                launchCartListActivity();
             }
 
             binding.svSearch.setOnQueryTextFocusChangeListener { _, hasFocus ->
@@ -244,6 +250,19 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
         }
     }
 
+    private fun launchCartListActivity() {
+        try {
+            val intent = Intent(context, CartListActivity::class.java)
+            intent.putExtra("filterType", filterType)
+            intent.putExtra("filterPrice", filterPrice)
+            intent.putExtra("filterView", filterView)
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+            filterLauncher.launch(intent)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
     var filterLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             Log.e("onACR", "Comes")
@@ -270,6 +289,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
         }
     }
 
+<<<<<<< Updated upstream
     private fun launchCartActivity() {
         try {
             val intent = Intent(context, CartItemActivity::class.java)
@@ -283,6 +303,8 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
         }
     }
 
+=======
+>>>>>>> Stashed changes
     private fun resetPagination() {
         try {
             this.startPage = 0
@@ -313,7 +335,8 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
                 val offersViewModel = OffersViewModel()
                 offersViewModel.getTopOffers(
                     requestObject,
-                    preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!)
+                    preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!
+                )
                     .observe(viewLifecycleOwner, { jsonObject ->
                         parseTopOffersResponse(jsonObject)
 
