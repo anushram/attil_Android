@@ -13,6 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.develop.sns.MainActivityViewModel
 import com.develop.sns.R
 import com.develop.sns.SubModuleActivity
 import com.develop.sns.databinding.ActivitySignUpBinding
@@ -27,6 +28,8 @@ import com.develop.sns.utils.PreferenceHelper
 import com.google.gson.JsonObject
 import com.talentmicro.icanrefer.dto.ModuleDto
 import org.json.JSONObject
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class SignUpInfoActivity : SubModuleActivity(), AppUserListener {
@@ -45,6 +48,7 @@ class SignUpInfoActivity : SubModuleActivity(), AppUserListener {
         setContentView(binding.root)
 
         initialiseProgressBar(binding.lnProgressbar)
+        initialiseErrorMessage(binding.lnError)
         initToolBar()
         initClassReference();
         populateList()
@@ -213,11 +217,24 @@ class SignUpInfoActivity : SubModuleActivity(), AppUserListener {
         try {
             if (AppUtils.isConnectedToInternet(context)) {
                 val requestObject = JsonObject()
-                requestObject.addProperty("_id", signUpDto?.id)
+                requestObject.addProperty("phoneVerficationId", signUpDto?.id)
+                requestObject.addProperty("phoneNumber", signUpDto?.mobileNo)
                 requestObject.addProperty("username", signUpDto?.userId)
                 requestObject.addProperty("password", signUpDto?.password)
                 requestObject.addProperty("isPassword", signUpDto?.isPassword)
                 requestObject.addProperty("gender", signUpDto?.gender)
+                requestObject.addProperty("role", "user")
+                requestObject.addProperty("deviceModel", getDeviceName())
+                requestObject.addProperty("os", "Android")
+                requestObject.addProperty("preferredLanguage", language)
+                requestObject.addProperty(
+                    "udid",
+                    preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_DEVICE_ID)!!
+                )
+                requestObject.addProperty(
+                    "deviceToken",
+                    preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_GCM_ID)!!
+                )
                 Log.e("Request Object", requestObject.toString())
                 showProgressBar()
                 val signUpViewModel = SignUpViewModel()
@@ -243,9 +260,39 @@ class SignUpInfoActivity : SubModuleActivity(), AppUserListener {
     private fun parseCreateAccountResponse(obj: JSONObject) {
         try {
             Log.e("Response", obj.toString())
-            if (obj.has("data") && !obj.isNull("data")) {
-                //val dataObject = obj.getJSONObject("data")
-                handleResponse()
+            if (obj.has("code") && obj.getInt("code") == 200) {
+                if (obj.has("status") && obj.getBoolean("status")) {
+                    if (obj.has("data") && !obj.isNull("data")) {
+                        val dataObject = obj.getJSONObject("data")
+                        if (dataObject.has("access_token") && !dataObject.isNull("access_token")) {
+                            preferenceHelper!!.saveValueToSharedPrefs(
+                                AppConstant.KEY_TOKEN,
+                                dataObject.getString("access_token")
+                            )
+                        }
+                        if (dataObject.has("userId") && !dataObject.isNull("userId")) {
+                            preferenceHelper!!.saveValueToSharedPrefs(
+                                AppConstant.KEY_USER_ID,
+                                dataObject.getString("userId")
+                            )
+                        }
+
+                        if (dataObject.has("username") && !dataObject.isNull("username")) {
+                            preferenceHelper!!.saveValueToSharedPrefs(
+                                AppConstant.KEY_NAME,
+                                dataObject.getString("username")
+                            )
+                        }
+                        handleResponse()
+                    }
+                } else {
+                    CommonClass.showToastMessage(
+                        context,
+                        binding.rootView,
+                        obj.getString("message"),
+                        Toast.LENGTH_SHORT
+                    );
+                }
             } else {
                 CommonClass.showToastMessage(
                     context,
@@ -266,6 +313,30 @@ class SignUpInfoActivity : SubModuleActivity(), AppUserListener {
             finish()
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+    private fun getDeviceName(): String {
+        val manufacturer = Build.MANUFACTURER
+        val model = Build.MODEL
+        return if (model.lowercase(Locale.getDefault())
+                .startsWith(manufacturer.lowercase(Locale.getDefault()))
+        ) {
+            capitalize(model)
+        } else {
+            capitalize(manufacturer) + " " + model
+        }
+    }
+
+    private fun capitalize(s: String?): String {
+        if (s == null || s.isEmpty()) {
+            return ""
+        }
+        val first = s[0]
+        return if (Character.isUpperCase(first)) {
+            s
+        } else {
+            Character.toUpperCase(first).toString() + s.substring(1)
         }
     }
 }

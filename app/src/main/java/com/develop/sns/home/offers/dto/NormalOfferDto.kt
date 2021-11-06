@@ -26,4 +26,8 @@ class NormalOfferDto : Serializable {
         }
         return false
     }
+
+    override fun hashCode(): Int {
+        return productName?.hashCode() ?: 0
+    }
 }

@@ -30,6 +30,7 @@
     <string name="sign_up_warning">தயவுசெய்து மொபைல் எண்ணை பதிவு செய்யவும்</string>
     <string name="give_your_username">உங்கள் பயனர்பெயரைக் கொடுங்கள்</string>
     <string name="username_available"><font fgcolor='#00C853'>பயனர்பெயர் கிடைக்கிறது</font> &#128077;</string>
+    <string name="username_not_available"><font fgcolor='#E7492E'>பயனர் பெயர் கிடைக்கவில்லை</font> &#128078;</string>
     <string name="enter_your_username">உங்கள் பயனர்பெயரை உள்ளிடவும்</string>
     <string name="pick_your_gender">உங்கள் பாலினத்தைத் தேர்ந்தெடுக்கவும்</string>
     <string name="user_details">User Details</string>
@@ -72,4 +73,6 @@
     <string name="new_arrivals">New Arrivals</string>
     <string name="top_selling">Top Selling</string>
     <string name="clear">Clear</string>
+    <string name="upto">upto</string>
+    <string name="totally">Totally</string>
 </resources>

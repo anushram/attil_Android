@@ -51,6 +51,7 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
         setContentView(binding.root)
 
         initialiseProgressBar(binding.lnProgressbar)
+        initialiseErrorMessage(binding.lnError)
         initClassReference()
         getIntentValue()
         handleUiElement()
@@ -374,9 +375,11 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
                 var quantity: Int = itemDto!!.quantity!!
                 if (itemMainDto!!.packageType.equals(
                         "loose",
-                        true) && itemMainDto!!.offerType.equals(
+                        true
+                    ) && itemMainDto!!.offerType.equals(
                         "normal",
-                        true)
+                        true
+                    )
                 ) {
                     val qty = quantity.toFloat().div(1000)
                     val qtyStr = "%.3f".format(qty)

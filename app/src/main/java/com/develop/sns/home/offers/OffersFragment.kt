@@ -20,6 +20,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.develop.sns.R
+import com.develop.sns.cart.CartItemActivity
 import com.develop.sns.customviews.GravitySnapHelper
 import com.develop.sns.databinding.FragmentOffersBinding
 import com.develop.sns.home.details.ItemDetailsActivity
@@ -52,6 +53,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
     private lateinit var normalOffersListAdapter: NormalOffersListAdapter
 
     val time = 4000
+    var cartCount = 0
     var packageType = ""
     var offerType = ""
     var language = ""
@@ -138,7 +140,8 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
             if (view != null) {
                 (requireActivity().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
                     view.windowToken,
-                    InputMethodManager.HIDE_NOT_ALWAYS)
+                    InputMethodManager.HIDE_NOT_ALWAYS
+                )
             }
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
@@ -233,6 +236,10 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
                 }
             })
 
+            binding.ibvCart.setOnClickListener {
+                launchCartActivity()
+            }
+
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -243,7 +250,6 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
             Log.e("onACR", "Comes")
             isOnActivityRes = true
             if (result.resultCode == Activity.RESULT_OK) {
-                // There are no request codes
                 val data: Intent? = result.data
                 filterType = data!!.getIntExtra("filterType", 0)
                 filterPrice = data.getIntExtra("filterPrice", 0)
@@ -265,6 +271,19 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
         }
     }
 
+
+    private fun launchCartActivity() {
+        try {
+            val intent = Intent(context, CartItemActivity::class.java)
+            intent.putExtra("filterType", filterType)
+            intent.putExtra("filterPrice", filterPrice)
+            intent.putExtra("filterView", filterView)
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+            filterLauncher.launch(intent)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 
     private fun resetPagination() {
         try {
@@ -296,7 +315,8 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
                 val offersViewModel = OffersViewModel()
                 offersViewModel.getTopOffers(
                     requestObject,
-                    preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!)
+                    preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!
+                )
                     .observe(viewLifecycleOwner, { jsonObject ->
                         parseTopOffersResponse(jsonObject)
 
@@ -821,7 +841,8 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
             Log.e("CartCount", obj.toString())
             if (obj.has("status") && obj.getBoolean("status")) {
                 if (obj.has("data") && !obj.isNull("data")) {
-                    binding.ibvCart.badgeValue = obj.getInt("data")
+                    cartCount = obj.getInt("data")
+                    binding.ibvCart.badgeValue = cartCount
                 }
             } else {
                 CommonClass.showToastMessage(

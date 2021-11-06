@@ -10,6 +10,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import com.develop.sns.databinding.ActivitySubModuleBinding
+import com.develop.sns.databinding.CustomErrorSnackbarBinding
 import com.develop.sns.databinding.ProgressBarLayoutBinding
 import com.develop.sns.utils.AppConstant
 import com.develop.sns.utils.PreferenceHelper
@@ -27,8 +28,8 @@ open class SubModuleActivity : ModuleActivity() {
     open var languageId = 0
     open var language = ""
     var lnProgressBar: LinearLayout? = null
-    var progressBarLayoutBinding: ProgressBarLayoutBinding? = null
-
+    lateinit var progressBarLayoutBinding: ProgressBarLayoutBinding
+    lateinit var lnError: CustomErrorSnackbarBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,9 +85,17 @@ open class SubModuleActivity : ModuleActivity() {
         }
     }
 
+    fun initialiseProgressBar(progressbarId: ProgressBarLayoutBinding) {
+        try {
+            this.progressBarLayoutBinding = progressbarId
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
     open fun showProgressBar() {
         try {
-            this.progressBarLayoutBinding!!.root.visibility = View.VISIBLE
+            this.progressBarLayoutBinding.root.visibility = View.VISIBLE
             window.setFlags(
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
@@ -105,15 +114,31 @@ open class SubModuleActivity : ModuleActivity() {
         }
     }
 
-    fun initialiseProgressBar(progressbarId: ProgressBarLayoutBinding) {
+    companion object {
+    }
+
+    open fun initialiseErrorMessage(lnError: CustomErrorSnackbarBinding) {
         try {
-            this.progressBarLayoutBinding = progressbarId
-        } catch (e: Exception) {
+            this.lnError = lnError
+        } catch (e: java.lang.Exception) {
             e.printStackTrace()
         }
     }
 
-    companion object {
-        private const val MY_PERMISSIONS_REQUEST_CALL_PHONE = 101
+    open fun showErrorMessage(errorMessage: String?) {
+        try {
+            lnError.tvMessage.text = errorMessage
+            lnError.root.visibility = View.VISIBLE
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    open fun hideErrorMessage() {
+        try {
+            lnError.root.visibility = View.GONE
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
     }
 }

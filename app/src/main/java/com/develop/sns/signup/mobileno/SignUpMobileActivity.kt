@@ -37,6 +37,7 @@ class SignUpMobileActivity : SubModuleActivity() {
         setContentView(binding.root)
 
         initialiseProgressBar(binding.lnProgressbar)
+        initialiseErrorMessage(binding.lnError)
         initToolBar()
         getIntentValue()
         initClassReference()
@@ -151,6 +152,8 @@ class SignUpMobileActivity : SubModuleActivity() {
     private fun parseGenerateOtpResponse(obj: JSONObject) {
         try {
             submitFlag = false
+//            if (obj.has("code") && obj.getInt("code") == 200) {
+//                if (obj.has("status") && obj.getBoolean("status")) {
             if (obj.has("data") && !obj.isNull("data")) {
                 val dataObject = obj.getJSONObject("data")
                 if (dataObject.has("_id") && !dataObject.isNull("_id")) {
@@ -165,7 +168,7 @@ class SignUpMobileActivity : SubModuleActivity() {
                     Log.e("otp", otp)
                 }
                 launchOTPVerifyActivity();
-            } else {
+            } /*}*/ else {
                 CommonClass.showToastMessage(
                     context,
                     binding.rootView,
@@ -173,6 +176,15 @@ class SignUpMobileActivity : SubModuleActivity() {
                     Toast.LENGTH_SHORT
                 );
             }
+            /*} else {
+                CommonClass.showToastMessage(
+                    context,
+                    binding.rootView,
+                    obj.getString("message"),
+                    Toast.LENGTH_SHORT
+                );
+            }*/
+
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -208,13 +220,4 @@ class SignUpMobileActivity : SubModuleActivity() {
             e.printStackTrace()
         }
     }
-
-    open fun hideErrorMessage() {
-        try {
-            binding.lnError.lnErrorMain.visibility = View.GONE
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        }
-    }
-
 }

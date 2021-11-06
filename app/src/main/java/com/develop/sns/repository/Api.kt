@@ -65,8 +65,8 @@ interface Api {
         @Body requestObject: JsonObject,
     ): Call<ResponseBody>
 
-    @POST("createProfile")
-    fun createProfile(
+    @POST("createAccount")
+    fun createAccount(
         @Header("Authorization") authorization: String,
         @Body requestObject: JsonObject,
     ): Call<ResponseBody>
@@ -103,6 +103,12 @@ interface Api {
 
     @POST("product/search/list/brands")
     fun getProductBrands(
+        @Header("Authorization") authorization: String,
+        @Body requestObject: JsonObject,
+    ): Call<ResponseBody>
+
+    @POST("customer/viewCart")
+    fun getCartItems(
         @Header("Authorization") authorization: String,
         @Body requestObject: JsonObject,
     ): Call<ResponseBody>

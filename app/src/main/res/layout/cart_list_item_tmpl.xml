@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="-6dp"
+        android:layout_marginTop="-10dp"
+        android:layout_marginEnd="-6dp"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
+        app:cardMaxElevation="8dp"
+        app:cardUseCompatPadding="true">
+
+        <LinearLayout
+            android:id="@+id/ln_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_product_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/noto_sans_bold"
+                    android:maxLines="2"
+                    android:text="Product Name"
+                    android:textColor="@color/text_color"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_baseline_delete_24"
+                    app:tint="@color/md_red_700" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="4dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <com.makeramen.roundedimageview.RoundedImageView
+                    android:id="@+id/iv_product"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/sample"
+                    app:riv_border_color="@color/transparent"
+                    app:riv_border_width="0dp"
+                    app:riv_corner_radius="10dp"
+                    app:riv_mutate_background="false"
+                    app:riv_oval="false"
+                    app:riv_tile_mode="clamp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:layout_marginStart="8dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tv_offer_percentage"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:fontFamily="@font/noto_sans_bold"
+                            android:text="12% OFF"
+                            android:textColor="@color/primary"
+                            android:textSize="16sp"
+                            android:visibility="visible" />
+
+                        <LinearLayout
+                            android:id="@+id/ln_pack"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:visibility="gone">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:fontFamily="@font/noto_sans_semi_bold"
+                                android:text="Picked:"
+                                android:textColor="@color/text_color"
+                                android:textSize="16sp"
+                                android:visibility="visible" />
+
+                            <TextView
+                                android:id="@+id/tv_pack"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:fontFamily="@font/noto_sans_semi_bold"
+                                android:text="1 Pack"
+                                android:textColor="@color/primary"
+                                android:textSize="16sp"
+                                android:visibility="visible" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tv_date"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:fontFamily="@font/noto_sans_regular"
+                            android:gravity="end|center"
+                            android:text="12 Nov 2020"
+                            android:textColor="@color/md_grey_600"
+                            android:textSize="11sp"
+                            android:visibility="visible" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|end"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:gravity="end"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tv_availability"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="end"
+                                android:layout_weight="1"
+                                android:ellipsize="end"
+                                android:fontFamily="@font/noto_sans_regular"
+                                android:text=""
+                                android:textColor="@color/text_color"
+                                android:textSize="12sp"
+                                android:visibility="gone" />
+
+                            <TextView
+                                android:id="@+id/tv_mrp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="end"
+                                android:ellipsize="end"
+                                android:fontFamily="@font/noto_sans_regular"
+                                android:text="\u20B9 33.33"
+                                android:textColor="@color/text_color"
+                                android:textSize="12sp"
+                                android:visibility="visible" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom|end"
+                            android:layout_marginTop="3dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tv_save"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:ellipsize="end"
+                                android:fontFamily="@font/noto_sans_semi_bold"
+                                android:gravity="end|center"
+                                android:paddingEnd="10dp"
+                                android:text="You save \u20B9 5"
+                                android:textColor="@color/primary"
+                                android:textSize="12sp"
+                                android:visibility="visible" />
+
+                            <TextView
+                                android:id="@+id/tv_offer_price"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="end"
+                                android:ellipsize="end"
+                                android:fontFamily="@font/noto_sans_bold"
+                                android:gravity="end|center"
+                                android:text="10"
+                                android:textColor="@color/text_color"
+                                android:textSize="16sp"
+                                android:visibility="visible" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <com.develop.sns.customviews.CustomRecyclerView
+                android:id="@+id/lv_items"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:overScrollMode="never"
+                android:scrollbars="vertical"
+                android:scrollingCache="false"
+                android:visibility="gone" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</LinearLayout>
