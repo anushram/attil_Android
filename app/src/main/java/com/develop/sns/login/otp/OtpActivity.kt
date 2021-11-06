@@ -42,6 +42,7 @@ class OtpActivity : SubModuleActivity() {
         setContentView(binding.root)
 
         initialiseProgressBar(binding.lnProgressbar)
+        initialiseErrorMessage(binding.lnError)
         getIntentValue()
         initToolBar()
         handleUiElement()
@@ -173,59 +174,85 @@ class OtpActivity : SubModuleActivity() {
     private fun parseVerifyOtpResponse(obj: JSONObject) {
         try {
             submitFlag = false
-            if (obj.has("data") && !obj.isNull("data")) {
-                val dataObject = obj.getJSONObject("data")
+            if (obj.has("code") && obj.getInt("code") == 200) {
+                if (obj.has("status") && obj.getBoolean("status")) {
+                    if (obj.has("data") && !obj.isNull("data")) {
+                        val dataObject = obj.getJSONObject("data")
 
-                if (dataObject.has("access_token") && !dataObject.isNull("access_token")) {
-                    preferenceHelper!!.saveValueToSharedPrefs(
-                        AppConstant.KEY_TOKEN,
-                        dataObject.getString("access_token")
-                    )
-                }
+                        if (dataObject.has("access_token") && !dataObject.isNull("access_token")) {
+                            preferenceHelper!!.saveValueToSharedPrefs(
+                                AppConstant.KEY_TOKEN,
+                                dataObject.getString("access_token")
+                            )
+                        }
 
-                if (dataObject.has("userId") && !dataObject.isNull("userId")) {
-                    preferenceHelper!!.saveValueToSharedPrefs(
-                        AppConstant.KEY_USER_ID,
-                        dataObject.getString("userId")
-                    )
-                }
+                        if (dataObject.has("userId") && !dataObject.isNull("userId")) {
+                            preferenceHelper!!.saveValueToSharedPrefs(
+                                AppConstant.KEY_USER_ID,
+                                dataObject.getString("userId")
+                            )
+                        }
 
-                if (dataObject.has("username") && !dataObject.isNull("username")) {
-                    preferenceHelper!!.saveValueToSharedPrefs(
-                        AppConstant.KEY_NAME,
-                        dataObject.getString("username")
-                    )
-                }
+                        if (dataObject.has("username") && !dataObject.isNull("username")) {
+                            preferenceHelper!!.saveValueToSharedPrefs(
+                                AppConstant.KEY_NAME,
+                                dataObject.getString("username")
+                            )
+                        }
 
-                if (dataObject.has("_id") && !dataObject.isNull("_id")) {
-                    preferenceHelper!!.saveValueToSharedPrefs(
-                        AppConstant.KEY_OTP_ID,
-                        dataObject.getString("_id")
-                    )
-                    if (isSignUp == true) {
-                        signUpDto?.id = dataObject.getString("_id")
-                    }
-                }
+                        /*if (dataObject.has("_id") && !dataObject.isNull("_id")) {
+                            preferenceHelper!!.saveValueToSharedPrefs(
+                                AppConstant.KEY_OTP_ID,
+                                dataObject.getString("_id")
+                            )
+                            if (isSignUp == true) {
+                                signUpDto?.id = dataObject.getString("_id")
+                            }
+                        }*/
 
-                if (dataObject.has("phoneNumber") && !dataObject.isNull("phoneNumber")) {
-                    preferenceHelper!!.saveValueToSharedPrefs(
-                        AppConstant.KEY_MOBILE_NO,
-                        dataObject.getString("phoneNumber")
-                    )
-                    if (isSignUp == true) {
-                        signUpDto?.mobileNo = dataObject.getString("phoneNumber")
-                    }
-                }
+                        if (dataObject.has("phoneVerficationId") && !dataObject.isNull("phoneVerficationId")) {
+                            preferenceHelper!!.saveValueToSharedPrefs(
+                                AppConstant.KEY_OTP_ID,
+                                dataObject.getString("phoneVerficationId")
+                            )
+                            if (isSignUp == true) {
+                                signUpDto?.id = dataObject.getString("phoneVerficationId")
+                                signUpDto?.mobileNo = mobileNo
+                                preferenceHelper!!.saveValueToSharedPrefs(
+                                    AppConstant.KEY_MOBILE_NO,
+                                    mobileNo
+                                )
+                            }
+                        }
 
-                if (isSignUp == false) {
-                    val mainActivityModel = MainActivityViewModel()
-                    mainActivityModel.getProductList(preferenceHelper!!.getValueFromSharedPrefs(
-                        AppConstant.KEY_TOKEN)!!)?.observeForever {
-                        dismissProgressBar()
-                        parseProductList(it)
+                        if (dataObject.has("phoneNumber") && !dataObject.isNull("phoneNumber")) {
+                            preferenceHelper!!.saveValueToSharedPrefs(
+                                AppConstant.KEY_MOBILE_NO,
+                                dataObject.getString("phoneNumber")
+                            )
+                        }
+
+                        if (isSignUp == false) {
+                            val mainActivityModel = MainActivityViewModel()
+                            mainActivityModel.getProductList(
+                                preferenceHelper!!.getValueFromSharedPrefs(
+                                    AppConstant.KEY_TOKEN
+                                )!!
+                            )?.observeForever {
+                                dismissProgressBar()
+                                parseProductList(it)
+                            }
+                        } else {
+                            handleResponse()
+                        }
                     }
                 } else {
-                    handleResponse()
+                    CommonClass.showToastMessage(
+                        context,
+                        binding.rootView,
+                        obj.getString("message"),
+                        Toast.LENGTH_SHORT
+                    )
                 }
             } else {
                 CommonClass.showToastMessage(
@@ -290,22 +317,5 @@ class OtpActivity : SubModuleActivity() {
 
     companion object {
         private val TAG = OtpActivity::class.java.simpleName
-    }
-
-    open fun showErrorMessage(errorMessage: String?) {
-        try {
-            binding.lnError.tvMessage!!.setText(errorMessage)
-            binding.lnError.lnErrorMain.visibility = View.VISIBLE
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    open fun hideErrorMessage() {
-        try {
-            binding.lnError.lnErrorMain.visibility = View.GONE
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        }
     }
 }

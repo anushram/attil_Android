@@ -65,6 +65,7 @@ class VarietyListActivity : SubModuleActivity(), CategoryProductListener {
         fa = this;
 
         initialiseProgressBar(binding.lnProgressbar)
+        initialiseErrorMessage(binding.lnError)
         initToolBar()
         initClassReference()
         getIntentValue()
@@ -215,8 +216,10 @@ class VarietyListActivity : SubModuleActivity(), CategoryProductListener {
                 requestObject.addProperty("commonProductId", categoryProductDto.commonProductId)
                 Log.e("VarietyRequestObj", requestObject.toString())
                 val productsViewModel = ProductsViewModel()
-                productsViewModel.getProductFromVariety(requestObject,
-                    preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!)
+                productsViewModel.getProductFromVariety(
+                    requestObject,
+                    preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!
+                )
                     .observe(this, { jsonObject ->
                         if (jsonObject != null) {
                             parseProductVarietyResponse(jsonObject)

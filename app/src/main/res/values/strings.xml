@@ -31,6 +31,7 @@
     <string name="sign_up_warning">Please register the Mobile Number</string>
     <string name="give_your_username">Give your Username</string>
     <string name="username_available"><font fgcolor='#00C853'>Username Available</font> &#128077;</string>
+    <string name="username_not_available"><font fgcolor='#E7492E'>Username Not Available</font> &#128078;</string>
     <string name="enter_your_username">Enter your Username</string>
     <string name="pick_your_gender">Pick your Gender</string>
     <string name="user_details">User Details</string>

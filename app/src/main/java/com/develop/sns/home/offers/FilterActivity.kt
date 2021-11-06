@@ -31,6 +31,7 @@ class FilterActivity : SubModuleActivity() {
         setContentView(binding.root)
 
         initialiseProgressBar(binding.lnProgressbar)
+        initialiseErrorMessage(binding.lnError)
         initToolBar()
         getIntentValue()
         handleUiElement()

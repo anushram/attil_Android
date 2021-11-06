@@ -1,7 +1,6 @@
 package com.develop.sns.signup.info
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.develop.sns.repository.Api
 import com.develop.sns.repository.ApiRepository
@@ -13,7 +12,7 @@ class SignUpViewModel : ViewModel() {
     private val api = Api.initRetrofit()
 
     fun createAccount(requestObject: JsonObject): LiveData<JSONObject> {
-        val call = api.createProfile("", requestObject)
+        val call = api.createAccount("", requestObject)
         return apiRepository.callApi(call)
     }
 }

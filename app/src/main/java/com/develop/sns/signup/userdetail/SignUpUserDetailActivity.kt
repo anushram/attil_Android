@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -25,6 +26,8 @@ import com.develop.sns.utils.CommonClass
 import com.develop.sns.utils.PreferenceHelper
 import com.google.gson.JsonObject
 import org.json.JSONObject
+import android.text.Editable
+
 
 class SignUpUserDetailActivity : SubModuleActivity() {
 
@@ -33,7 +36,7 @@ class SignUpUserDetailActivity : SubModuleActivity() {
 
     override var preferenceHelper: PreferenceHelper? = null
     private var submitFlag = false
-    private var isChecked = false
+    private var isValid = false;
     var signUpDto: SignUpDto? = null
     var segmentPosition: Int = 0
 
@@ -42,6 +45,7 @@ class SignUpUserDetailActivity : SubModuleActivity() {
         setContentView(binding.root)
 
         initialiseProgressBar(binding.lnProgressbar)
+        initialiseErrorMessage(binding.lnError)
         initToolBar()
         getIntentValue();
         initClassReference()
@@ -50,15 +54,14 @@ class SignUpUserDetailActivity : SubModuleActivity() {
 
     private fun initToolBar() {
         try {
-            (binding.lnToolbar.toolbar as Toolbar).setTitle(getResources().getString(R.string.user_details))
+            (binding.lnToolbar.toolbar as Toolbar).title =
+                resources.getString(R.string.user_details)
             setSupportActionBar(binding.lnToolbar.toolbar as Toolbar)
-            assert(getSupportActionBar() != null)
-            getSupportActionBar()?.setDisplayShowHomeEnabled(true)
-            (binding.lnToolbar.toolbar as Toolbar).setNavigationIcon(
-                ContextCompat.getDrawable(
-                    context,
-                    R.drawable.ic_action_back
-                )
+            assert(supportActionBar != null)
+            supportActionBar?.setDisplayShowHomeEnabled(true)
+            (binding.lnToolbar.toolbar as Toolbar).navigationIcon = ContextCompat.getDrawable(
+                context,
+                R.drawable.ic_action_back
             )
             (binding.lnToolbar.toolbar as Toolbar).layoutDirection =
                 View.LAYOUT_DIRECTION_LTR
@@ -102,9 +105,48 @@ class SignUpUserDetailActivity : SubModuleActivity() {
                 false
             })
 
+            binding.etUserName.addTextChangedListener(object : TextWatcher {
+                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                }
+
+                override fun beforeTextChanged(
+                    s: CharSequence,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                    // TODO Auto-generated method stub
+                }
+
+                override fun afterTextChanged(s: Editable) {
+                    val data = s.toString()
+                    if (data.isNotEmpty()) {
+                        isValid = true
+                    } else {
+                        isValid = false
+                        binding.tvSuccessText.text = getString(R.string.give_your_username)
+                        binding.tvSuccessText.setTextColor(
+                            ContextCompat.getColor(
+                                context,
+                                R.color.text_color
+                            )
+                        )
+                    }
+                }
+            })
+
             binding.btnNext.setOnClickListener {
-                signUpDto?.gender = binding.rgGender.getButton(binding.rgGender.position).text
-                launchPasswordActivity()
+                if (isValid) {
+                    signUpDto?.gender = binding.rgGender.getButton(binding.rgGender.position).text
+                    launchPasswordActivity()
+                } else {
+                    CommonClass.showToastMessage(
+                        context,
+                        binding.rootView,
+                        "Please enter valid Username and check for it's availability",
+                        Toast.LENGTH_SHORT
+                    )
+                }
             }
 
             binding.rgGender.setOnPositionChangedListener { position ->
@@ -124,9 +166,9 @@ class SignUpUserDetailActivity : SubModuleActivity() {
                 if (keypadHeight > screenHeight * 0.15) {
 
                 } else {
-                    if (!isChecked) {
-                        if (!binding.etUserName.text.isEmpty() && binding.etUserName.text.length == 10) {
-                            if (submitFlag == false) {
+                    if (!isValid) {
+                        if (binding.etUserName.text.isNotEmpty() && binding.etUserName.text.length == 10) {
+                            if (!submitFlag) {
                                 submitFlag = true
                                 checkUserNameAvailability()
                             }
@@ -139,7 +181,7 @@ class SignUpUserDetailActivity : SubModuleActivity() {
         }
     }
 
-    var signUpPasswordLauncher =
+    private var signUpPasswordLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 // There are no request codes
@@ -194,7 +236,7 @@ class SignUpUserDetailActivity : SubModuleActivity() {
                     requestObject.addProperty("username", binding.etUserName.getText().toString())
                     requestObject.addProperty("preferredLanguage", language)
                     showProgressBar()
-                    val signUpUserDetailViewModel= SignUpUserDetailViewModel()
+                    val signUpUserDetailViewModel = SignUpUserDetailViewModel()
                     signUpUserDetailViewModel.checkUserNameAvailability(
                         requestObject
                     )?.observe(this, Observer<JSONObject?> { jsonObject ->
@@ -224,7 +266,7 @@ class SignUpUserDetailActivity : SubModuleActivity() {
             Log.e("LoginResponse", obj.toString())
             if (obj.has("status")) {
                 if (obj.getBoolean("status")) {
-                    isChecked = true;
+                    isValid = true
                     binding.tvSuccessText.text = getString(R.string.username_available)
                     binding.tvSuccessText.setTextColor(
                         ContextCompat.getColor(
@@ -237,8 +279,23 @@ class SignUpUserDetailActivity : SubModuleActivity() {
                         AppConstant.KEY_USER_ID,
                         binding.etUserName.text.toString()
                     )
+                } else {
+                    isValid = false
+                    binding.tvSuccessText.text = getString(R.string.username_not_available)
+                    binding.tvSuccessText.setTextColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.error_color
+                        )
+                    )
+                    signUpDto?.userId = ""
+                    preferenceHelper?.saveValueToSharedPrefs(
+                        AppConstant.KEY_USER_ID,
+                        ""
+                    )
                 }
             } else {
+                isValid = false
                 CommonClass.showToastMessage(
                     context,
                     binding.rootView,
@@ -247,23 +304,6 @@ class SignUpUserDetailActivity : SubModuleActivity() {
                 );
             }
         } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    open fun showErrorMessage(errorMessage: String?) {
-        try {
-            binding.lnError.tvMessage!!.setText(errorMessage)
-            binding.lnError.lnErrorMain.visibility = View.VISIBLE
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    open fun hideErrorMessage() {
-        try {
-            binding.lnError.lnErrorMain.visibility = View.GONE
-        } catch (e: java.lang.Exception) {
             e.printStackTrace()
         }
     }

@@ -53,6 +53,7 @@ class LoginActivity : SubModuleActivity() {
         fa = this
 
         initialiseProgressBar(binding.lnProgressbar)
+        initialiseErrorMessage(binding.lnError)
         initClassReference()
         checkFireBaseToken()
         handleUiElement()
@@ -187,8 +188,15 @@ class LoginActivity : SubModuleActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 // There are no request codes
-                val data: Intent? = result.data
-                handleResponse()
+                val mainActivityModel = MainActivityViewModel()
+                mainActivityModel.getProductList(
+                    preferenceHelper!!.getValueFromSharedPrefs(
+                        AppConstant.KEY_TOKEN
+                    )!!
+                )?.observeForever {
+                    dismissProgressBar()
+                    parseProductList(it)
+                }
             }
         }
 
@@ -201,7 +209,6 @@ class LoginActivity : SubModuleActivity() {
             e.printStackTrace()
         }
     }
-
 
     private fun sendOtpService() {
         try {
@@ -269,21 +276,11 @@ class LoginActivity : SubModuleActivity() {
         }
     }
 
-    var resultLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                // There are no request codes
-                val data: Intent? = result.data
-                handleResponse()
-            }
-        }
-
     private fun launchOTPVerifyActivity() {
         val intent = Intent(this, OtpActivity::class.java)
         intent.putExtra("mobileNo", binding.etMobileNo.text.toString())
         intent.putExtra("otp", otp)
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
-        //resultLauncher.launch(intent)
         startActivity(intent)
         overridePendingTransition(0, 0)
     }
@@ -294,8 +291,10 @@ class LoginActivity : SubModuleActivity() {
             if (validate()) {
                 if (AppUtils.isConnectedToInternet(context)) {
                     val requestObject = JsonObject()
-                    requestObject.addProperty("phoneNumber",
-                        binding.etMobileNo.text.toString())
+                    requestObject.addProperty(
+                        "phoneNumber",
+                        binding.etMobileNo.text.toString()
+                    )
                     requestObject.addProperty("password", binding.etPassword.text.toString())
                     requestObject.addProperty("preferredLanguage", language)
                     Log.e("requestObj", requestObject.toString())
@@ -327,11 +326,15 @@ class LoginActivity : SubModuleActivity() {
             submitFlag = false
             Log.e("LoginResponse", obj.toString())
             if (obj.has("data") && !obj.isNull("data")) {
-                preferenceHelper!!.saveValueToSharedPrefs(AppConstant.KEY_USER_NAME,
-                    binding.etMobileNo.text.toString().trim())
+                preferenceHelper!!.saveValueToSharedPrefs(
+                    AppConstant.KEY_USER_NAME,
+                    binding.etMobileNo.text.toString().trim()
+                )
                 if (binding.etPassword.text.toString().trim().isNotEmpty()) {
-                    preferenceHelper!!.saveValueToSharedPrefs(AppConstant.KEY_USER_PWD,
-                        binding.etPassword.text.toString().trim())
+                    preferenceHelper!!.saveValueToSharedPrefs(
+                        AppConstant.KEY_USER_PWD,
+                        binding.etPassword.text.toString().trim()
+                    )
                 }
                 val dataObject = obj.getJSONObject("data")
                 if (dataObject.has("access_token") && !dataObject.isNull("access_token")) {
@@ -357,8 +360,11 @@ class LoginActivity : SubModuleActivity() {
 
                 //handleResponse()
                 val mainActivityModel = MainActivityViewModel()
-                mainActivityModel.getProductList(preferenceHelper!!.getValueFromSharedPrefs(
-                    AppConstant.KEY_TOKEN)!!)?.observeForever {
+                mainActivityModel.getProductList(
+                    preferenceHelper!!.getValueFromSharedPrefs(
+                        AppConstant.KEY_TOKEN
+                    )!!
+                )?.observeForever {
                     dismissProgressBar()
                     parseProductList(it)
                 }
@@ -377,8 +383,6 @@ class LoginActivity : SubModuleActivity() {
 
     private fun parseProductList(jsonObject: JSONObject?) {
         try {
-            /*val scheduler = context.getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
-            scheduler.cancel(1)*/
             Log.e("ProducrList", jsonObject.toString())
             if (jsonObject != null) {
                 if (jsonObject.has("code") && jsonObject.getInt("code") == 200) {
@@ -467,22 +471,5 @@ class LoginActivity : SubModuleActivity() {
 
     companion object {
         private val TAG = LoginActivity::class.java.simpleName
-    }
-
-    open fun showErrorMessage(errorMessage: String?) {
-        try {
-            binding.lnError.tvMessage!!.setText(errorMessage)
-            binding.lnError.lnErrorMain.visibility = View.VISIBLE
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    open fun hideErrorMessage() {
-        try {
-            binding.lnError.lnErrorMain.visibility = View.GONE
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        }
     }
 }

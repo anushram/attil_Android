@@ -74,6 +74,7 @@ class BrandListActivity : SubModuleActivity(), NormalOfferListener {
         fa = this;
 
         initialiseProgressBar(binding.lnProgressbar)
+        initialiseErrorMessage(binding.lnError)
         initToolBar()
         initClassReference()
         getIntentValue()

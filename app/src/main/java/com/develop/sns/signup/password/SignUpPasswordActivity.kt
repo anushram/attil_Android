@@ -14,6 +14,9 @@ import com.develop.sns.databinding.ActivitySignUpPasswordBinding
 import com.develop.sns.signup.dto.SignUpDto
 import com.develop.sns.utils.CommonClass
 import com.develop.sns.utils.PreferenceHelper
+import android.text.method.PasswordTransformationMethod
+
+import android.widget.CompoundButton
 
 
 class SignUpPasswordActivity : SubModuleActivity() {
@@ -31,6 +34,7 @@ class SignUpPasswordActivity : SubModuleActivity() {
         setContentView(binding.root)
 
         initialiseProgressBar(binding.lnProgressbar)
+        initialiseErrorMessage(binding.lnError)
         initToolBar()
         getIntentValue();
         initClassReference()
@@ -79,6 +83,41 @@ class SignUpPasswordActivity : SubModuleActivity() {
             binding.btnNext.setOnClickListener {
                 handleBackData();
             }
+
+            binding.cbNewPassword.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
+                val start: Int
+                val end: Int
+                ////Log.i("inside checkbox chnge", "" + isChecked);
+                if (!isChecked) {
+                    start = binding.etNewPassword.getSelectionStart()
+                    end = binding.etNewPassword.getSelectionEnd()
+                    binding.etNewPassword.setTransformationMethod(PasswordTransformationMethod())
+                    binding.etNewPassword.setSelection(start, end)
+                } else {
+                    start = binding.etNewPassword.getSelectionStart()
+                    end = binding.etNewPassword.getSelectionEnd()
+                    binding.etNewPassword.setTransformationMethod(null)
+                    binding.etNewPassword.setSelection(start, end)
+                }
+            })
+
+            binding.cbConfirmPassword.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
+                val start: Int
+                val end: Int
+                ////Log.i("inside checkbox chnge", "" + isChecked);
+                if (!isChecked) {
+                    start = binding.etConfirmPassword.selectionStart
+                    end = binding.etConfirmPassword.selectionEnd
+                    binding.etConfirmPassword.transformationMethod = PasswordTransformationMethod()
+                    binding.etConfirmPassword.setSelection(start, end)
+                } else {
+                    start = binding.etConfirmPassword.selectionStart
+                    end = binding.etConfirmPassword.selectionEnd
+                    binding.etConfirmPassword.transformationMethod = null
+                    binding.etConfirmPassword.setSelection(start, end)
+                }
+            })
+
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -143,23 +182,6 @@ class SignUpPasswordActivity : SubModuleActivity() {
             setResult(RESULT_OK, intent)
             finish()
         } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    open fun showErrorMessage(errorMessage: String?) {
-        try {
-            binding.lnError.tvMessage!!.setText(errorMessage)
-            binding.lnError.lnErrorMain.visibility = View.VISIBLE
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    open fun hideErrorMessage() {
-        try {
-            binding.lnError.lnErrorMain.visibility = View.GONE
-        } catch (e: java.lang.Exception) {
             e.printStackTrace()
         }
     }

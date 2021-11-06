@@ -1,41 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/ln_error_main"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_alignParentTop="true"
-    android:background="@color/md_red_A700"
-    android:orientation="horizontal"
-    android:paddingStart="5dp"
-    android:paddingTop="10dp"
-    android:paddingEnd="5dp"
-    android:paddingBottom="10dp">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        android:id="@+id/tv_message"
+    <data>
+
+        <variable
+            name="LoginViewModel"
+            type="com.develop.sns.login.LoginViewModel" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/ln_error_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight="1"
-        android:ellipsize="end"
-        android:gravity="start|center"
-        android:maxLines="3"
+        android:background="@color/md_red_A700"
+        android:orientation="horizontal"
         android:paddingStart="5dp"
-        android:paddingLeft="5dp"
-        android:text="@string/no_internet"
-        android:textColor="@color/white"
-        android:textSize="13sp" />
+        android:paddingTop="10dp"
+        android:paddingEnd="5dp"
+        android:paddingBottom="10dp">
 
-    <ImageView
-        android:id="@+id/iv_close"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_gravity="center"
-        android:scaleType="fitCenter"
-        android:src="@drawable/close_x"
-        app:tint="@color/white" />
+        <TextView
+            android:id="@+id/tv_message"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:gravity="start|center"
+            android:maxLines="3"
+            android:paddingStart="5dp"
+            android:paddingLeft="5dp"
+            android:text="@string/no_internet"
+            android:textColor="@color/white"
+            android:textSize="13sp" />
 
-</LinearLayout>
+        <ImageView
+            android:id="@+id/iv_close"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:scaleType="fitCenter"
+            android:src="@drawable/close_x"
+            app:tint="@color/white" />
 
+    </LinearLayout>
+</layout>
 

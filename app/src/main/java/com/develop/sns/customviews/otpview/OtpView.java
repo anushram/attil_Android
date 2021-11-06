@@ -55,7 +55,7 @@ public class OtpView extends AppCompatEditText {
 
     private static final boolean DBG = false;
     private static final int BLINK = 500;
-    private static final int DEFAULT_COUNT = 4;
+    private static final int DEFAULT_COUNT = 5;
     private static final InputFilter[] NO_FILTERS = new InputFilter[0];
     private static final int[] SELECTED_STATE = new int[]{
             android.R.attr.state_selected

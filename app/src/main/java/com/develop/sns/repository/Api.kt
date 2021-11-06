@@ -65,8 +65,8 @@ interface Api {
         @Body requestObject: JsonObject,
     ): Call<ResponseBody>
 
-    @POST("createProfile")
-    fun createProfile(
+    @POST("createAccount")
+    fun createAccount(
         @Header("Authorization") authorization: String,
         @Body requestObject: JsonObject,
     ): Call<ResponseBody>

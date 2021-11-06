@@ -28,6 +28,7 @@ class HomeActivity : SubModuleActivity() {
     private val profileFragment = ProfileFragment()
     var fa: Activity? = null
     var firstTime = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)

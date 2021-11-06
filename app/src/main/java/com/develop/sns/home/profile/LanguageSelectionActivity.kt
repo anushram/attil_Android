@@ -30,6 +30,7 @@ class LanguageSelectionActivity : SubModuleActivity() {
         setContentView(binding.root)
 
         initialiseProgressBar(binding.lnProgressbar)
+        initialiseErrorMessage(binding.lnError)
         initToolBar()
         setUpUiElement()
         handleUiElement()
