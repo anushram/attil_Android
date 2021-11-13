@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.Point
 import android.graphics.Typeface
 import android.os.Build
+import android.util.Base64.*
 import android.view.Gravity
 import android.view.View
 import android.widget.TextView
@@ -19,8 +20,15 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.json.JSONObject
 import java.io.*
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 import java.util.regex.Matcher
 import java.util.regex.Pattern
+import java.util.zip.GZIPOutputStream
+import javax.crypto.Cipher
+import javax.crypto.SecretKey
+import javax.crypto.spec.IvParameterSpec
+import javax.crypto.spec.SecretKeySpec
 
 
 class CommonClass {
@@ -196,5 +204,92 @@ class CommonClass {
                 )
             }
         }
+
+
+        fun getEncryptedObjectBeforeToken(
+            context: Context,
+            requestObject: JSONObject
+        ): JSONObject? {
+            var jsonObject: JSONObject? = null
+            return try {
+                val encryptString = encryptCompress(context, requestObject, false)
+                jsonObject = JSONObject()
+                jsonObject.put("data", encryptString)
+                jsonObject
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+                null
+            }
+        }
+
+        fun encryptCompress(context: Context, obj: JSONObject, isToken: Boolean): String? {
+            var dataObject: String? = null
+            var secretKey: String? = "T@MiCr097124!iCR"
+            try {
+                if (isToken) {
+                    secretKey =
+                        PreferenceHelper(context).getValueFromSharedPrefs(AppConstant.KEY_SECRET)
+                }
+                val encryptString = compress(obj.toString())
+                val encryptByteObject = encryptMsg(context, encryptString, secretKey)
+                val dataByteArray: ByteArray = encode(encryptByteObject, DEFAULT)
+                dataObject = encodeToString(encryptByteObject, DEFAULT)
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+            }
+            return dataObject
+        }
+
+        //GZIP
+        fun compress(string: String): ByteArray? {
+            var compressed: ByteArray? = null
+            try {
+                val os = ByteArrayOutputStream(string.length)
+                val gos = GZIPOutputStream(os)
+                gos.write(string.toByteArray())
+                gos.close()
+                compressed = os.toByteArray()
+                os.close()
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+            }
+            return compressed
+        }
+
+        fun encryptMsg(context: Context, message: ByteArray?, secretKey: String?): ByteArray? {
+            var cipherText: ByteArray? = null
+            try {
+                /* Encrypt the message. */
+                val secret: SecretKey? = generateCTRKey(secretKey)
+                var cipher: Cipher? = null
+                cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
+                cipher.init(
+                    Cipher.ENCRYPT_MODE,
+                    secret,
+                    IvParameterSpec(
+                        context.resources.getString(com.develop.sns.R.string.encryption_iv)
+                            .toByteArray(charset("UTF-8"))
+                    )
+                )
+                cipherText = cipher.doFinal(message)
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+            }
+            return cipherText
+        }
+
+        fun generateCTRKey(key: String?): SecretKey? {
+            try {
+                val md: MessageDigest = MessageDigest.getInstance("SHA-256")
+                val keyByte: ByteArray = md.digest(key!!.toByteArray(charset("UTF-8")))
+                return SecretKeySpec(keyByte, "AES")
+            } catch (e: NoSuchAlgorithmException) {
+                e.printStackTrace()
+            } catch (e: UnsupportedEncodingException) {
+                e.printStackTrace()
+            }
+            return null
+        }
+
     }
 }
