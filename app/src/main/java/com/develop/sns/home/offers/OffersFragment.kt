@@ -90,7 +90,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         return binding.root
 
     }
@@ -127,7 +127,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
             binding.srlList.isEnabled = false
             language =
                 preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_LANGUAGE)!!
-            normalOfferList = ArrayList();
+            normalOfferList = ArrayList()
             topOfferList = ArrayList()
         } catch (e: Exception) {
             e.printStackTrace()
@@ -184,7 +184,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
                     serviceFlag = false
                     searchQueryFlag = true
                     binding.svSearch.clearFocus()
-                    requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                    requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
                     resetPagination()
                     return false
                 }
@@ -195,7 +195,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
                         searchQuery = newText
                         serviceFlag = false
                         binding.svSearch.clearFocus()
-                        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
                         searchQueryFlag = true
                         resetPagination()
                     }
@@ -228,7 +228,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
                 ) {
                     super.onScrollStateChanged(recyclerView, newState)
                     if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        Log.d("-----", "end");
+                        Log.d("-----", "end")
                         startPage++
                         Log.e("StartPage", startPage.toString())
                         getNormalOffers()
@@ -394,10 +394,10 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
                                 topOfferDto.createdAtTZ = itemObject.getString("createdAtTZ")
                             }
 
-                            val priceDetailsArray = ArrayList<NormalOfferPriceDto>();
+                            val priceDetailsArray = ArrayList<NormalOfferPriceDto>()
                             if (itemObject.has("priceDetails") && !itemObject.isNull("priceDetails")) {
                                 val priceArray = itemObject.getJSONArray("priceDetails")
-                                val sortedPriceArray = sortJsonArray(priceArray);
+                                val sortedPriceArray = sortJsonArray(priceArray)
                                 for (k in 0 until sortedPriceArray.length()) {
                                     val priceObject = sortedPriceArray.getJSONObject(k)
                                     val normalOfferPriceDto = NormalOfferPriceDto()
@@ -473,7 +473,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
                         binding.rootView,
                         obj.getString("message"),
                         Toast.LENGTH_SHORT
-                    );
+                    )
                 }
             } else {
                 CommonClass.handleErrorResponse(requireActivity(), obj, binding.rootView)
@@ -503,7 +503,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
                 binding.lvTopOffers.adapter = topOffersListAdapter
                 val snapHelper = GravitySnapHelper(Gravity.START)
                 snapHelper.attachToRecyclerView(binding.lvTopOffers)
-                binding.lvTopOffers.autoScroll(topOfferList!!.size, 1000)
+                binding.lvTopOffers.autoScroll(topOfferList.size, 1000)
                 binding.lvTopOffers.setLoopEnabled(true)
             } else {
                 binding.lvTopOffers.visibility = View.GONE
@@ -551,8 +551,8 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
             if (obj.has("code") && obj.getInt("code") == 200) {
                 if (obj.has("status") && obj.getBoolean("status")) {
                     if (obj.has("data") && !obj.isNull("data")) {
-                        serviceFlag = false;
-                        searchQueryFlag = false;
+                        serviceFlag = false
+                        searchQueryFlag = false
                         val dataArray = obj.getJSONArray("data")
                         for (i in 0 until dataArray.length()) {
                             val itemObject = dataArray.getJSONObject(i)
@@ -605,10 +605,10 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
                                 normalOfferDto.createdAtTZ = itemObject.getString("createdAtTZ")
                             }
 
-                            val priceDetailsArray = ArrayList<NormalOfferPriceDto>();
+                            val priceDetailsArray = ArrayList<NormalOfferPriceDto>()
                             if (itemObject.has("priceDetails") && !itemObject.isNull("priceDetails")) {
                                 val priceArray = itemObject.getJSONArray("priceDetails")
-                                val sortedPriceArray = sortJsonArray(priceArray);
+                                val sortedPriceArray = sortJsonArray(priceArray)
                                 for (k in 0 until sortedPriceArray.length()) {
                                     val priceObject = sortedPriceArray.getJSONObject(k)
                                     val normalOfferPriceDto = NormalOfferPriceDto()
@@ -747,7 +747,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
                             }
                             normalOfferDto.priceDetails = priceDetailsArray
 
-                            normalOfferList!!.add(normalOfferDto)
+                            normalOfferList.add(normalOfferDto)
                         }
                     }
 
@@ -850,7 +850,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
                     binding.rootView,
                     obj.getString("message"),
                     Toast.LENGTH_SHORT
-                );
+                )
             }
         } catch (e: Exception) {
             e.printStackTrace()

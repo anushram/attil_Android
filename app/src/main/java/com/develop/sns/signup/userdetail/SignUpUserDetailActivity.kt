@@ -36,7 +36,7 @@ class SignUpUserDetailActivity : SubModuleActivity() {
 
     override var preferenceHelper: PreferenceHelper? = null
     private var submitFlag = false
-    private var isValid = false;
+    private var isValid = false
     var signUpDto: SignUpDto? = null
     var segmentPosition: Int = 0
 
@@ -47,25 +47,25 @@ class SignUpUserDetailActivity : SubModuleActivity() {
         initialiseProgressBar(binding.lnProgressbar)
         initialiseErrorMessage(binding.lnError)
         initToolBar()
-        getIntentValue();
+        getIntentValue()
         initClassReference()
         handleUiElement()
     }
 
     private fun initToolBar() {
         try {
-            (binding.lnToolbar.toolbar as Toolbar).title =
+            binding.lnToolbar.toolbar.title =
                 resources.getString(R.string.user_details)
-            setSupportActionBar(binding.lnToolbar.toolbar as Toolbar)
+            setSupportActionBar(binding.lnToolbar.toolbar)
             assert(supportActionBar != null)
             supportActionBar?.setDisplayShowHomeEnabled(true)
-            (binding.lnToolbar.toolbar as Toolbar).navigationIcon = ContextCompat.getDrawable(
+            binding.lnToolbar.toolbar.navigationIcon = ContextCompat.getDrawable(
                 context,
                 R.drawable.ic_action_back
             )
-            (binding.lnToolbar.toolbar as Toolbar).layoutDirection =
+            binding.lnToolbar.toolbar.layoutDirection =
                 View.LAYOUT_DIRECTION_LTR
-            (binding.lnToolbar.toolbar as Toolbar).setNavigationOnClickListener { onBackPressed() }
+            binding.lnToolbar.toolbar.setNavigationOnClickListener { onBackPressed() }
         } catch (bug: Exception) {
             bug.printStackTrace()
         }
@@ -74,7 +74,7 @@ class SignUpUserDetailActivity : SubModuleActivity() {
     private fun getIntentValue() {
         try {
             val intent = intent
-            signUpDto = intent.getSerializableExtra("signUpDto") as SignUpDto?;
+            signUpDto = intent.getSerializableExtra("signUpDto") as SignUpDto?
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -91,7 +91,7 @@ class SignUpUserDetailActivity : SubModuleActivity() {
 
     private fun handleUiElement() {
         try {
-            binding.lnError.ivClose!!.setOnClickListener(View.OnClickListener { hideErrorMessage() })
+            binding.lnError.ivClose.setOnClickListener(View.OnClickListener { hideErrorMessage() })
 
             binding.etUserName.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, event ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -216,9 +216,9 @@ class SignUpUserDetailActivity : SubModuleActivity() {
     private fun validate(): Boolean {
         var flag = true
         try {
-            if (binding.etUserName.getText().toString().isEmpty()) {
+            if (binding.etUserName.text.toString().isEmpty()) {
                 binding.etUserName.requestFocus()
-                binding.etUserName.setError(resources.getString(R.string.required))
+                binding.etUserName.error = resources.getString(R.string.required)
                 flag = false
             }
         } catch (e: Exception) {
@@ -233,7 +233,7 @@ class SignUpUserDetailActivity : SubModuleActivity() {
             if (validate()) {
                 if (AppUtils.isConnectedToInternet(context)) {
                     val requestObject = JsonObject()
-                    requestObject.addProperty("username", binding.etUserName.getText().toString())
+                    requestObject.addProperty("username", binding.etUserName.text.toString())
                     requestObject.addProperty("preferredLanguage", language)
                     showProgressBar()
                     val signUpUserDetailViewModel = SignUpUserDetailViewModel()
@@ -301,7 +301,7 @@ class SignUpUserDetailActivity : SubModuleActivity() {
                     binding.rootView,
                     obj.getString("message"),
                     Toast.LENGTH_SHORT
-                );
+                )
             }
         } catch (e: Exception) {
             e.printStackTrace()

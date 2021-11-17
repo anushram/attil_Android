@@ -29,7 +29,7 @@ class ProductFragment : Fragment(), BrandSelectListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        preferenceHelper = PreferenceHelper(requireActivity());
+        preferenceHelper = PreferenceHelper(requireActivity())
     }
 
     override fun onCreateView(
@@ -42,7 +42,7 @@ class ProductFragment : Fragment(), BrandSelectListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        selectItem(AppConstant.PRODUCT_FRAGMENT);
+        selectItem(AppConstant.PRODUCT_FRAGMENT)
         handleUiElement()
     }
 

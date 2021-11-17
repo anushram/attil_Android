@@ -110,7 +110,8 @@
                                 app:ibv_badgeTextSize="9sp"
                                 app:ibv_badgeTextStyle="bold"
                                 app:ibv_badgeValue="0"
-                                app:ibv_fixedBadgeRadius="10dp" />
+                                app:ibv_fixedBadgeRadius="10dp"
+                                app:ibv_visibleBadge="true" />
 
                         </LinearLayout>
 

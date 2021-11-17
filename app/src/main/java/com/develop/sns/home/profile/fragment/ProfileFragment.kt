@@ -25,7 +25,7 @@ class ProfileFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        preferenceHelper = PreferenceHelper(requireActivity());
+        preferenceHelper = PreferenceHelper(requireActivity())
     }
 
     override fun onCreateView(
@@ -117,9 +117,9 @@ class ProfileFragment : Fragment() {
             val language: String =
                 preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_LANGUAGE)!!
 
-            preferenceHelper!!.clear();
-            preferenceHelper!!.saveIntValueToSharedPrefs(AppConstant.KEY_LANGUAGE_ID, languageId);
-            preferenceHelper!!.saveValueToSharedPrefs(AppConstant.KEY_LANGUAGE, language);
+            preferenceHelper!!.clear()
+            preferenceHelper!!.saveIntValueToSharedPrefs(AppConstant.KEY_LANGUAGE_ID, languageId)
+            preferenceHelper!!.saveValueToSharedPrefs(AppConstant.KEY_LANGUAGE, language)
 
             val intent = Intent(activity, MainActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -132,7 +132,5 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    companion object {
-
-    }
+    companion object
 }

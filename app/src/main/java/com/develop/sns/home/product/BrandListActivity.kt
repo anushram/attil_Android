@@ -71,7 +71,7 @@ class BrandListActivity : SubModuleActivity(), NormalOfferListener {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        fa = this;
+        fa = this
 
         initialiseProgressBar(binding.lnProgressbar)
         initialiseErrorMessage(binding.lnError)
@@ -139,7 +139,7 @@ class BrandListActivity : SubModuleActivity(), NormalOfferListener {
                     serviceFlag = false
                     searchQueryFlag = true
                     binding.svSearch.clearFocus()
-                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
                     resetPagination()
                     return false
                 }
@@ -149,7 +149,7 @@ class BrandListActivity : SubModuleActivity(), NormalOfferListener {
                         searchQuery = newText
                         serviceFlag = false
                         binding.svSearch.clearFocus()
-                        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
                         searchQueryFlag = true
                         resetPagination()
                     }
@@ -183,7 +183,7 @@ class BrandListActivity : SubModuleActivity(), NormalOfferListener {
                 ) {
                     super.onScrollStateChanged(recyclerView, newState)
                     if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        Log.d("-----", "end");
+                        Log.d("-----", "end")
                         startPage++
                         Log.e("StartPage", startPage.toString())
                         getNormalOffers()
@@ -306,10 +306,10 @@ class BrandListActivity : SubModuleActivity(), NormalOfferListener {
                                 normalOfferDto.createdAtTZ = itemObject.getString("createdAtTZ")
                             }
 
-                            val priceDetailsArray = ArrayList<NormalOfferPriceDto>();
+                            val priceDetailsArray = ArrayList<NormalOfferPriceDto>()
                             if (itemObject.has("priceDetails") && !itemObject.isNull("priceDetails")) {
                                 val priceArray = itemObject.getJSONArray("priceDetails")
-                                val sortedPriceArray = sortJsonArray(priceArray);
+                                val sortedPriceArray = sortJsonArray(priceArray)
                                 for (k in 0 until sortedPriceArray.length()) {
                                     val priceObject = sortedPriceArray.getJSONObject(k)
                                     val normalOfferPriceDto = NormalOfferPriceDto()
@@ -448,7 +448,7 @@ class BrandListActivity : SubModuleActivity(), NormalOfferListener {
                             }
                             normalOfferDto.priceDetails = priceDetailsArray
 
-                            normalOfferList!!.add(normalOfferDto)
+                            normalOfferList.add(normalOfferDto)
                         }
                     }
                 }

@@ -33,9 +33,9 @@ class HomeActivity : SubModuleActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        fa = this;
+        fa = this
 
-        selectItem(AppConstant.OFFERS_FRAGMENT);
+        selectItem(AppConstant.OFFERS_FRAGMENT)
         initClassReference()
         handleUiElement()
     }
@@ -217,7 +217,7 @@ class HomeActivity : SubModuleActivity() {
 
     private fun launchProductFragment() {
         try {
-            firstTime = false;
+            firstTime = false
             val fragmentManager: FragmentManager = supportFragmentManager
             val transaction: FragmentTransaction = fragmentManager.beginTransaction()
             transaction.replace(R.id.fl_fragment, productFragment)

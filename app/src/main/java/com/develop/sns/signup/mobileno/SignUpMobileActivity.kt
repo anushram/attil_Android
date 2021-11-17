@@ -46,19 +46,17 @@ class SignUpMobileActivity : SubModuleActivity() {
 
     private fun initToolBar() {
         try {
-            (binding.lnToolbar.toolbar as Toolbar).setTitle(getResources().getString(R.string.verify))
-            setSupportActionBar(binding.lnToolbar.toolbar as Toolbar)
-            assert(getSupportActionBar() != null)
-            getSupportActionBar()?.setDisplayShowHomeEnabled(true)
-            (binding.lnToolbar.toolbar as Toolbar).setNavigationIcon(
-                ContextCompat.getDrawable(
-                    context,
-                    R.drawable.ic_action_back
-                )
+            binding.lnToolbar.toolbar.title = resources.getString(R.string.verify)
+            setSupportActionBar(binding.lnToolbar.toolbar)
+            assert(supportActionBar != null)
+            supportActionBar?.setDisplayShowHomeEnabled(true)
+            binding.lnToolbar.toolbar.navigationIcon = ContextCompat.getDrawable(
+                context,
+                R.drawable.ic_action_back
             )
-            (binding.lnToolbar.toolbar as Toolbar).layoutDirection =
+            binding.lnToolbar.toolbar.layoutDirection =
                 View.LAYOUT_DIRECTION_LTR
-            (binding.lnToolbar.toolbar as Toolbar).setNavigationOnClickListener { onBackPressed() }
+            binding.lnToolbar.toolbar.setNavigationOnClickListener { onBackPressed() }
         } catch (bug: Exception) {
             bug.printStackTrace()
         }
@@ -83,7 +81,7 @@ class SignUpMobileActivity : SubModuleActivity() {
 
     private fun handleUiElement() {
         try {
-            binding.lnError.ivClose!!.setOnClickListener(View.OnClickListener { hideErrorMessage() })
+            binding.lnError.ivClose.setOnClickListener(View.OnClickListener { hideErrorMessage() })
 
             binding.btnVerify.setOnClickListener(View.OnClickListener {
                 if (submitFlag == false) {
@@ -100,9 +98,9 @@ class SignUpMobileActivity : SubModuleActivity() {
     private fun validateMob(): Boolean {
         var flag = true
         try {
-            if (binding.etMobileNo.getText().toString().isEmpty()) {
+            if (binding.etMobileNo.text.toString().isEmpty()) {
                 binding.etMobileNo.requestFocus()
-                binding.etMobileNo.setError(resources.getString(R.string.required))
+                binding.etMobileNo.error = resources.getString(R.string.required)
                 flag = false
             }
         } catch (e: Exception) {
@@ -129,7 +127,7 @@ class SignUpMobileActivity : SubModuleActivity() {
                     val signUpMobileViewModel = SignUpMobileViewModel()
                     signUpMobileViewModel.sendOtpService(
                         requestObject
-                    )?.observe(this, Observer<JSONObject?> { currencyPojos ->
+                    ).observe(this, Observer<JSONObject?> { currencyPojos ->
                         if (currencyPojos != null) {
                             dismissProgressBar()
                             parseGenerateOtpResponse(currencyPojos)
@@ -139,7 +137,7 @@ class SignUpMobileActivity : SubModuleActivity() {
                     CommonClass.showToastMessage(
                         context,
                         binding.rootView,
-                        getResources().getString(R.string.no_internet),
+                        resources.getString(R.string.no_internet),
                         Toast.LENGTH_SHORT
                     )
                 }
@@ -164,17 +162,17 @@ class SignUpMobileActivity : SubModuleActivity() {
                 }
 
                 if (dataObject.has("otp") && !dataObject.isNull("otp")) {
-                    otp = dataObject.getString("otp");
+                    otp = dataObject.getString("otp")
                     Log.e("otp", otp)
                 }
-                launchOTPVerifyActivity();
+                launchOTPVerifyActivity()
             } /*}*/ else {
                 CommonClass.showToastMessage(
                     context,
                     binding.rootView,
                     obj.getString("message"),
                     Toast.LENGTH_SHORT
-                );
+                )
             }
             /*} else {
                 CommonClass.showToastMessage(

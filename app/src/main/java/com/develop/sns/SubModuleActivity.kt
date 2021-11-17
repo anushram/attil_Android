@@ -108,14 +108,13 @@ open class SubModuleActivity : ModuleActivity() {
     open fun dismissProgressBar() {
         try {
             window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-            this.progressBarLayoutBinding!!.root.visibility = View.GONE
+            this.progressBarLayoutBinding.root.visibility = View.GONE
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    companion object {
-    }
+    companion object;
 
     open fun initialiseErrorMessage(lnError: CustomErrorSnackbarBinding) {
         try {

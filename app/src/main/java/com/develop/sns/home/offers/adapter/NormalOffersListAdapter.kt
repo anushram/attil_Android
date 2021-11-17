@@ -90,13 +90,13 @@ class NormalOffersListAdapter(
                     Picasso.with(context).load(item.brandImage!![j])
                         .placeholder(R.drawable.product)
                         .error(R.drawable.product)
-                        .into(ivProduct);
+                        .into(ivProduct)
                 }
 
                 var normalOfferPriceDto: NormalOfferPriceDto?
 
                 val obj =
-                    preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_MIN_UNITS);
+                    preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_MIN_UNITS)
 
                 val jsonArray = JSONArray(obj)
 
@@ -109,26 +109,26 @@ class NormalOffersListAdapter(
                         .plus(normalOfferPriceDto.minUnitMeasureType)
 
 
-                    minUnit = normalOfferPriceDto.minUnit!!.toDouble()
-                    if (!userexists(jsonArray, normalOfferPriceDto.minUnitMeasureType!!)) {
-                        minUnit = (normalOfferPriceDto.minUnit!! * 1000).toDouble()
+                    minUnit = normalOfferPriceDto.minUnit.toDouble()
+                    if (!userexists(jsonArray, normalOfferPriceDto.minUnitMeasureType)) {
+                        minUnit = (normalOfferPriceDto.minUnit * 1000).toDouble()
                     }
 
-                    val unit: Double = normalOfferPriceDto.unit!!.toDouble()
+                    val unit: Double = normalOfferPriceDto.unit.toDouble()
                     val result: Double = minUnit.div(unit)
                     Log.e("Double result", result.toString())
-                    val normalPrice = normalOfferPriceDto.normalPrice!!
+                    val normalPrice = normalOfferPriceDto.normalPrice
                     mrp = result.times(normalPrice)
 
-                    val offerPrice = normalOfferPriceDto.attilPrice!!
+                    val offerPrice = normalOfferPriceDto.attilPrice
                     offerMrp = result.times(offerPrice)
 
-                    tvOfferPercentage.visibility = View.VISIBLE
+                    lnOfferPercentage.visibility = View.VISIBLE
                     lnBogeMain.visibility = View.GONE
                     ivBogo.visibility = View.GONE
 
                     tvOfferPercentage.text =
-                        normalOfferPriceDto.offerPercentage!!.toString().plus("% OFF")
+                        normalOfferPriceDto.offerPercentage.toString().plus("% OFF")
 
                     diff = (mrp - offerMrp)
 
@@ -152,10 +152,10 @@ class NormalOffersListAdapter(
                         .plus(item.priceDetails?.get(0)!!.unit).plus(" ")
                         .plus(item.priceDetails?.get(0)!!.measureType)
 
-                    mrp = item.priceDetails?.get(0)!!.normalPrice!!.toDouble()
-                    offerMrp = item.priceDetails?.get(0)!!.attilPrice!!.toDouble()
+                    mrp = item.priceDetails?.get(0)!!.normalPrice.toDouble()
+                    offerMrp = item.priceDetails?.get(0)!!.attilPrice.toDouble()
 
-                    tvOfferPercentage.visibility = View.VISIBLE
+                    lnOfferPercentage.visibility = View.VISIBLE
                     lnBogeMain.visibility = View.GONE
                     ivBogo.visibility = View.GONE
 
@@ -189,10 +189,10 @@ class NormalOffersListAdapter(
                         .plus(normalOfferPriceDto!!.unit).plus(" ")
                         .plus(normalOfferPriceDto.measureType)
 
-                    mrp = normalOfferPriceDto.normalPrice!!.toDouble()
-                    offerMrp = normalOfferPriceDto.attilPrice!!.toDouble()
+                    mrp = normalOfferPriceDto.normalPrice.toDouble()
+                    offerMrp = normalOfferPriceDto.attilPrice.toDouble()
 
-                    tvOfferPercentage.visibility = View.GONE
+                    lnOfferPercentage.visibility = View.GONE
                     lnBogeMain.visibility = View.GONE
                     ivBogo.visibility = View.VISIBLE
 
@@ -221,8 +221,8 @@ class NormalOffersListAdapter(
                         .plus(normalOfferPriceDto!!.unit).plus(" ")
                         .plus(normalOfferPriceDto.measureType)
 
-                    mrp = normalOfferPriceDto.normalPrice!!.toDouble()
-                    offerMrp = normalOfferPriceDto.attilPrice!!.toDouble()
+                    mrp = normalOfferPriceDto.normalPrice.toDouble()
+                    offerMrp = normalOfferPriceDto.attilPrice.toDouble()
 
                     diff = (mrp - offerMrp)
 
@@ -240,14 +240,14 @@ class NormalOffersListAdapter(
                             .plus(context.getString(R.string.Rs)).plus("")
                             .plus("%.2f".format(diff))
 
-                    tvOfferPercentage.visibility = View.GONE
+                    lnOfferPercentage.visibility = View.GONE
                     lnBogeMain.visibility = View.VISIBLE
                     ivBogo.visibility = View.GONE
 
                     Picasso.with(context).load(normalOfferPriceDto.bogeProductImg)
                         .placeholder(R.drawable.product)
                         .error(R.drawable.product)
-                        .into(ivBogeBrand);
+                        .into(ivBogeBrand)
                     tvBogeName.text = normalOfferPriceDto.bogeProductName
                     tvBogeQty.text = normalOfferPriceDto.bogeUnit.toString().plus(" ")
                         .plus(normalOfferPriceDto.bogeMeasureType)

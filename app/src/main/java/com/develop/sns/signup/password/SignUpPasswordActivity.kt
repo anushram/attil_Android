@@ -36,26 +36,24 @@ class SignUpPasswordActivity : SubModuleActivity() {
         initialiseProgressBar(binding.lnProgressbar)
         initialiseErrorMessage(binding.lnError)
         initToolBar()
-        getIntentValue();
+        getIntentValue()
         initClassReference()
         handleUiElement()
     }
 
     private fun initToolBar() {
         try {
-            (binding.lnToolbar.toolbar as Toolbar).setTitle(getResources().getString(R.string.password))
-            setSupportActionBar(binding.lnToolbar.toolbar as Toolbar)
-            assert(getSupportActionBar() != null)
-            getSupportActionBar()?.setDisplayShowHomeEnabled(true)
-            (binding.lnToolbar.toolbar as Toolbar).setNavigationIcon(
-                ContextCompat.getDrawable(
-                    context,
-                    R.drawable.ic_action_back
-                )
+            binding.lnToolbar.toolbar.title = resources.getString(R.string.password)
+            setSupportActionBar(binding.lnToolbar.toolbar)
+            assert(supportActionBar != null)
+            supportActionBar?.setDisplayShowHomeEnabled(true)
+            binding.lnToolbar.toolbar.navigationIcon = ContextCompat.getDrawable(
+                context,
+                R.drawable.ic_action_back
             )
-            (binding.lnToolbar.toolbar as Toolbar).layoutDirection =
+            binding.lnToolbar.toolbar.layoutDirection =
                 View.LAYOUT_DIRECTION_LTR
-            (binding.lnToolbar.toolbar as Toolbar).setNavigationOnClickListener { onBackPressed() }
+            binding.lnToolbar.toolbar.setNavigationOnClickListener { onBackPressed() }
         } catch (bug: Exception) {
             bug.printStackTrace()
         }
@@ -64,7 +62,7 @@ class SignUpPasswordActivity : SubModuleActivity() {
     private fun getIntentValue() {
         try {
             val intent = intent
-            signUpDto = intent.getSerializableExtra("signUpDto") as SignUpDto?;
+            signUpDto = intent.getSerializableExtra("signUpDto") as SignUpDto?
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -81,7 +79,7 @@ class SignUpPasswordActivity : SubModuleActivity() {
     private fun handleUiElement() {
         try {
             binding.btnNext.setOnClickListener {
-                handleBackData();
+                handleBackData()
             }
 
             binding.cbNewPassword.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
@@ -89,14 +87,14 @@ class SignUpPasswordActivity : SubModuleActivity() {
                 val end: Int
                 ////Log.i("inside checkbox chnge", "" + isChecked);
                 if (!isChecked) {
-                    start = binding.etNewPassword.getSelectionStart()
-                    end = binding.etNewPassword.getSelectionEnd()
-                    binding.etNewPassword.setTransformationMethod(PasswordTransformationMethod())
+                    start = binding.etNewPassword.selectionStart
+                    end = binding.etNewPassword.selectionEnd
+                    binding.etNewPassword.transformationMethod = PasswordTransformationMethod()
                     binding.etNewPassword.setSelection(start, end)
                 } else {
-                    start = binding.etNewPassword.getSelectionStart()
-                    end = binding.etNewPassword.getSelectionEnd()
-                    binding.etNewPassword.setTransformationMethod(null)
+                    start = binding.etNewPassword.selectionStart
+                    end = binding.etNewPassword.selectionEnd
+                    binding.etNewPassword.transformationMethod = null
                     binding.etNewPassword.setSelection(start, end)
                 }
             })
@@ -139,34 +137,34 @@ class SignUpPasswordActivity : SubModuleActivity() {
         var flag = true
         try {
             if (binding.etNewPassword.text.toString().isEmpty()) {
-                binding.etNewPassword.requestFocus();
-                binding.etNewPassword.error = resources.getString(R.string.required);
-                flag = false;
+                binding.etNewPassword.requestFocus()
+                binding.etNewPassword.error = resources.getString(R.string.required)
+                flag = false
             } else if (binding.etNewPassword.text.toString().trim().length < 6
                 || binding.etNewPassword.text.toString().trim().length > 24
             ) {
-                binding.etNewPassword.requestFocus();
+                binding.etNewPassword.requestFocus()
                 binding.etNewPassword.error =
-                    resources.getString(R.string.password_length_validation);
-                flag = false;
+                    resources.getString(R.string.password_length_validation)
+                flag = false
             } else if (CommonClass.validatePassword(
                     binding.etNewPassword.text.toString().trim()
                 ) == false
             ) {
-                binding.etNewPassword.requestFocus();
+                binding.etNewPassword.requestFocus()
                 binding.etNewPassword.error =
-                    resources.getString(R.string.password_length_validation);
-                flag = false;
+                    resources.getString(R.string.password_length_validation)
+                flag = false
             } else if (binding.etConfirmPassword.text.toString().length == 0) {
-                binding.etConfirmPassword.requestFocus();
-                binding.etConfirmPassword.error = resources.getString(R.string.required);
-                flag = false;
+                binding.etConfirmPassword.requestFocus()
+                binding.etConfirmPassword.error = resources.getString(R.string.required)
+                flag = false
             } else if (binding.etNewPassword.text.toString()
                     .trim() != binding.etConfirmPassword.text.toString().trim()
             ) {
-                binding.etConfirmPassword.requestFocus();
-                binding.etConfirmPassword.setError(getResources().getString(R.string.new_password_match_validation));
-                flag = false;
+                binding.etConfirmPassword.requestFocus()
+                binding.etConfirmPassword.error = resources.getString(R.string.new_password_match_validation)
+                flag = false
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -193,12 +191,12 @@ class SignUpPasswordActivity : SubModuleActivity() {
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         val menuSkip: MenuItem = menu.findItem(R.id.action_skip)
-        menuSkip.setVisible(true)
+        menuSkip.isVisible = true
         return super.onPrepareOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.getItemId()) {
+        return when (item.itemId) {
             R.id.action_skip -> {
                 signUpDto?.isPassword = false
                 signUpDto?.password = ""

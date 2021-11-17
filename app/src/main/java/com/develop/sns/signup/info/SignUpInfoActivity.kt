@@ -50,7 +50,7 @@ class SignUpInfoActivity : SubModuleActivity(), AppUserListener {
         initialiseProgressBar(binding.lnProgressbar)
         initialiseErrorMessage(binding.lnError)
         initToolBar()
-        initClassReference();
+        initClassReference()
         populateList()
         handleUiElement()
         checkForSubmitButton()
@@ -59,19 +59,17 @@ class SignUpInfoActivity : SubModuleActivity(), AppUserListener {
 
     private fun initToolBar() {
         try {
-            (binding.lnToolbar.toolbar as Toolbar).setTitle(getResources().getString(R.string.register))
-            setSupportActionBar(binding.lnToolbar.toolbar as Toolbar)
-            assert(getSupportActionBar() != null)
-            getSupportActionBar()?.setDisplayShowHomeEnabled(true)
-            (binding.lnToolbar.toolbar as Toolbar).setNavigationIcon(
-                ContextCompat.getDrawable(
-                    context,
-                    R.drawable.ic_action_back
-                )
+            binding.lnToolbar.toolbar.title = resources.getString(R.string.register)
+            setSupportActionBar(binding.lnToolbar.toolbar)
+            assert(supportActionBar != null)
+            supportActionBar?.setDisplayShowHomeEnabled(true)
+            binding.lnToolbar.toolbar.navigationIcon = ContextCompat.getDrawable(
+                context,
+                R.drawable.ic_action_back
             )
-            (binding.lnToolbar.toolbar as Toolbar).layoutDirection =
+            binding.lnToolbar.toolbar.layoutDirection =
                 View.LAYOUT_DIRECTION_LTR
-            (binding.lnToolbar.toolbar as Toolbar).setNavigationOnClickListener { onBackPressed() }
+            binding.lnToolbar.toolbar.setNavigationOnClickListener { onBackPressed() }
         } catch (bug: Exception) {
             bug.printStackTrace()
         }
@@ -110,7 +108,7 @@ class SignUpInfoActivity : SubModuleActivity(), AppUserListener {
 
     private fun checkForSubmitButton() = try {
         if (dataList.get(0).isCompleted == 1 && dataList.get(1).isCompleted == 1) {
-            isCompleted = true;
+            isCompleted = true
             binding.btnCreate.isEnabled = true
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 binding.btnCreate.backgroundTintList =
@@ -121,17 +119,17 @@ class SignUpInfoActivity : SubModuleActivity(), AppUserListener {
                         )
                     )
             } else {
-                binding.btnCreate.setBackgroundResource(R.drawable.boundary_primary);
+                binding.btnCreate.setBackgroundResource(R.drawable.boundary_primary)
             }
             binding.btnCreate.setTextColor(ContextCompat.getColor(context, R.color.white))
         } else {
             binding.btnCreate.isEnabled = false
-            isCompleted = false;
+            isCompleted = false
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 binding.btnCreate.backgroundTintList =
                     ColorStateList.valueOf(ContextCompat.getColor(context, R.color.md_grey_300))
             } else {
-                binding.btnCreate.setBackgroundResource(R.drawable.boundary_button_gray);
+                binding.btnCreate.setBackgroundResource(R.drawable.boundary_button_gray)
             }
             binding.btnCreate.setTextColor(ContextCompat.getColor(context, R.color.text_color))
         }
@@ -291,7 +289,7 @@ class SignUpInfoActivity : SubModuleActivity(), AppUserListener {
                         binding.rootView,
                         obj.getString("message"),
                         Toast.LENGTH_SHORT
-                    );
+                    )
                 }
             } else {
                 CommonClass.showToastMessage(
@@ -299,7 +297,7 @@ class SignUpInfoActivity : SubModuleActivity(), AppUserListener {
                     binding.rootView,
                     obj.getString("message"),
                     Toast.LENGTH_SHORT
-                );
+                )
             }
         } catch (e: Exception) {
             e.printStackTrace()

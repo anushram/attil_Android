@@ -16,9 +16,9 @@ import com.develop.sns.R;
 
 public class RoundedCornerImageView extends ImageView {
 
-    private static int DEFAULT_CORNER_COLOR = Color.WHITE;
-    private static int DEFAULT_CORNER_RADIUS = 6;
-    private static int CORNER_COUNT = 6;
+    private static final int DEFAULT_CORNER_COLOR = Color.WHITE;
+    private static final int DEFAULT_CORNER_RADIUS = 6;
+    private static final int CORNER_COUNT = 6;
 
     private static class Corner {
         int color = DEFAULT_CORNER_COLOR;
@@ -29,7 +29,7 @@ public class RoundedCornerImageView extends ImageView {
     /*
      * cache sequence  left top, right top, left bottom, right bottom
      */
-    private static Corner[] mCacheCorners = new Corner[CORNER_COUNT];
+    private static final Corner[] mCacheCorners = new Corner[CORNER_COUNT];
 
     private float mDensityMultiplier;
     private int mCornerDisableFlag = 0;
@@ -37,7 +37,7 @@ public class RoundedCornerImageView extends ImageView {
     private int mRoundedCornerColor = DEFAULT_CORNER_COLOR;
     private float mRoundedCornerRadius = DEFAULT_CORNER_RADIUS;
     private float mRoundedCornerRadiusPx;
-    private Corner[] mCorners = new Corner[CORNER_COUNT];
+    private final Corner[] mCorners = new Corner[CORNER_COUNT];
 
     public RoundedCornerImageView(Context context) {
         super(context);
