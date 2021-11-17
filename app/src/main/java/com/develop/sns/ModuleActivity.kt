@@ -12,7 +12,7 @@ import java.util.*
 
 
 open class ModuleActivity : AppCompatActivity() {
-    protected override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUpScreen()
         getSharedPreferenceValue()
@@ -21,7 +21,7 @@ open class ModuleActivity : AppCompatActivity() {
     private fun setUpScreen() {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                val window: Window = getWindow()
+                val window: Window = window
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
                 window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
                 window.statusBarColor =
@@ -46,7 +46,7 @@ open class ModuleActivity : AppCompatActivity() {
         }
     }
 
-    protected override fun onDestroy() {
+    override fun onDestroy() {
         super.onDestroy()
     }
 }

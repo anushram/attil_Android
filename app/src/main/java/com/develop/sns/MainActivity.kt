@@ -83,7 +83,7 @@ class MainActivity : SubModuleActivity() {
     }
 
     private fun parseSystemConfigData(obj: JSONObject) {
-        Log.i("Version Main Response", "" + obj.toString());
+        Log.i("Version Main Response", "" + obj.toString())
         try {
             if (obj.has("data") && !obj.isNull("data")) {
                 val dataObject = obj.getJSONObject("data")
@@ -93,7 +93,7 @@ class MainActivity : SubModuleActivity() {
                     preferenceHelper!!.saveValueToSharedPrefs(
                         AppConstant.KEY_SYSTEM_LANGUAGES,
                         systemLanguagesArr.toString()
-                    );
+                    )
                 }
 
                 if (dataObject.has("minUnits") && !dataObject.isNull("minUnits")) {
@@ -101,7 +101,7 @@ class MainActivity : SubModuleActivity() {
                     preferenceHelper!!.saveValueToSharedPrefs(
                         AppConstant.KEY_MIN_UNITS,
                         minUnitsArr.toString()
-                    );
+                    )
                 }
 
                 if (dataObject.has("maxUnits") && !dataObject.isNull("maxUnits")) {
@@ -109,70 +109,70 @@ class MainActivity : SubModuleActivity() {
                     preferenceHelper!!.saveValueToSharedPrefs(
                         AppConstant.KEY_MAX_UNITS,
                         maxUnitsArr.toString()
-                    );
+                    )
                 }
 
                 if (dataObject.has("isPaymentActive") && !dataObject.isNull("isPaymentActive")) {
                     preferenceHelper!!.saveBooleanValueToSharedPrefs(
                         AppConstant.KEY_IS_PAYMENT_ACTIVE,
                         dataObject.getBoolean("isPaymentActive")
-                    );
+                    )
                 }
 
                 if (dataObject.has("isCODActive") && !dataObject.isNull("isCODActive")) {
                     preferenceHelper!!.saveBooleanValueToSharedPrefs(
                         AppConstant.KEY_IS_COD_ACTIVE,
                         dataObject.getBoolean("isCODActive")
-                    );
+                    )
                 }
 
                 if (dataObject.has("packageCost") && !dataObject.isNull("packageCost")) {
                     preferenceHelper!!.saveIntValueToSharedPrefs(
                         AppConstant.KEY_PACKAGE_COST,
                         dataObject.getInt("packageCost")
-                    );
+                    )
                 }
 
                 if (dataObject.has("deliveryCost") && !dataObject.isNull("deliveryCost")) {
                     preferenceHelper!!.saveIntValueToSharedPrefs(
                         AppConstant.KEY_DELIVERY_COST,
                         dataObject.getInt("deliveryCost")
-                    );
+                    )
                 }
 
                 if (dataObject.has("minimumFreeDelivery") && !dataObject.isNull("minimumFreeDelivery")) {
                     preferenceHelper!!.saveIntValueToSharedPrefs(
                         AppConstant.KEY_MIN_FREE_DELIVERY,
                         dataObject.getInt("minimumFreeDelivery")
-                    );
+                    )
                 }
 
                 if (dataObject.has("minIOSVersion") && !dataObject.isNull("minIOSVersion")) {
                     preferenceHelper!!.saveValueToSharedPrefs(
                         AppConstant.KEY_MIN_IOS,
                         dataObject.getString("minIOSVersion")
-                    );
+                    )
                 }
 
                 if (dataObject.has("minAndroidVersion") && !dataObject.isNull("minAndroidVersion")) {
                     preferenceHelper!!.saveValueToSharedPrefs(
                         AppConstant.KEY_MIN_ANDROID,
                         dataObject.getString("minAndroidVersion")
-                    );
+                    )
                 }
 
                 if (dataObject.has("updatedAt") && !dataObject.isNull("updatedAt")) {
                     preferenceHelper!!.saveValueToSharedPrefs(
                         AppConstant.KEY_UPDATED_AT,
                         dataObject.getString("updatedAt")
-                    );
+                    )
                 }
 
                 if (dataObject.has("updatedAtTZ") && !dataObject.isNull("updatedAtTZ")) {
                     preferenceHelper!!.saveValueToSharedPrefs(
                         AppConstant.KEY_UPDATED_AT_TZ,
                         dataObject.getString("updatedAtTZ")
-                    );
+                    )
                 }
             }
             checkForToken()
@@ -336,7 +336,5 @@ class MainActivity : SubModuleActivity() {
         }
     }
 
-    companion object {
-
-    }
+    companion object
 }

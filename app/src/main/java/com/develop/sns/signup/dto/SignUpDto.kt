@@ -19,10 +19,6 @@ class SignUpDto : Serializable {
         return false
     }
 
-    override fun hashCode(): Int {
-        return super.hashCode()
-    }
-
     override fun toString(): String {
         return userId!!
     }

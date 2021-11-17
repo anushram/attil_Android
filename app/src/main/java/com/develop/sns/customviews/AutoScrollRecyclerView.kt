@@ -249,10 +249,6 @@ class AutoScrollRecyclerView @JvmOverloads constructor(
         } else true
     }
 
-    override fun performClick(): Boolean {
-        return super.performClick()
-    }
-
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         startScroll()
@@ -307,7 +303,7 @@ class AutoScrollRecyclerView @JvmOverloads constructor(
     /**
      * Customize the Adapter container so that the list can be displayed in an infinite loop
      */
-    private class NestingRecyclerViewAdapter<VH : ViewHolder> internal constructor(
+    private class NestingRecyclerViewAdapter<VH : ViewHolder>(
         private val mRecyclerView: AutoScrollRecyclerView, var mAdapter: Adapter<VH>
     ) :
         Adapter<VH>() {

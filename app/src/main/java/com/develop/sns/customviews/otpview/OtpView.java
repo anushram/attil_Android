@@ -66,7 +66,7 @@ public class OtpView extends AppCompatEditText {
     private static final int VIEW_TYPE_RECTANGLE = 0;
     private static final int VIEW_TYPE_LINE = 1;
     private static final int VIEW_TYPE_NONE = 2;
-    private int viewType;
+    private final int viewType;
     private int otpViewItemCount;
     private int otpViewItemWidth;
     private int otpViewItemHeight;
@@ -93,7 +93,7 @@ public class OtpView extends AppCompatEditText {
     private int itemBackgroundResource;
     private Drawable itemBackground;
     private boolean hideLineWhenFilled;
-    private boolean rtlTextDirection;
+    private final boolean rtlTextDirection;
     private String maskingChar;
     private OnOtpCompletionListener onOtpCompletionListener;
 

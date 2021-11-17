@@ -71,7 +71,7 @@ class ProductSubFragment : Fragment(), CategoryMainListener, CategoryProductList
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         preferenceHelper = PreferenceHelper(requireActivity())
-        onAttachToParentFragment(requireParentFragment());
+        onAttachToParentFragment(requireParentFragment())
     }
 
     override fun onCreateView(
@@ -133,7 +133,7 @@ class ProductSubFragment : Fragment(), CategoryMainListener, CategoryProductList
                     serviceFlag = false
                     searchQueryFlag = true
                     binding.svSearch.clearFocus()
-                    requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                    requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
                     resetPagination()
                     return false
                 }
@@ -143,7 +143,7 @@ class ProductSubFragment : Fragment(), CategoryMainListener, CategoryProductList
                         searchQuery = newText
                         serviceFlag = false
                         binding.svSearch.clearFocus()
-                        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
                         searchQueryFlag = true
                         resetPagination()
                     }
@@ -176,7 +176,7 @@ class ProductSubFragment : Fragment(), CategoryMainListener, CategoryProductList
                 ) {
                     super.onScrollStateChanged(recyclerView, newState)
                     if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        Log.d("-----", "end");
+                        Log.d("-----", "end")
                         startPage++
                         Log.e("StartPage", startPage.toString())
                         getCategoryProducts(selectedCategoryDto)
@@ -255,7 +255,7 @@ class ProductSubFragment : Fragment(), CategoryMainListener, CategoryProductList
         try {
             if (obj.has("code") && obj.getInt("code") == 200) {
                 if (obj.has("status") && obj.getBoolean("status")) {
-                    categoryMainList = ArrayList<CategoryMainDto>();
+                    categoryMainList = ArrayList<CategoryMainDto>()
                     if (obj.has("data") && !obj.isNull("data")) {
                         val dataArray = obj.getJSONArray("data")
                         for (i in 0 until dataArray.length()) {
@@ -273,7 +273,7 @@ class ProductSubFragment : Fragment(), CategoryMainListener, CategoryProductList
                             if (itemObject.has("categoryImage") && !itemObject.isNull("categoryImage")) {
                                 categoryDto.categoryImage = itemObject.getString("categoryImage")
                             }
-                            categoryMainList.add(categoryDto);
+                            categoryMainList.add(categoryDto)
                         }
                     }
                     populateCategoryData()
@@ -283,7 +283,7 @@ class ProductSubFragment : Fragment(), CategoryMainListener, CategoryProductList
                         binding.rootView,
                         obj.getString("message"),
                         Toast.LENGTH_SHORT
-                    );
+                    )
                 }
             } else {
                 CommonClass.handleErrorResponse(requireActivity(), obj, binding.rootView)
@@ -325,7 +325,7 @@ class ProductSubFragment : Fragment(), CategoryMainListener, CategoryProductList
 
     override fun selectCategoryItem(categoryMainDto: CategoryMainDto, position: Int) {
         try {
-            this.selectedCategoryDto = categoryMainDto;
+            this.selectedCategoryDto = categoryMainDto
             for (i in 0 until categoryMainList.size) {
                 val categoryMainDto1: CategoryMainDto = categoryMainList.get(i)
                 categoryMainDto1.isSelected = false
@@ -415,7 +415,7 @@ class ProductSubFragment : Fragment(), CategoryMainListener, CategoryProductList
                                     itemObject.getInt("brands")
                             }
 
-                            categoryProductList.add(categoryProductDto);
+                            categoryProductList.add(categoryProductDto)
 
                         }
                     }
@@ -456,7 +456,7 @@ class ProductSubFragment : Fragment(), CategoryMainListener, CategoryProductList
 
     override fun selectCategoryProductItem(categoryMainDto: CategoryProductDto, position: Int) {
         try {
-            launchVarietyActivity(categoryMainDto);
+            launchVarietyActivity(categoryMainDto)
         } catch (e: Exception) {
             e.printStackTrace()
         }

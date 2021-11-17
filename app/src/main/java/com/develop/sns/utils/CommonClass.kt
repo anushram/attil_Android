@@ -152,14 +152,14 @@ class CommonClass {
 
         fun saveCartMap(context: Context, cartMap: HashMap<String, NormalOfferPriceDto>) {
             try {
-                val preferenceHelper = PreferenceHelper(context);
-                val gson = Gson();
+                val preferenceHelper = PreferenceHelper(context)
+                val gson = Gson()
                 preferenceHelper.saveValueToSharedPrefs(
                     AppConstant.KEY_CART_ITEM,
                     gson.toJson(cartMap)
                 )
             } catch (e: Exception) {
-                e.printStackTrace();
+                e.printStackTrace()
             }
         }
 
@@ -175,19 +175,19 @@ class CommonClass {
         fun getCartMap(context: Context): HashMap<String, NormalOfferPriceDto> {
             var cartMap = HashMap<String, NormalOfferPriceDto>()
             try {
-                val preferenceHelper = PreferenceHelper(context);
-                val gson = Gson();
+                val preferenceHelper = PreferenceHelper(context)
+                val gson = Gson()
                 val cartMapString =
-                    preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_CART_ITEM);
+                    preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_CART_ITEM)
                 if (cartMapString != null && cartMapString.trim().isNotEmpty()) {
                     val type = object : TypeToken<HashMap<String?, NormalOfferPriceDto?>?>() {}.type
-                    cartMap = gson.fromJson(cartMapString, type);
+                    cartMap = gson.fromJson(cartMapString, type)
                 }
 
             } catch (e: Exception) {
-                e.printStackTrace();
+                e.printStackTrace()
             }
-            return cartMap;
+            return cartMap
         }
 
         fun handleErrorResponse(context: Context, jsonObject: JSONObject, view: View) {
@@ -204,92 +204,5 @@ class CommonClass {
                 )
             }
         }
-
-
-        fun getEncryptedObjectBeforeToken(
-            context: Context,
-            requestObject: JSONObject
-        ): JSONObject? {
-            var jsonObject: JSONObject? = null
-            return try {
-                val encryptString = encryptCompress(context, requestObject, false)
-                jsonObject = JSONObject()
-                jsonObject.put("data", encryptString)
-                jsonObject
-            } catch (e: java.lang.Exception) {
-                e.printStackTrace()
-                null
-            }
-        }
-
-        fun encryptCompress(context: Context, obj: JSONObject, isToken: Boolean): String? {
-            var dataObject: String? = null
-            var secretKey: String? = "T@MiCr097124!iCR"
-            try {
-                if (isToken) {
-                    secretKey =
-                        PreferenceHelper(context).getValueFromSharedPrefs(AppConstant.KEY_SECRET)
-                }
-                val encryptString = compress(obj.toString())
-                val encryptByteObject = encryptMsg(context, encryptString, secretKey)
-                val dataByteArray: ByteArray = encode(encryptByteObject, DEFAULT)
-                dataObject = encodeToString(encryptByteObject, DEFAULT)
-            } catch (e: java.lang.Exception) {
-                e.printStackTrace()
-            }
-            return dataObject
-        }
-
-        //GZIP
-        fun compress(string: String): ByteArray? {
-            var compressed: ByteArray? = null
-            try {
-                val os = ByteArrayOutputStream(string.length)
-                val gos = GZIPOutputStream(os)
-                gos.write(string.toByteArray())
-                gos.close()
-                compressed = os.toByteArray()
-                os.close()
-            } catch (e: java.lang.Exception) {
-                e.printStackTrace()
-            }
-            return compressed
-        }
-
-        fun encryptMsg(context: Context, message: ByteArray?, secretKey: String?): ByteArray? {
-            var cipherText: ByteArray? = null
-            try {
-                /* Encrypt the message. */
-                val secret: SecretKey? = generateCTRKey(secretKey)
-                var cipher: Cipher? = null
-                cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
-                cipher.init(
-                    Cipher.ENCRYPT_MODE,
-                    secret,
-                    IvParameterSpec(
-                        context.resources.getString(com.develop.sns.R.string.encryption_iv)
-                            .toByteArray(charset("UTF-8"))
-                    )
-                )
-                cipherText = cipher.doFinal(message)
-            } catch (e: java.lang.Exception) {
-                e.printStackTrace()
-            }
-            return cipherText
-        }
-
-        fun generateCTRKey(key: String?): SecretKey? {
-            try {
-                val md: MessageDigest = MessageDigest.getInstance("SHA-256")
-                val keyByte: ByteArray = md.digest(key!!.toByteArray(charset("UTF-8")))
-                return SecretKeySpec(keyByte, "AES")
-            } catch (e: NoSuchAlgorithmException) {
-                e.printStackTrace()
-            } catch (e: UnsupportedEncodingException) {
-                e.printStackTrace()
-            }
-            return null
-        }
-
     }
 }

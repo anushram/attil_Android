@@ -65,7 +65,7 @@ class LoginActivity : SubModuleActivity() {
             languageId = preferenceHelper!!.getIntFromSharedPrefs(AppConstant.KEY_LANGUAGE_ID)
             myAnim = AnimationUtils.loadAnimation(this, R.anim.zoom_in_out)
             binding.btnSignUp.startAnimation(myAnim)
-            binding.cbShowPassword.setButtonDrawable(R.drawable.password_show_drawable);
+            binding.cbShowPassword.setButtonDrawable(R.drawable.password_show_drawable)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -110,7 +110,7 @@ class LoginActivity : SubModuleActivity() {
 
     private fun handleUiElement() {
         try {
-            binding.lnError.ivClose!!.setOnClickListener(View.OnClickListener { hideErrorMessage() })
+            binding.lnError.ivClose.setOnClickListener(View.OnClickListener { hideErrorMessage() })
 
             binding.etMobileNo.setOnEditorActionListener(OnEditorActionListener { v, actionId, event -> ////Log.i("onEditorAction", "onEditorAction");
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -236,7 +236,7 @@ class LoginActivity : SubModuleActivity() {
                     CommonClass.showToastMessage(
                         context,
                         binding.rlLoginMainLayout,
-                        getResources().getString(R.string.no_internet),
+                        resources.getString(R.string.no_internet),
                         Toast.LENGTH_SHORT
                     )
                 }
@@ -260,16 +260,16 @@ class LoginActivity : SubModuleActivity() {
                 }
 
                 if (dataObject.has("otp") && !dataObject.isNull("otp")) {
-                    otp = dataObject.getString("otp");
+                    otp = dataObject.getString("otp")
                 }
-                launchOTPVerifyActivity();
+                launchOTPVerifyActivity()
             } else {
                 CommonClass.showToastMessage(
                     context,
                     binding.rlLoginMainLayout,
                     obj.getString("message"),
                     Toast.LENGTH_SHORT
-                );
+                )
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -374,7 +374,7 @@ class LoginActivity : SubModuleActivity() {
                     binding.rlLoginMainLayout,
                     obj.getString("message"),
                     Toast.LENGTH_SHORT
-                );
+                )
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -443,9 +443,9 @@ class LoginActivity : SubModuleActivity() {
     private fun validateMob(): Boolean {
         var flag = true
         try {
-            if (binding.etMobileNo.getText().toString().isEmpty()) {
+            if (binding.etMobileNo.text.toString().isEmpty()) {
                 binding.etMobileNo.requestFocus()
-                binding.etMobileNo.setError(resources.getString(R.string.required))
+                binding.etMobileNo.error = resources.getString(R.string.required)
                 flag = false
             }
         } catch (e: Exception) {

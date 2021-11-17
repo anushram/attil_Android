@@ -54,14 +54,14 @@ class ItemDetailsListAdapter(
                 tvProductName.text = normalOfferDto.productName
 
                 val obj =
-                    preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_MIN_UNITS);
+                    preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_MIN_UNITS)
 
                 val jsonArray = JSONArray(obj)
 
                 Picasso.with(context).load(normalOfferDto.brandImage!![0])
                     .placeholder(R.drawable.product)
                     .error(R.drawable.product)
-                    .into(ivProduct);
+                    .into(ivProduct)
                 Log.e("PackageType", normalOfferDto.packageType!!)
                 Log.e("OfferType", normalOfferDto.offerType!!)
                 if (normalOfferDto.packageType.equals("loose", true)
@@ -73,20 +73,20 @@ class ItemDetailsListAdapter(
                         .plus(priceDetailDto.maxUnitMeasureType)
 
 
-                    minUnit = priceDetailDto.minUnit!!.toDouble()
-                    if (!dataExists(jsonArray, priceDetailDto.minUnitMeasureType!!)) {
-                        minUnit = priceDetailDto.minUnit!! * 1000.toDouble()
+                    minUnit = priceDetailDto.minUnit.toDouble()
+                    if (!dataExists(jsonArray, priceDetailDto.minUnitMeasureType)) {
+                        minUnit = priceDetailDto.minUnit * 1000.toDouble()
                     }
-                    val result: Double = minUnit / priceDetailDto.unit!!.toDouble()
-                    val normalPrice = priceDetailDto.normalPrice!!
+                    val result: Double = minUnit / priceDetailDto.unit.toDouble()
+                    val normalPrice = priceDetailDto.normalPrice
                     mrp = result.times(normalPrice)
 
-                    val offerPrice = priceDetailDto.attilPrice!!
+                    val offerPrice = priceDetailDto.attilPrice
                     offerMrp = result.times(offerPrice)
 
-                    tvOfferPercentage.visibility = View.VISIBLE
+                    lnOfferPercentage.visibility = View.VISIBLE
                     tvOfferPercentage.text =
-                        priceDetailDto.offerPercentage!!.toString().plus("% OFF")
+                        priceDetailDto.offerPercentage.toString().plus("% OFF")
                     tvMeasure.text = measureText
 
                     tvMrp.text =
@@ -116,10 +116,10 @@ class ItemDetailsListAdapter(
                     measureText =
                         priceDetailDto.unit.toString().plus(" ").plus(priceDetailDto.measureType)
 
-                    mrp = priceDetailDto.normalPrice!!.toDouble()
-                    offerMrp = priceDetailDto.attilPrice!!.toDouble()
+                    mrp = priceDetailDto.normalPrice.toDouble()
+                    offerMrp = priceDetailDto.attilPrice.toDouble()
 
-                    tvOfferPercentage.visibility = View.VISIBLE
+                    lnOfferPercentage.visibility = View.VISIBLE
                     tvOfferPercentage.text =
                         priceDetailDto.offerPercentage.toString().plus(" ").plus("% OFF")
 
@@ -150,10 +150,10 @@ class ItemDetailsListAdapter(
                     measureText = priceDetailDto.unit.toString().plus(" ")
                         .plus(priceDetailDto.measureType)
 
-                    mrp = priceDetailDto.normalPrice!!.toDouble()
-                    offerMrp = priceDetailDto.attilPrice!!.toDouble()
+                    mrp = priceDetailDto.normalPrice.toDouble()
+                    offerMrp = priceDetailDto.attilPrice.toDouble()
 
-                    tvOfferPercentage.visibility = View.GONE
+                    lnOfferPercentage.visibility = View.GONE
                     lnBogeMain.visibility = View.GONE
                     ivBogo.visibility = View.VISIBLE
 
@@ -178,8 +178,8 @@ class ItemDetailsListAdapter(
                     measureText = priceDetailDto.unit.toString().plus(" ")
                         .plus(priceDetailDto.measureType)
 
-                    mrp = priceDetailDto.normalPrice!!.toDouble()
-                    offerMrp = priceDetailDto.attilPrice!!.toDouble()
+                    mrp = priceDetailDto.normalPrice.toDouble()
+                    offerMrp = priceDetailDto.attilPrice.toDouble()
 
                     diff = (mrp - offerMrp)
 
@@ -197,14 +197,14 @@ class ItemDetailsListAdapter(
                             .plus(context.getString(R.string.Rs)).plus("")
                             .plus("%.2f".format(diff))
 
-                    tvOfferPercentage.visibility = View.GONE
+                    lnOfferPercentage.visibility = View.GONE
                     lnBogeMain.visibility = View.VISIBLE
                     ivBogo.visibility = View.GONE
 
                     Picasso.with(context).load(priceDetailDto.bogeProductImg)
                         .placeholder(R.drawable.product)
                         .error(R.drawable.product)
-                        .into(ivBogeBrand);
+                        .into(ivBogeBrand)
                     tvBogeName.text = priceDetailDto.bogeProductName
                     tvBogeQty.text = priceDetailDto.bogeUnit.toString().plus(" ")
                         .plus(priceDetailDto.bogeMeasureType)
@@ -217,7 +217,7 @@ class ItemDetailsListAdapter(
                     btnAdd.visibility = View.GONE
                     lnLooseAdd.visibility = View.VISIBLE
                     lnAdd.visibility = View.GONE
-                    val kg = priceDetailDto.quantity!!.toDouble() * 0.001
+                    val kg = priceDetailDto.quantity.toDouble() * 0.001
                     var minUnit = "0"
                     var maxUnit = "0"
                     val qtyStr = "%.3f".format(kg)
@@ -231,7 +231,7 @@ class ItemDetailsListAdapter(
                     tvGmCount.text = minUnit
                     tvKgCount.text = maxUnit
                 } else {
-                    if (priceDetailDto.quantity!! > 0) {
+                    if (priceDetailDto.quantity > 0) {
                         btnAdd.visibility = View.GONE
                         lnLooseAdd.visibility = View.GONE
                         lnAdd.visibility = View.VISIBLE

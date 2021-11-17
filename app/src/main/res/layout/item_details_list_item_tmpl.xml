@@ -415,20 +415,28 @@
                         android:src="@drawable/buy"
                         android:visibility="gone" />
 
-                    <TextView
-                        android:id="@+id/tv_offer_percentage"
+                    <LinearLayout
+                        android:id="@+id/ln_offer_percentage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="start"
                         android:background="@drawable/boundary_primary"
-                        android:ellipsize="end"
-                        android:fontFamily="@font/noto_sans_bold"
-                        android:paddingStart="6dp"
-                        android:paddingEnd="6dp"
-                        android:text="12% OFF"
-                        android:textColor="@color/white"
-                        android:textSize="16sp"
-                        android:visibility="visible" />
+                        android:paddingStart="10dp"
+                        android:layout_gravity="start"
+                        android:paddingTop="1dp"
+                        android:paddingEnd="10dp"
+                        android:paddingBottom="1dp">
+
+                        <TextView
+                            android:id="@+id/tv_offer_percentage"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:fontFamily="@font/noto_sans_bold"
+                            android:text="12% OFF"
+                            android:textColor="@color/white"
+                            android:textSize="13sp"
+                            android:visibility="visible" />
+                    </LinearLayout>
 
                 </LinearLayout>
 

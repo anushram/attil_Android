@@ -94,7 +94,7 @@ class TopOffersListAdapter(
                     Picasso.with(context).load(item.brandImage!![j])
                         .placeholder(R.drawable.product)
                         .error(R.drawable.product).fit()
-                        .into(ivProduct);
+                        .into(ivProduct)
                 }
 
                 measureText = item.priceDetails!![0].unit.toString().plus(" ")
@@ -103,7 +103,7 @@ class TopOffersListAdapter(
                     .plus(item.priceDetails!![0].attilPrice)
                 tvMeasure.text = measureText
 
-                tvOfferPercentage.visibility = View.VISIBLE
+                lnOfferPercentage.visibility = View.VISIBLE
                 tvOfferPercentage.text =
                     item.priceDetails?.get(0)!!.offerPercentage.toString().plus("% OFF")
 

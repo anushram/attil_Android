@@ -38,7 +38,7 @@ class InfoListAdapter(
                     Picasso.with(context).load(R.drawable.verified)
                         .placeholder(R.drawable.verified)
                         .error(R.drawable.verified)
-                        .into(ivPicture);
+                        .into(ivPicture)
                     if (position == 0) {
                         if (!item.mobileNo!!.isEmpty()) {
                             tvNumber.visibility = View.VISIBLE
@@ -54,7 +54,7 @@ class InfoListAdapter(
                     Picasso.with(context).load(R.drawable.close)
                         .placeholder(R.drawable.close)
                         .error(R.drawable.close)
-                        .into(ivPicture);
+                        .into(ivPicture)
                 }
                 lnMain.setOnClickListener {
                     appUserListener.selectItem(position)

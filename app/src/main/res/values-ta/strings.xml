@@ -75,4 +75,7 @@
     <string name="clear">Clear</string>
     <string name="upto">upto</string>
     <string name="totally">Totally</string>
+    <string name="your_cart_is_empty">Your Cart Is Empty</string>
+    <string name="total_cart">Total Cart</string>
+    <string name="checkout">Checkout</string>
 </resources>

@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.develop.sns.R
@@ -41,28 +40,26 @@ class CartItemActivity : SubModuleActivity(), CartListener {
         setContentView(binding.root)
 
         initialiseProgressBar(binding.lnProgressbar)
-        initToolBar()
-        getIntentValue();
+        getIntentValue()
         initClassReference()
         handleUiElement()
         getCartItems()
     }
 
-    private fun initToolBar() {
+    private fun initToolBar(size: Int) {
         try {
-            (binding.lnToolbar.toolbar as Toolbar).setTitle(getResources().getString(R.string.user_details))
-            setSupportActionBar(binding.lnToolbar.toolbar as Toolbar)
-            assert(getSupportActionBar() != null)
-            getSupportActionBar()?.setDisplayShowHomeEnabled(true)
-            (binding.lnToolbar.toolbar as Toolbar).setNavigationIcon(
-                ContextCompat.getDrawable(
-                    context,
-                    R.drawable.ic_action_back
-                )
+            binding.lnToolbar.toolbar.title =
+                resources.getString(R.string.total_cart) + " - " + size
+            setSupportActionBar(binding.lnToolbar.toolbar)
+            assert(supportActionBar != null)
+            supportActionBar?.setDisplayShowHomeEnabled(true)
+            binding.lnToolbar.toolbar.navigationIcon = ContextCompat.getDrawable(
+                context,
+                R.drawable.ic_action_back
             )
-            (binding.lnToolbar.toolbar as Toolbar).layoutDirection =
+            binding.lnToolbar.toolbar.layoutDirection =
                 View.LAYOUT_DIRECTION_LTR
-            (binding.lnToolbar.toolbar as Toolbar).setNavigationOnClickListener { onBackPressed() }
+            binding.lnToolbar.toolbar.setNavigationOnClickListener { onBackPressed() }
         } catch (bug: Exception) {
             bug.printStackTrace()
         }
@@ -78,7 +75,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
 
     private fun initClassReference() {
         try {
-            cartItemList = ArrayList();
+            cartItemList = ArrayList()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -100,7 +97,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                     "userId",
                     preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_USER_ID)
                 )
-                Log.e("Normal request", requestObject.toString())
+                showProgressBar()
                 val cartViewModel = CartViewModel()
                 cartViewModel.getCartItem(
                     requestObject,
@@ -125,6 +122,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
     private fun parseCartItemsResponse(obj: JSONObject) {
         try {
             Log.e("CartItem", obj.toString())
+            binding.rootView.visibility = View.VISIBLE
             if (obj.has("code") && obj.getInt("code") == 200) {
                 if (obj.has("status") && obj.getBoolean("status")) {
                     if (obj.has("data") && !obj.isNull("data")) {
@@ -144,14 +142,16 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                                 }
 
                                 if (productDetailsObj.has("productCode") && !productDetailsObj.isNull(
-                                        "productCode")
+                                        "productCode"
+                                    )
                                 ) {
                                     cartItemDto.productCode =
                                         productDetailsObj.getString("productCode")
                                 }
 
                                 if (productDetailsObj.has("productName") && !productDetailsObj.isNull(
-                                        "productName")
+                                        "productName"
+                                    )
                                 ) {
                                     cartItemDto.productName =
                                         productDetailsObj.getString("productName")
@@ -159,7 +159,8 @@ class CartItemActivity : SubModuleActivity(), CartListener {
 
                                 val brandImageList = ArrayList<String>()
                                 if (productDetailsObj.has("brandImage") && !productDetailsObj.isNull(
-                                        "brandImage")
+                                        "brandImage"
+                                    )
                                 ) {
                                     val brandImageArray =
                                         productDetailsObj.getJSONArray("brandImage")
@@ -174,13 +175,15 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                                 }
 
                                 if (productDetailsObj.has("brandName") && !productDetailsObj.isNull(
-                                        "brandName")
+                                        "brandName"
+                                    )
                                 ) {
                                     cartItemDto.brandName = productDetailsObj.getString("brandName")
                                 }
 
                                 if (productDetailsObj.has("packageType") && !productDetailsObj.isNull(
-                                        "packageType")
+                                        "packageType"
+                                    )
                                 ) {
                                     cartItemDto.packageType =
                                         productDetailsObj.getString("packageType")
@@ -188,32 +191,36 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                                 }
 
                                 if (productDetailsObj.has("offerType") && !productDetailsObj.isNull(
-                                        "offerType")
+                                        "offerType"
+                                    )
                                 ) {
                                     cartItemDto.offerType = productDetailsObj.getString("offerType")
                                     offerType = productDetailsObj.getString("offerType")
                                 }
 
                                 if (productDetailsObj.has("description") && !productDetailsObj.isNull(
-                                        "description")
+                                        "description"
+                                    )
                                 ) {
                                     cartItemDto.description =
                                         productDetailsObj.getString("description")
                                 }
 
                                 if (productDetailsObj.has("createdAtTZ") && !productDetailsObj.isNull(
-                                        "createdAtTZ")
+                                        "createdAtTZ"
+                                    )
                                 ) {
                                     cartItemDto.createdAtTZ =
                                         productDetailsObj.getString("createdAtTZ")
                                 }
 
-                                val priceDetailsArray = ArrayList<NormalOfferPriceDto>();
+                                val priceDetailsArray = ArrayList<NormalOfferPriceDto>()
                                 if (productDetailsObj.has("priceDetails") && !productDetailsObj.isNull(
-                                        "priceDetails")
+                                        "priceDetails"
+                                    )
                                 ) {
                                     val priceArray = productDetailsObj.getJSONArray("priceDetails")
-                                    val sortedPriceArray = sortJsonArray(priceArray);
+                                    val sortedPriceArray = sortJsonArray(priceArray)
                                     for (k in 0 until sortedPriceArray.length()) {
                                         val priceObject = sortedPriceArray.getJSONObject(k)
                                         val normalOfferPriceDto = NormalOfferPriceDto()
@@ -353,7 +360,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                                 cartItemDto.priceDetails = priceDetailsArray
                             }
 
-                            val cartDetailsList = ArrayList<CartDetailsDto>();
+                            val cartDetailsList = ArrayList<CartDetailsDto>()
                             if (itemObject.has("cart") && !itemObject.isNull("cart")) {
                                 val cartArray = itemObject.getJSONArray("cart")
                                 for (k in 0 until cartArray.length()) {
@@ -405,14 +412,13 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                             cartItemList.add(cartItemDto)
                         }
                     }
-
                 }
-                populateCartItemList()
             } else {
                 binding.lvProducts.visibility = View.GONE
                 binding.tvNoData.visibility = View.VISIBLE
                 CommonClass.handleErrorResponse(context, obj, binding.rootView)
             }
+            populateCartItemList()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -420,6 +426,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
 
     private fun populateCartItemList() {
         try {
+            initToolBar(cartItemList.size)
             if (!cartItemList.isNullOrEmpty()) {
                 binding.lvProducts.visibility = View.VISIBLE
                 binding.tvNoData.visibility = View.GONE

@@ -62,7 +62,7 @@ class VarietyListActivity : SubModuleActivity(), CategoryProductListener {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        fa = this;
+        fa = this
 
         initialiseProgressBar(binding.lnProgressbar)
         initialiseErrorMessage(binding.lnError)
@@ -101,8 +101,8 @@ class VarietyListActivity : SubModuleActivity(), CategoryProductListener {
         try {
             val intent = intent
             categoryProductDto =
-                intent.getSerializableExtra("categoryMainDto") as CategoryProductDto;
-            getProductByVariety();
+                intent.getSerializableExtra("categoryMainDto") as CategoryProductDto
+            getProductByVariety()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -129,7 +129,7 @@ class VarietyListActivity : SubModuleActivity(), CategoryProductListener {
                     serviceFlag = false
                     searchQueryFlag = true
                     binding.svSearch.clearFocus()
-                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
                     resetPagination()
                     return false
                 }
@@ -139,7 +139,7 @@ class VarietyListActivity : SubModuleActivity(), CategoryProductListener {
                         searchQuery = newText
                         serviceFlag = false
                         binding.svSearch.clearFocus()
-                        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
                         searchQueryFlag = true
                         resetPagination()
                     }
@@ -173,10 +173,10 @@ class VarietyListActivity : SubModuleActivity(), CategoryProductListener {
                 ) {
                     super.onScrollStateChanged(recyclerView, newState)
                     if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        Log.d("-----", "end");
+                        Log.d("-----", "end")
                         startPage++
                         Log.e("StartPage", startPage.toString())
-                        getProductByVariety();
+                        getProductByVariety()
                     }
                 }
             })
@@ -285,7 +285,7 @@ class VarietyListActivity : SubModuleActivity(), CategoryProductListener {
                                     itemObject.getInt("brands")
                             }
 
-                            productVaritiesList.add(categoryProductDto);
+                            productVaritiesList.add(categoryProductDto)
 
                         }
                     }
@@ -326,7 +326,7 @@ class VarietyListActivity : SubModuleActivity(), CategoryProductListener {
 
     override fun selectCategoryProductItem(categoryMainDto: CategoryProductDto, position: Int) {
         try {
-            launchBrandListActivity(categoryMainDto);
+            launchBrandListActivity(categoryMainDto)
         } catch (e: Exception) {
             e.printStackTrace()
         }

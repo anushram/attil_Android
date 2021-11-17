@@ -20,10 +20,6 @@ class ApplicationManager : Application() {
         MultiDex.install(this)
     }
 
-    override fun onTerminate() {
-        super.onTerminate()
-    }
-
     override fun onCreate() {
         super.onCreate()
         instance = this

@@ -17,12 +17,12 @@ class SplashActivity : Activity() {
     private var dataObject: String? = null
     private val binding by lazy { ActivitySplashBinding.inflate(layoutInflater) }
 
-    protected override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                val window: Window = getWindow()
+                val window: Window = window
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
                 window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
                 window.statusBarColor =
@@ -43,13 +43,13 @@ class SplashActivity : Activity() {
 
     private fun checkNewIntent() {
         try {
-            onNewIntent(getIntent())
+            onNewIntent(intent)
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    protected override fun onNewIntent(intent: Intent) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         try {
 //            val extras: Bundle = intent.getExtras()!!

@@ -38,19 +38,17 @@ class LanguageSelectionActivity : SubModuleActivity() {
 
     private fun initToolBar() {
         try {
-            (binding.lnToolbar.toolbar as Toolbar).setTitle(getResources().getString(R.string.language_title))
-            setSupportActionBar(binding.lnToolbar.toolbar as Toolbar)
+            binding.lnToolbar.toolbar.title = resources.getString(R.string.language_title)
+            setSupportActionBar(binding.lnToolbar.toolbar)
             assert(supportActionBar != null)
             supportActionBar?.setDisplayShowHomeEnabled(true)
-            (binding.lnToolbar.toolbar as Toolbar).setNavigationIcon(
-                ContextCompat.getDrawable(
-                    context,
-                    R.drawable.ic_action_back
-                )
+            binding.lnToolbar.toolbar.navigationIcon = ContextCompat.getDrawable(
+                context,
+                R.drawable.ic_action_back
             )
-            (binding.lnToolbar.toolbar as Toolbar).layoutDirection =
+            binding.lnToolbar.toolbar.layoutDirection =
                 View.LAYOUT_DIRECTION_LTR
-            (binding.lnToolbar.toolbar as Toolbar).setNavigationOnClickListener { onBackPressed() }
+            binding.lnToolbar.toolbar.setNavigationOnClickListener { onBackPressed() }
         } catch (bug: Exception) {
             bug.printStackTrace()
         }

@@ -50,10 +50,10 @@ class CartItemListAdapter(
                     Picasso.with(context).load(cartItemDto.brandImage[j])
                         .placeholder(R.drawable.product)
                         .error(R.drawable.product)
-                        .into(ivProduct);
+                        .into(ivProduct)
                 }
 
-                val obj = preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_MIN_UNITS);
+                val obj = preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_MIN_UNITS)
                 val jsonArray = JSONArray(obj)
 
                 val normalOfferPriceDto: NormalOfferPriceDto = cartItemDto.priceDetails[0]
@@ -64,19 +64,19 @@ class CartItemListAdapter(
                         .plus(normalOfferPriceDto.maxUnit).plus(" ")
                         .plus(normalOfferPriceDto.maxUnitMeasureType)
 
-                    minUnit = normalOfferPriceDto.minUnit!!.toDouble()
-                    if (!userexists(jsonArray, normalOfferPriceDto.minUnitMeasureType!!)) {
-                        minUnit = (normalOfferPriceDto.minUnit!! * 1000).toDouble()
+                    minUnit = normalOfferPriceDto.minUnit.toDouble()
+                    if (!userexists(jsonArray, normalOfferPriceDto.minUnitMeasureType)) {
+                        minUnit = (normalOfferPriceDto.minUnit * 1000).toDouble()
                     }
 
-                    val result: Double = minUnit.div(normalOfferPriceDto.unit!!.toDouble())
-                    mrp = result.times(normalOfferPriceDto.normalPrice!!)
-                    offerMrp = result.times(normalOfferPriceDto.attilPrice!!)
+                    val result: Double = minUnit.div(normalOfferPriceDto.unit.toDouble())
+                    mrp = result.times(normalOfferPriceDto.normalPrice)
+                    offerMrp = result.times(normalOfferPriceDto.attilPrice)
                     diff = (mrp - offerMrp)
 
-                    tvOfferPercentage.visibility = View.VISIBLE
+                    lnOfferPercentage.visibility = View.VISIBLE
                     tvOfferPercentage.text =
-                        normalOfferPriceDto.offerPercentage!!.toString().plus("% OFF")
+                        normalOfferPriceDto.offerPercentage.toString().plus("% OFF")
 
                     tvAvailability.visibility = View.VISIBLE
                     tvAvailability.text = measureText
@@ -101,11 +101,11 @@ class CartItemListAdapter(
                         .plus(normalOfferPriceDto.unit).plus(" ")
                         .plus(normalOfferPriceDto.measureType)
 
-                    mrp = normalOfferPriceDto.normalPrice!!.toDouble()
-                    offerMrp = normalOfferPriceDto.attilPrice!!.toDouble()
+                    mrp = normalOfferPriceDto.normalPrice.toDouble()
+                    offerMrp = normalOfferPriceDto.attilPrice.toDouble()
                     diff = (mrp - offerMrp)
 
-                    tvOfferPercentage.visibility = View.VISIBLE
+                    lnOfferPercentage.visibility = View.VISIBLE
                     tvOfferPercentage.text =
                         normalOfferPriceDto.offerPercentage.toString().plus("-")
                             .plus(cartItemDto.priceDetails[cartItemDto.priceDetails.size - 1].offerPercentage)
@@ -129,8 +129,8 @@ class CartItemListAdapter(
 
                 } else if (cartItemDto.packageType == "packed" && cartItemDto.offerType == "BOGO") {
 
-                    mrp = normalOfferPriceDto.normalPrice!!.toDouble()
-                    offerMrp = normalOfferPriceDto.attilPrice!!.toDouble()
+                    mrp = normalOfferPriceDto.normalPrice.toDouble()
+                    offerMrp = normalOfferPriceDto.attilPrice.toDouble()
                     diff = (mrp - offerMrp)
 
                     tvMrp.text =
@@ -147,7 +147,7 @@ class CartItemListAdapter(
                             .plus(context.getString(R.string.Rs)).plus("")
                             .plus("%.2f".format(diff))
 
-                    tvOfferPercentage.visibility = View.GONE
+                    lnOfferPercentage.visibility = View.GONE
                     tvAvailability.visibility = View.GONE
 
                 } else if (cartItemDto.packageType.equals("packed") && cartItemDto.offerType.equals(
@@ -155,8 +155,8 @@ class CartItemListAdapter(
                         false
                     )
                 ) {
-                    mrp = normalOfferPriceDto.normalPrice!!.toDouble()
-                    offerMrp = normalOfferPriceDto.attilPrice!!.toDouble()
+                    mrp = normalOfferPriceDto.normalPrice.toDouble()
+                    offerMrp = normalOfferPriceDto.attilPrice.toDouble()
                     diff = (mrp - offerMrp)
 
                     tvMrp.text =
@@ -173,7 +173,7 @@ class CartItemListAdapter(
                             .plus(context.getString(R.string.Rs)).plus("")
                             .plus("%.2f".format(diff))
 
-                    tvOfferPercentage.visibility = View.GONE
+                    lnOfferPercentage.visibility = View.GONE
                     tvAvailability.visibility = View.GONE
                 }
 

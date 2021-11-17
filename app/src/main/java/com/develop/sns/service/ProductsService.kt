@@ -41,7 +41,7 @@ class ProductsService : JobService() {
             val scheduler = context.getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
             scheduler.cancel(1)
             Log.e("ProducrList", jsonObject.toString())
-            preferenceHelper!!.saveValueToSharedPrefs(
+            preferenceHelper.saveValueToSharedPrefs(
                 AppConstant.KEY_PRODUCTS_OBJ,
                 jsonObject.toString()
             )
