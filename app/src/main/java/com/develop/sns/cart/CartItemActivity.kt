@@ -372,14 +372,40 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                                         cartDetailsDto.cartItemId = cartObject.getString("_id")
                                     }
 
+                                    if (cartObject.has("measureType") && !cartObject.isNull("measureType")) {
+                                        cartDetailsDto.measureType =
+                                            cartObject.getString("measureType")
+                                    }
+
+                                    if (cartObject.has("unit") && !cartObject.isNull("unit")) {
+                                        cartDetailsDto.unit = cartObject.getInt("unit")
+                                    }
+
+                                    if (cartObject.has("normalPrice") && !cartObject.isNull("normalPrice")) {
+                                        cartDetailsDto.normalPrice =
+                                            cartObject.getInt("normalPrice")
+                                    }
+
+                                    if (cartObject.has("attilPrice") && !cartObject.isNull("attilPrice")) {
+                                        cartDetailsDto.attilPrice = cartObject.getInt("attilPrice")
+                                    }
+
                                     if (cartObject.has("createdAtTZ") && !cartObject.isNull("createdAtTZ")) {
                                         cartDetailsDto.updatedAt =
-                                            CommonClass.getDateTimeFromUtc(cartObject.getString("createdAtTZ"),AppConstant.appDateFormat,AppConstant.appDateTimeFormat_TimeZone)
+                                            CommonClass.getDateTimeFromUtc(
+                                                cartObject.getString("createdAtTZ"),
+                                                AppConstant.appDateFormat,
+                                                AppConstant.appDateTimeFormat_TimeZone
+                                            )
                                     }
 
                                     if (cartObject.has("updatedAtTZ") && !cartObject.isNull("updatedAtTZ")) {
                                         cartDetailsDto.updatedAt =
-                                            CommonClass.getDateTimeFromUtc(cartObject.getString("updatedAtTZ"),AppConstant.appDateFormat,AppConstant.appDateTimeFormat_TimeZone)
+                                            CommonClass.getDateTimeFromUtc(
+                                                cartObject.getString("updatedAtTZ"),
+                                                AppConstant.appDateFormat,
+                                                AppConstant.appDateTimeFormat_TimeZone
+                                            )
                                     }
 
                                     if (cartObject.has("selectedMin") && !cartObject.isNull("selectedMin")) {
@@ -410,9 +436,91 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                                         }
                                     }
 
+                                    if (cartObject.has("maxUnit") && !cartObject.isNull("maxUnit")) {
+
+                                        val maxUnitObject = cartObject.getJSONObject("maxUnit")
+
+                                        if (maxUnitObject.has("measureType")) {
+                                            cartDetailsDto.maxUnitMeasureType =
+                                                maxUnitObject.getString("measureType")
+                                        }
+                                        if (maxUnitObject.has("unit") && !maxUnitObject.isNull("unit")) {
+                                            cartDetailsDto.maxUnit =
+                                                maxUnitObject.getInt("unit")
+                                        }
+                                    }
+
                                     if (cartObject.has("selectedItemCount") && !cartObject.isNull("selectedItemCount")) {
                                         cartDetailsDto.cartSelectedItemCount =
                                             cartObject.getInt("selectedItemCount")
+                                    }
+
+                                    if (cartObject.has("offerDetails") && !cartObject.isNull("offerDetails")) {
+                                        val offerDetailsObject =
+                                            cartObject.getJSONObject("offerDetails")
+                                        if (offerDetailsObject.has("measureType")) {
+                                            cartDetailsDto.offerMeasureType =
+                                                offerDetailsObject.getString("measureType")
+                                        }
+
+                                        if (offerDetailsObject.has("unit") && !offerDetailsObject.isNull(
+                                                "unit"
+                                            )
+                                        ) {
+                                            cartDetailsDto.offerUnit =
+                                                offerDetailsObject.getInt("unit")
+                                        }
+
+                                        if (offerDetailsObject.has("offerPercentage")
+                                            && !offerDetailsObject.isNull(
+                                                "offerPercentage"
+                                            )
+                                        ) {
+                                            cartDetailsDto.offerPercentage =
+                                                offerDetailsObject.getInt("offerPercentage")
+                                        }
+
+                                        if (offerDetailsObject.has("extraProduct")
+                                            && !offerDetailsObject.isNull("extraProduct")
+                                        ) {
+                                            val extraProdObj =
+                                                offerDetailsObject.getJSONObject("extraProduct")
+                                            if (extraProdObj.has("productName")
+                                                && !extraProdObj.isNull("productName")
+                                            ) {
+                                                cartDetailsDto.bogeProductName =
+                                                    extraProdObj.getString("productName")
+                                            }
+                                            if (extraProdObj.has("brandImage")
+                                                && !extraProdObj.isNull("brandImage")
+                                            ) {
+                                                val extraBrandImg =
+                                                    extraProdObj.getJSONArray("brandImage")
+                                                cartDetailsDto.bogeProductImg =
+                                                    extraBrandImg.getString(0)
+                                            }
+                                            if (extraProdObj.has("priceDetails")
+                                                && !extraProdObj.isNull("priceDetails")
+                                            ) {
+                                                val extraPrice =
+                                                    extraProdObj.getJSONArray("priceDetails")
+                                                val extraPriceObj = extraPrice.getJSONObject(0)
+                                                if (extraPriceObj.has("unit") && !extraPriceObj.isNull(
+                                                        "unit"
+                                                    )
+                                                ) {
+                                                    cartDetailsDto.bogeUnit =
+                                                        extraPriceObj.getInt("unit")
+                                                }
+                                                if (extraPriceObj.has("measureType") && !extraPriceObj.isNull(
+                                                        "measureType"
+                                                    )
+                                                ) {
+                                                    cartDetailsDto.bogeMeasureType =
+                                                        extraPriceObj.getString("measureType")
+                                                }
+                                            }
+                                        }
                                     }
 
                                     cartDetailsList.add(cartDetailsDto)

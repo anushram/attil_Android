@@ -9,8 +9,21 @@ class CartDetailsDto : Serializable {
     var cartMinUnitMeasureType: String = ""
     var cartSelectedMaxUnit: Int = 0
     var cartMaxUnitMeasureType: String = ""
+    var maxUnit: Int = 0
+    var maxUnitMeasureType: String = ""
     var cartSelectedItemCount: Int = 0
+    var unit: Int = 0
+    var normalPrice: Int = 0
+    var attilPrice: Int = 0
     var updatedAt: String = ""
+    var measureType: String = ""
+    var offerMeasureType: String = ""
+    var offerUnit: Int = 0
+    var offerPercentage: Int = 0
+    var bogeProductName: String = ""
+    var bogeProductImg: String = ""
+    var bogeUnit: Int = 0
+    var bogeMeasureType: String = ""
 
     override fun toString(): String {
         return cartItemId

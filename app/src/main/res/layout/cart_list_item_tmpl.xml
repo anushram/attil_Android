@@ -9,13 +9,10 @@
         android:id="@+id/cv_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="-6dp"
-        android:layout_marginTop="-10dp"
-        android:layout_marginEnd="-6dp"
         app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="8dp"
         app:cardElevation="4dp"
-        app:cardMaxElevation="8dp"
+        app:cardMaxElevation="6dp"
         app:cardUseCompatPadding="true">
 
         <LinearLayout
@@ -90,7 +87,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:visibility="visible">
+                            android:visibility="gone">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -113,6 +110,16 @@
                                 android:textSize="14sp"
                                 android:visibility="visible" />
                         </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tv_available"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:fontFamily="@font/noto_sans_regular"
+                            android:textColor="@color/text_color"
+                            android:textSize="13sp"
+                            android:visibility="gone" />
 
                         <TextView
                             android:id="@+id/tv_date"
