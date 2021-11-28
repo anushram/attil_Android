@@ -66,7 +66,7 @@ object AppConstant {
     val serverFormatTime = SimpleDateFormat("HH:mm:ss", Locale.ENGLISH)
 
     //Date format
-    val appDateFormat = SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault())
+    val appDateFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
     val yearOnly = SimpleDateFormat("yyyy", Locale.getDefault())
     val monthOnly = SimpleDateFormat("MM", Locale.getDefault())
     val dayOnly = SimpleDateFormat("dd", Locale.getDefault())
@@ -79,5 +79,6 @@ object AppConstant {
     val appDateTimeSSFormat = SimpleDateFormat("dd-MMM-yyyy hh:mm:ss a", Locale.getDefault())
     val appDateTimeFormat_no_yyyy = SimpleDateFormat("dd-MMM hh:mm a", Locale.getDefault())
     val appDateTimeFormat_no_yyyy_extra = SimpleDateFormat("dd-MMM  hh:mm a", Locale.getDefault())
+    val appDateTimeFormat_TimeZone = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
     val serverDateTimeFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
 }

@@ -18,6 +18,7 @@ import com.develop.sns.home.offers.dto.NormalOfferPriceDto
 import com.develop.sns.utils.AppConstant
 import com.develop.sns.utils.AppUtils
 import com.develop.sns.utils.CommonClass
+import com.google.android.gms.common.internal.service.Common
 import com.google.gson.JsonObject
 import org.json.JSONArray
 import org.json.JSONException
@@ -369,6 +370,16 @@ class CartItemActivity : SubModuleActivity(), CartListener {
 
                                     if (cartObject.has("_id") && !cartObject.isNull("_id")) {
                                         cartDetailsDto.cartItemId = cartObject.getString("_id")
+                                    }
+
+                                    if (cartObject.has("createdAtTZ") && !cartObject.isNull("createdAtTZ")) {
+                                        cartDetailsDto.updatedAt =
+                                            CommonClass.getDateTimeFromUtc(cartObject.getString("createdAtTZ"),AppConstant.appDateFormat,AppConstant.appDateTimeFormat_TimeZone)
+                                    }
+
+                                    if (cartObject.has("updatedAtTZ") && !cartObject.isNull("updatedAtTZ")) {
+                                        cartDetailsDto.updatedAt =
+                                            CommonClass.getDateTimeFromUtc(cartObject.getString("updatedAtTZ"),AppConstant.appDateFormat,AppConstant.appDateTimeFormat_TimeZone)
                                     }
 
                                     if (cartObject.has("selectedMin") && !cartObject.isNull("selectedMin")) {
