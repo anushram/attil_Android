@@ -6,7 +6,6 @@ import android.content.Intent
 import android.graphics.Point
 import android.graphics.Typeface
 import android.os.Build
-import android.util.Base64.*
 import android.view.Gravity
 import android.view.View
 import android.widget.TextView
@@ -20,15 +19,11 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.json.JSONObject
 import java.io.*
-import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
-import java.util.zip.GZIPOutputStream
-import javax.crypto.Cipher
-import javax.crypto.SecretKey
-import javax.crypto.spec.IvParameterSpec
-import javax.crypto.spec.SecretKeySpec
+import kotlin.collections.HashMap
 
 
 class CommonClass {
@@ -203,6 +198,26 @@ class CommonClass {
                     Toast.LENGTH_SHORT
                 )
             }
+        }
+
+        fun getDateTimeFromUtc(
+            str: String,
+            outputFormat: SimpleDateFormat,
+            inputFormat: SimpleDateFormat
+        ): String {
+            var dateTime = ""
+            try {
+                val tz = TimeZone.getTimeZone("UTC")
+                inputFormat.timeZone = tz
+                val date = inputFormat.parse(str)
+
+                val tzInAmerica = TimeZone.getDefault()
+                outputFormat.timeZone = tzInAmerica
+                dateTime = outputFormat.format(date)
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+            }
+            return dateTime
         }
     }
 }

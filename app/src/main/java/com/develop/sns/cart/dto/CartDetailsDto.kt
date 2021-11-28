@@ -10,6 +10,7 @@ class CartDetailsDto : Serializable {
     var cartSelectedMaxUnit: Int = 0
     var cartMaxUnitMeasureType: String = ""
     var cartSelectedItemCount: Int = 0
+    var updatedAt: String = ""
 
     override fun toString(): String {
         return cartItemId

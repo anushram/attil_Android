@@ -78,4 +78,8 @@
     <string name="your_cart_is_empty">Your Cart Is Empty</string>
     <string name="total_cart">Total Cart</string>
     <string name="checkout">Checkout</string>
+    <string name="picked">Picked:</string>
+    <string name="delete">Delete</string>
+    <string name="packs">Packs</string>
+    <string name="pack">Pack</string>
 </resources>

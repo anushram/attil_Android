@@ -1,6 +1,7 @@
 package com.develop.sns.cart.adapter
 
 import android.content.Context
+import android.graphics.Color.pack
 import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
@@ -53,6 +54,14 @@ class CartItemListAdapter(
                         .into(ivProduct)
                 }
 
+                if (cartItemDto.cartDetails.size > 1) {
+                    tvPack.text =
+                        cartItemDto.cartDetails.size.toString().plus(" ").plus(context.getString(R.string.packs))
+                } else {
+                    tvPack.text =
+                        cartItemDto.cartDetails.size.toString().plus(" ").plus(context.getString(R.string.pack))
+                }
+
                 val obj = preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_MIN_UNITS)
                 val jsonArray = JSONArray(obj)
 
@@ -74,13 +83,6 @@ class CartItemListAdapter(
                     offerMrp = result.times(normalOfferPriceDto.attilPrice)
                     diff = (mrp - offerMrp)
 
-                    lnOfferPercentage.visibility = View.VISIBLE
-                    tvOfferPercentage.text =
-                        normalOfferPriceDto.offerPercentage.toString().plus("% OFF")
-
-                    tvAvailability.visibility = View.VISIBLE
-                    tvAvailability.text = measureText
-
                     tvMrp.text =
                         context.getString(R.string.totally).plus(" ")
                             .plus(context.getString(R.string.Rs)).plus("").plus("%.2f".format(mrp))
@@ -95,7 +97,10 @@ class CartItemListAdapter(
                             .plus(context.getString(R.string.Rs)).plus("")
                             .plus("%.2f".format(diff))
 
-                } else if (cartItemDto.packageType.equals("packed") && cartItemDto.offerType.equals("normal")) {
+                } else if (cartItemDto.packageType.equals("packed") && cartItemDto.offerType.equals(
+                        "normal"
+                    )
+                ) {
 
                     measureText = context.getString(R.string.starts).plus(" @")
                         .plus(normalOfferPriceDto.unit).plus(" ")
@@ -104,14 +109,6 @@ class CartItemListAdapter(
                     mrp = normalOfferPriceDto.normalPrice.toDouble()
                     offerMrp = normalOfferPriceDto.attilPrice.toDouble()
                     diff = (mrp - offerMrp)
-
-                    lnOfferPercentage.visibility = View.VISIBLE
-                    tvOfferPercentage.text =
-                        normalOfferPriceDto.offerPercentage.toString().plus("-")
-                            .plus(cartItemDto.priceDetails[cartItemDto.priceDetails.size - 1].offerPercentage)
-                            .plus("% OFF")
-
-                    tvAvailability.visibility = View.GONE
 
                     tvMrp.text =
                         context.getString(R.string.totally).plus(" ")
@@ -147,9 +144,6 @@ class CartItemListAdapter(
                             .plus(context.getString(R.string.Rs)).plus("")
                             .plus("%.2f".format(diff))
 
-                    lnOfferPercentage.visibility = View.GONE
-                    tvAvailability.visibility = View.GONE
-
                 } else if (cartItemDto.packageType.equals("packed") && cartItemDto.offerType.equals(
                         "BOGE",
                         false
@@ -173,8 +167,6 @@ class CartItemListAdapter(
                             .plus(context.getString(R.string.Rs)).plus("")
                             .plus("%.2f".format(diff))
 
-                    lnOfferPercentage.visibility = View.GONE
-                    tvAvailability.visibility = View.GONE
                 }
 
                 lnMain.setOnClickListener {
