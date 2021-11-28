@@ -190,6 +190,13 @@
         <item name="android:paddingTop">7dp</item>
     </style>
 
+    <style name="CloseStyle" parent="AppBaseTheme">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingEnd">3dp</item>
+    </style>
+
     <style name="AppSearchView" parent="Widget.AppCompat.SearchView">
         <item name="android:textSize">13sp</item>
         <item name="android:textColorHint">@color/text_color</item>
@@ -197,6 +204,7 @@
         <item name="android:tint">@color/md_grey_400</item>
         <item name="android:fontFamily">@font/noto_sans_regular</item>
     </style>
+
     <style name="MyRadioButtonStyle" parent="@android:style/Widget.CompoundButton.RadioButton">
         <item name="android:button">@drawable/custom_radio_drawable</item>
     </style>

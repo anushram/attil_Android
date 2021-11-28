@@ -149,7 +149,6 @@
                                 app:tint="@color/white" />
                         </LinearLayout>
 
-
                     </LinearLayout>
 
                 </LinearLayout>
