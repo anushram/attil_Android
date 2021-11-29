@@ -5,10 +5,13 @@ import java.io.Serializable
 class CartDetailsDto : Serializable {
 
     var cartItemId: String = ""
+    var availability: Int = 0
     var cartSelectedMinUnit: Int = 0
     var cartMinUnitMeasureType: String = ""
     var cartSelectedMaxUnit: Int = 0
     var cartMaxUnitMeasureType: String = ""
+    var minUnitMeasureType: String = ""
+    var minUnit: Int = 0
     var maxUnit: Int = 0
     var maxUnitMeasureType: String = ""
     var cartSelectedItemCount: Int = 0

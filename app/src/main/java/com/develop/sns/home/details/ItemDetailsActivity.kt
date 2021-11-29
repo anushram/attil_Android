@@ -316,6 +316,7 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
                         val value: Int = quantity - 50
                         value
                     }
+
                     if (quantity.toFloat() <= itemDto.maxUnit * 1000.toFloat()) {
                         if (quantity.toFloat() < itemDto.minUnit.toFloat()) {
                             itemDto.selectedFlag = false
@@ -328,6 +329,7 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
                         }
                         itemDetailsListAdapter!!.notifyItemChanged(position, itemDto)
                     }
+
                 } else if ((itemMainDto!!.packageType.equals("packed", true)
                             && itemMainDto!!.offerType.equals("normal", true))
                     || (itemMainDto!!.packageType.equals("packed", true)
