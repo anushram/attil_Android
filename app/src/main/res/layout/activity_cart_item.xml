@@ -20,7 +20,7 @@
             android:layout_height="match_parent"
             android:background="@color/md_grey_50"
             android:orientation="vertical"
-            android:visibility="visible"
+            android:visibility="gone"
             tools:context=".cart.CartItemActivity">
 
             <include

@@ -8,8 +8,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.develop.sns.R
+import com.develop.sns.cart.dto.CartDetailsDto
 import com.develop.sns.cart.dto.CartItemDto
 import com.develop.sns.cart.listener.CartListener
+import com.develop.sns.cart.listener.CartSubListener
 import com.develop.sns.customviews.CustomRecyclerView
 import com.develop.sns.databinding.CartListItemTmplBinding
 import com.develop.sns.utils.PreferenceHelper
@@ -21,7 +23,7 @@ class CartItemListAdapter(
     val context: Context,
     val items: ArrayList<CartItemDto>?,
     val cartListener: CartListener,
-) : RecyclerView.Adapter<CartItemListAdapter.ViewHolder>(), CartListener {
+) : RecyclerView.Adapter<CartItemListAdapter.ViewHolder>(), CartSubListener {
 
     var preferenceHelper = PreferenceHelper(context)
     private lateinit var linearLayoutManager: LinearLayoutManager
@@ -139,8 +141,18 @@ class CartItemListAdapter(
 
                     }
 
-                    populateItemList(cartItemDto, lvItems)
+                    lvItems.visibility = View.VISIBLE
+                    linearLayoutManager = LinearLayoutManager(context)
+                    lvItems.layoutManager = linearLayoutManager
+                    cartSubItemListAdapter =
+                        CartSubItemListAdapter(context, cartItemDto, this@CartItemListAdapter)
+                    lvItems.adapter = cartSubItemListAdapter
 
+                }
+
+                with(cartSubItemListAdapter) {
+
+                    this.notifyDataSetChanged()
                 }
 
                 lnMain.setOnClickListener {
@@ -155,20 +167,42 @@ class CartItemListAdapter(
 
     private fun populateItemList(cartItemDto: CartItemDto, lvItems: CustomRecyclerView) {
         try {
-            lvItems.visibility = View.VISIBLE
-            linearLayoutManager = LinearLayoutManager(context)
-            lvItems.layoutManager = linearLayoutManager
-            cartSubItemListAdapter =
-                CartSubItemListAdapter(context, cartItemDto, this@CartItemListAdapter)
-            lvItems.adapter = cartSubItemListAdapter
+
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    override fun selectItem(itemDto: CartItemDto) {
+    override fun changeSubCount(
+        position: Int,
+        cartDetailsDto: CartDetailsDto,
+        isAdd: Boolean,
+        cartItemDto: CartItemDto
+    ) {
         try {
-            cartListener.selectItem(itemDto)
+            cartListener.changeCount(position, cartDetailsDto, isAdd, cartItemDto)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    override fun changeSubCountGmOrKg(
+        position: Int,
+        cartDetailsDto: CartDetailsDto,
+        isAdd: Boolean,
+        isGm: Boolean,
+        count: Int,
+        cartItemDto: CartItemDto
+    ) {
+        try {
+            cartListener.changeCountGmOrKg(
+                position,
+                cartDetailsDto,
+                isAdd,
+                isGm,
+                count,
+                cartItemDto
+            )
         } catch (e: Exception) {
             e.printStackTrace()
         }

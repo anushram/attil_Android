@@ -14,11 +14,11 @@ import com.develop.sns.cart.dto.CartDetailsDto
 import com.develop.sns.cart.dto.CartItemDto
 import com.develop.sns.cart.listener.CartListener
 import com.develop.sns.databinding.ActivityCartItemBinding
+import com.develop.sns.home.details.adapter.ItemDetailsListAdapter
 import com.develop.sns.home.offers.dto.NormalOfferPriceDto
 import com.develop.sns.utils.AppConstant
 import com.develop.sns.utils.AppUtils
 import com.develop.sns.utils.CommonClass
-import com.google.android.gms.common.internal.service.Common
 import com.google.gson.JsonObject
 import org.json.JSONArray
 import org.json.JSONException
@@ -35,6 +35,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
 
     var packageType = ""
     var offerType = ""
+    var totalAmount = 0F
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -372,6 +373,11 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                                         cartDetailsDto.cartItemId = cartObject.getString("_id")
                                     }
 
+                                    if (cartObject.has("availability") && !cartObject.isNull("availability")) {
+                                        cartDetailsDto.availability =
+                                            cartObject.getInt("availability")
+                                    }
+
                                     if (cartObject.has("measureType") && !cartObject.isNull("measureType")) {
                                         cartDetailsDto.measureType =
                                             cartObject.getString("measureType")
@@ -433,6 +439,20 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                                         if (maxUnitObject.has("unit") && !maxUnitObject.isNull("unit")) {
                                             cartDetailsDto.cartSelectedMaxUnit =
                                                 maxUnitObject.getInt("unit")
+                                        }
+                                    }
+
+                                    if (cartObject.has("minUnit") && !cartObject.isNull("minUnit")) {
+                                        val minUnitObject = cartObject.getJSONObject("minUnit")
+
+                                        if (minUnitObject.has("measureType")) {
+                                            cartDetailsDto.minUnitMeasureType =
+                                                minUnitObject.getString("measureType")
+                                        }
+
+                                        if (minUnitObject.has("unit") && !minUnitObject.isNull("unit")) {
+                                            cartDetailsDto.minUnit =
+                                                minUnitObject.getInt("unit")
                                         }
                                     }
 
@@ -558,9 +578,43 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                 binding.lvProducts.visibility = View.GONE
                 binding.tvNoData.visibility = View.VISIBLE
             }
+            calculateTotal(cartItemList)
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    private fun calculateTotal(cartItemList: java.util.ArrayList<CartItemDto>) {
+        try {
+            for (k in 0 until cartItemList.size) {
+                val cartItemDto = cartItemList[k]
+                val cartDetailsList = cartItemDto.cartDetails
+                for (i in 0 until cartDetailsList.size) {
+                    val cartDetailsDto = cartDetailsList[i]
+                    if (cartItemDto.packageType == "loose" && cartItemDto.offerType == "normal") {
+                        val qty =
+                            cartDetailsDto.cartSelectedMinUnit + (cartDetailsDto.cartSelectedMaxUnit * 1000)
+
+                        val result = qty.toFloat() / cartDetailsDto.unit.toFloat()
+                        totalAmount += result.times(cartDetailsDto.attilPrice)
+                    } else if ((cartItemDto.packageType == "packed" && cartItemDto.offerType == "normal")
+                        || (cartItemDto.packageType == "packed" && cartItemDto.offerType == "BOGO")
+                        || (cartItemDto.packageType == "packed" && cartItemDto.offerType == "BOGE")
+                    ) {
+                        val qty = cartDetailsDto.cartSelectedItemCount
+                        totalAmount += qty.times(cartDetailsDto.attilPrice)
+                    }
+                }
+            }
+            updateTotal(totalAmount)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun updateTotal(totalPrice: Float) {
+        binding.tvTotalPrice.text =
+            getString(R.string.Rs).plus(" ").plus("%.2f".format(totalPrice))
     }
 
     private fun sortJsonArray(array: JSONArray): JSONArray {
@@ -587,11 +641,132 @@ class CartItemActivity : SubModuleActivity(), CartListener {
         return JSONArray(jsons)
     }
 
-    override fun selectItem(itemDto: CartItemDto) {
+    override fun selectItem(cartItemDto: CartItemDto) {
         try {
 
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
+
+    override fun changeCount(
+        position: Int,
+        cartDetailsDto: CartDetailsDto,
+        isAdd: Boolean,
+        cartItemDto: CartItemDto
+    ) {
+        try {
+            var quantity = cartDetailsDto.cartSelectedItemCount
+            quantity = if (isAdd) {
+                val value: Int = quantity + 1
+                value
+            } else {
+                val value: Int = quantity - 1
+                value
+            }
+            if (quantity.toFloat() <= cartDetailsDto.availability.toFloat()) {
+                cartDetailsDto.cartSelectedItemCount = quantity
+                addItem(cartDetailsDto)
+            } else {
+                cartDetailsDto.cartSelectedItemCount = cartDetailsDto.availability
+                removeItem(cartDetailsDto)
+                addItem(cartDetailsDto)
+            }
+            cartItemListAdapter.notifyItemChanged(position, cartItemDto)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    override fun changeCountGmOrKg(
+        position: Int,
+        cartDetailsDto: CartDetailsDto,
+        isAdd: Boolean,
+        isGm: Boolean,
+        count: Int,
+        cartItemDto: CartItemDto
+    ) {
+        try {
+            val quantity =
+                cartDetailsDto.cartSelectedMinUnit + (cartDetailsDto.cartSelectedMaxUnit * 1000)
+
+            var minQuantity = cartDetailsDto.cartSelectedMinUnit
+            var maxQuantity = cartDetailsDto.cartSelectedMaxUnit
+
+            if (isGm) {
+                minQuantity = if (isAdd) {
+                    if (count == 1) {
+                        val value: Int = cartDetailsDto.minUnit
+                        value
+                    } else {
+                        val value: Int = minQuantity + 50
+                        value
+                    }
+                } else {
+                    val value: Int = minQuantity - 50
+                    value
+                }
+
+                if (quantity.toFloat() < cartDetailsDto.maxUnit * 1000.toFloat()) {
+                    if (quantity.toFloat() < cartDetailsDto.minUnit.toFloat()) {
+                        Log.e("Less Than", "Min")
+                        Log.e("Less Than", "Comes Here")
+                        cartDetailsDto.cartSelectedMinUnit = 0
+                        removeItem(cartDetailsDto)
+                        ItemDetailsListAdapter.clickGmPlusCount = 0
+                    } else {
+                        val qty2 = minQuantity + (maxQuantity * 1000)
+                        cartDetailsDto.cartSelectedMinUnit = qty2
+                        removeItem(cartDetailsDto)
+                        addItem(cartDetailsDto)
+                    }
+                } else {
+                    val qty3 = (maxQuantity * 1000)
+                    cartDetailsDto.cartSelectedMinUnit = qty3
+                    addItem(cartDetailsDto)
+                }
+
+                cartItemListAdapter.notifyItemChanged(position, cartItemDto)
+
+            } else {
+                maxQuantity = if (isAdd) {
+                    val value: Int = maxQuantity + 1
+                    value
+                } else {
+                    val value: Int = maxQuantity - 1
+                    value
+                }
+                if (maxQuantity.toFloat() < cartDetailsDto.maxUnit.toFloat()) {
+                    val qty4 = minQuantity + (maxQuantity * 1000)
+                    cartDetailsDto.cartSelectedMaxUnit = qty4
+                    addItem(cartDetailsDto)
+                } else {
+                    cartDetailsDto.cartSelectedMaxUnit = cartDetailsDto.maxUnit * 1000
+                    removeItem(cartDetailsDto)
+                    addItem(cartDetailsDto)
+                }
+                cartItemListAdapter.notifyItemChanged(position, cartItemDto)
+            }
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun addItem(cartDetailsDto: CartDetailsDto) {
+        try {
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun removeItem(cartDetailsDto: CartDetailsDto) {
+        try {
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
 }
