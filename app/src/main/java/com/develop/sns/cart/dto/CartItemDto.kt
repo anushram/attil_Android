@@ -1,5 +1,6 @@
 package com.develop.sns.cart.dto
 
+import com.develop.sns.cart.adapter.CartSubItemListAdapter
 import com.develop.sns.home.offers.dto.NormalOfferPriceDto
 import java.io.Serializable
 
@@ -18,6 +19,7 @@ class CartItemDto : Serializable {
     var createdAtTZ: String = ""
     var priceDetails: ArrayList<NormalOfferPriceDto> = ArrayList()
     var cartDetails: ArrayList<CartDetailsDto> = ArrayList()
+    var cartSubItemListAdapter: CartSubItemListAdapter? = null
 
     override fun toString(): String {
         return productName

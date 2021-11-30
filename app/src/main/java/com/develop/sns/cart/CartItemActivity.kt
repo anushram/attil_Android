@@ -23,6 +23,7 @@ import com.google.gson.JsonObject
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import java.text.FieldPosition
 
 class CartItemActivity : SubModuleActivity(), CartListener {
 
@@ -32,10 +33,11 @@ class CartItemActivity : SubModuleActivity(), CartListener {
     private lateinit var cartItemList: ArrayList<CartItemDto>
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var cartItemListAdapter: CartItemListAdapter
+    private lateinit var cartMap: HashMap<String, CartDetailsDto>
 
     var packageType = ""
     var offerType = ""
-    var totalAmount = 0F
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,6 +80,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
     private fun initClassReference() {
         try {
             cartItemList = ArrayList()
+            cartMap = java.util.HashMap()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -139,7 +142,10 @@ class CartItemActivity : SubModuleActivity(), CartListener {
 
                             if (itemObject.has("productDetails") && !itemObject.isNull("productDetails")) {
                                 val productDetailsObj = itemObject.getJSONObject("productDetails")
-                                if (productDetailsObj.has("_id") && !productDetailsObj.isNull("_id")) {
+
+                                if (productDetailsObj.has("_id")
+                                    && !productDetailsObj.isNull("_id")
+                                ) {
                                     cartItemDto.productId = productDetailsObj.getString("_id")
                                 }
 
@@ -192,174 +198,167 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                                     packageType = productDetailsObj.getString("packageType")
                                 }
 
-                                if (productDetailsObj.has("offerType") && !productDetailsObj.isNull(
-                                        "offerType"
-                                    )
+                                if (productDetailsObj.has("offerType")
+                                    && !productDetailsObj.isNull("offerType")
                                 ) {
                                     cartItemDto.offerType = productDetailsObj.getString("offerType")
                                     offerType = productDetailsObj.getString("offerType")
                                 }
 
-                                if (productDetailsObj.has("description") && !productDetailsObj.isNull(
-                                        "description"
-                                    )
-                                ) {
-                                    cartItemDto.description =
-                                        productDetailsObj.getString("description")
-                                }
+                                /* if (productDetailsObj.has("description")
+                                     && !productDetailsObj.isNull("description")) {
+                                     cartItemDto.description =
+                                         productDetailsObj.getString("description")
+                                 }
 
-                                if (productDetailsObj.has("createdAtTZ") && !productDetailsObj.isNull(
-                                        "createdAtTZ"
-                                    )
-                                ) {
-                                    cartItemDto.createdAtTZ =
-                                        productDetailsObj.getString("createdAtTZ")
-                                }
+                                 if (productDetailsObj.has("createdAtTZ")
+                                     && !productDetailsObj.isNull("createdAtTZ")) {
+                                     cartItemDto.createdAtTZ =
+                                         productDetailsObj.getString("createdAtTZ")
+                                 }
 
-                                val priceDetailsArray = ArrayList<NormalOfferPriceDto>()
-                                if (productDetailsObj.has("priceDetails") && !productDetailsObj.isNull(
-                                        "priceDetails"
-                                    )
-                                ) {
-                                    val priceArray = productDetailsObj.getJSONArray("priceDetails")
-                                    val sortedPriceArray = sortJsonArray(priceArray)
-                                    for (k in 0 until sortedPriceArray.length()) {
-                                        val priceObject = sortedPriceArray.getJSONObject(k)
-                                        val normalOfferPriceDto = NormalOfferPriceDto()
+                                 val priceDetailsArray = ArrayList<NormalOfferPriceDto>()
+                                 if (productDetailsObj.has("priceDetails")
+                                     && !productDetailsObj.isNull("priceDetails")) {
+                                     val priceArray = productDetailsObj.getJSONArray("priceDetails")
+                                     val sortedPriceArray = sortJsonArray(priceArray)
+                                     for (k in 0 until sortedPriceArray.length()) {
+                                         val priceObject = sortedPriceArray.getJSONObject(k)
+                                         val normalOfferPriceDto = NormalOfferPriceDto()
 
-                                        normalOfferPriceDto.packageType = packageType
+                                         normalOfferPriceDto.packageType = packageType
 
-                                        normalOfferPriceDto.offerType = offerType
+                                         normalOfferPriceDto.offerType = offerType
 
-                                        if (priceObject.has("_id") && !priceObject.isNull("_id")) {
-                                            normalOfferPriceDto.id = priceObject.getString("_id")
-                                        }
+                                         if (priceObject.has("_id") && !priceObject.isNull("_id")) {
+                                             normalOfferPriceDto.id = priceObject.getString("_id")
+                                         }
 
-                                        if (priceObject.has("measureType") && !priceObject.isNull("measureType")) {
-                                            normalOfferPriceDto.measureType =
-                                                priceObject.getString("measureType")
-                                        }
+                                         if (priceObject.has("measureType") && !priceObject.isNull("measureType")) {
+                                             normalOfferPriceDto.measureType =
+                                                 priceObject.getString("measureType")
+                                         }
 
-                                        if (priceObject.has("normalPrice") && !priceObject.isNull("normalPrice")) {
-                                            normalOfferPriceDto.normalPrice =
-                                                priceObject.getInt("normalPrice")
-                                        }
+                                         if (priceObject.has("normalPrice") && !priceObject.isNull("normalPrice")) {
+                                             normalOfferPriceDto.normalPrice =
+                                                 priceObject.getInt("normalPrice")
+                                         }
 
-                                        if (priceObject.has("attilPrice") && !priceObject.isNull("attilPrice")) {
-                                            normalOfferPriceDto.attilPrice =
-                                                priceObject.getInt("attilPrice")
-                                        }
+                                         if (priceObject.has("attilPrice") && !priceObject.isNull("attilPrice")) {
+                                             normalOfferPriceDto.attilPrice =
+                                                 priceObject.getInt("attilPrice")
+                                         }
 
-                                        if (priceObject.has("availability") && !priceObject.isNull("availability")) {
-                                            normalOfferPriceDto.availability =
-                                                priceObject.getInt("availability")
-                                        }
+                                         if (priceObject.has("availability") && !priceObject.isNull("availability")) {
+                                             normalOfferPriceDto.availability =
+                                                 priceObject.getInt("availability")
+                                         }
 
-                                        if (priceObject.has("unit") && !priceObject.isNull("unit")) {
-                                            normalOfferPriceDto.unit =
-                                                priceObject.getInt("unit")
-                                        }
+                                         if (priceObject.has("unit") && !priceObject.isNull("unit")) {
+                                             normalOfferPriceDto.unit =
+                                                 priceObject.getInt("unit")
+                                         }
 
-                                        if (priceObject.has("minUnit") && !priceObject.isNull("minUnit")) {
-                                            val minUnitObject = priceObject.getJSONObject("minUnit")
+                                         if (priceObject.has("minUnit") && !priceObject.isNull("minUnit")) {
+                                             val minUnitObject = priceObject.getJSONObject("minUnit")
 
-                                            if (minUnitObject.has("measureType")) {
-                                                normalOfferPriceDto.minUnitMeasureType =
-                                                    minUnitObject.getString("measureType")
-                                            }
+                                             if (minUnitObject.has("measureType")) {
+                                                 normalOfferPriceDto.minUnitMeasureType =
+                                                     minUnitObject.getString("measureType")
+                                             }
 
-                                            if (minUnitObject.has("unit") && !minUnitObject.isNull("unit")) {
-                                                normalOfferPriceDto.minUnit =
-                                                    minUnitObject.getInt("unit")
-                                            }
-                                        }
+                                             if (minUnitObject.has("unit") && !minUnitObject.isNull("unit")) {
+                                                 normalOfferPriceDto.minUnit =
+                                                     minUnitObject.getInt("unit")
+                                             }
+                                         }
 
-                                        if (priceObject.has("maxUnit") && !priceObject.isNull("maxUnit")) {
+                                         if (priceObject.has("maxUnit") && !priceObject.isNull("maxUnit")) {
 
-                                            val maxUnitObject = priceObject.getJSONObject("maxUnit")
+                                             val maxUnitObject = priceObject.getJSONObject("maxUnit")
 
-                                            if (maxUnitObject.has("measureType")) {
-                                                normalOfferPriceDto.maxUnitMeasureType =
-                                                    maxUnitObject.getString("measureType")
-                                            }
-                                            if (maxUnitObject.has("unit") && !maxUnitObject.isNull("unit")) {
-                                                normalOfferPriceDto.maxUnit =
-                                                    maxUnitObject.getInt("unit")
-                                            }
-                                        }
+                                             if (maxUnitObject.has("measureType")) {
+                                                 normalOfferPriceDto.maxUnitMeasureType =
+                                                     maxUnitObject.getString("measureType")
+                                             }
+                                             if (maxUnitObject.has("unit") && !maxUnitObject.isNull("unit")) {
+                                                 normalOfferPriceDto.maxUnit =
+                                                     maxUnitObject.getInt("unit")
+                                             }
+                                         }
 
-                                        if (priceObject.has("offerDetails") && !priceObject.isNull("offerDetails")) {
-                                            val offerDetailsObject =
-                                                priceObject.getJSONObject("offerDetails")
-                                            if (offerDetailsObject.has("measureType")) {
-                                                normalOfferPriceDto.offerMeasureType =
-                                                    offerDetailsObject.getString("measureType")
-                                            }
+                                         if (priceObject.has("offerDetails") && !priceObject.isNull("offerDetails")) {
+                                             val offerDetailsObject =
+                                                 priceObject.getJSONObject("offerDetails")
+                                             if (offerDetailsObject.has("measureType")) {
+                                                 normalOfferPriceDto.offerMeasureType =
+                                                     offerDetailsObject.getString("measureType")
+                                             }
 
-                                            if (offerDetailsObject.has("unit") && !offerDetailsObject.isNull(
-                                                    "unit"
-                                                )
-                                            ) {
-                                                normalOfferPriceDto.offerUnit =
-                                                    offerDetailsObject.getInt("unit")
-                                            }
+                                             if (offerDetailsObject.has("unit") && !offerDetailsObject.isNull(
+                                                     "unit"
+                                                 )
+                                             ) {
+                                                 normalOfferPriceDto.offerUnit =
+                                                     offerDetailsObject.getInt("unit")
+                                             }
 
-                                            if (offerDetailsObject.has("offerPercentage")
-                                                && !offerDetailsObject.isNull(
-                                                    "offerPercentage"
-                                                )
-                                            ) {
-                                                normalOfferPriceDto.offerPercentage =
-                                                    offerDetailsObject.getInt("offerPercentage")
-                                            }
+                                             if (offerDetailsObject.has("offerPercentage")
+                                                 && !offerDetailsObject.isNull(
+                                                     "offerPercentage"
+                                                 )
+                                             ) {
+                                                 normalOfferPriceDto.offerPercentage =
+                                                     offerDetailsObject.getInt("offerPercentage")
+                                             }
 
-                                            if (offerDetailsObject.has("extraProduct")
-                                                && !offerDetailsObject.isNull("extraProduct")
-                                            ) {
-                                                val extraProdObj =
-                                                    offerDetailsObject.getJSONObject("extraProduct")
-                                                if (extraProdObj.has("productName")
-                                                    && !extraProdObj.isNull("productName")
-                                                ) {
-                                                    normalOfferPriceDto.bogeProductName =
-                                                        extraProdObj.getString("productName")
-                                                }
-                                                if (extraProdObj.has("brandImage")
-                                                    && !extraProdObj.isNull("brandImage")
-                                                ) {
-                                                    val extraBrandImg =
-                                                        extraProdObj.getJSONArray("brandImage")
-                                                    normalOfferPriceDto.bogeProductImg =
-                                                        extraBrandImg.getString(0)
-                                                }
-                                                if (extraProdObj.has("priceDetails")
-                                                    && !extraProdObj.isNull("priceDetails")
-                                                ) {
-                                                    val extraPrice =
-                                                        extraProdObj.getJSONArray("priceDetails")
-                                                    val extraPriceObj = extraPrice.getJSONObject(0)
-                                                    if (extraPriceObj.has("unit") && !extraPriceObj.isNull(
-                                                            "unit"
-                                                        )
-                                                    ) {
-                                                        normalOfferPriceDto.bogeUnit =
-                                                            extraPriceObj.getInt("unit")
-                                                    }
-                                                    if (extraPriceObj.has("measureType") && !extraPriceObj.isNull(
-                                                            "measureType"
-                                                        )
-                                                    ) {
-                                                        normalOfferPriceDto.bogeMeasureType =
-                                                            extraPriceObj.getString("measureType")
-                                                    }
-                                                }
-                                            }
-                                        }
+                                             if (offerDetailsObject.has("extraProduct")
+                                                 && !offerDetailsObject.isNull("extraProduct")
+                                             ) {
+                                                 val extraProdObj =
+                                                     offerDetailsObject.getJSONObject("extraProduct")
+                                                 if (extraProdObj.has("productName")
+                                                     && !extraProdObj.isNull("productName")
+                                                 ) {
+                                                     normalOfferPriceDto.bogeProductName =
+                                                         extraProdObj.getString("productName")
+                                                 }
+                                                 if (extraProdObj.has("brandImage")
+                                                     && !extraProdObj.isNull("brandImage")
+                                                 ) {
+                                                     val extraBrandImg =
+                                                         extraProdObj.getJSONArray("brandImage")
+                                                     normalOfferPriceDto.bogeProductImg =
+                                                         extraBrandImg.getString(0)
+                                                 }
+                                                 if (extraProdObj.has("priceDetails")
+                                                     && !extraProdObj.isNull("priceDetails")
+                                                 ) {
+                                                     val extraPrice =
+                                                         extraProdObj.getJSONArray("priceDetails")
+                                                     val extraPriceObj = extraPrice.getJSONObject(0)
+                                                     if (extraPriceObj.has("unit") && !extraPriceObj.isNull(
+                                                             "unit"
+                                                         )
+                                                     ) {
+                                                         normalOfferPriceDto.bogeUnit =
+                                                             extraPriceObj.getInt("unit")
+                                                     }
+                                                     if (extraPriceObj.has("measureType") && !extraPriceObj.isNull(
+                                                             "measureType"
+                                                         )
+                                                     ) {
+                                                         normalOfferPriceDto.bogeMeasureType =
+                                                             extraPriceObj.getString("measureType")
+                                                     }
+                                                 }
+                                             }
+                                         }
 
-                                        priceDetailsArray.add(normalOfferPriceDto)
-                                    }
-                                }
-                                cartItemDto.priceDetails = priceDetailsArray
+                                         priceDetailsArray.add(normalOfferPriceDto)
+                                     }
+                                 }
+                                 cartItemDto.priceDetails = priceDetailsArray*/
                             }
 
                             val cartDetailsList = ArrayList<CartDetailsDto>()
@@ -368,6 +367,10 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                                 for (k in 0 until cartArray.length()) {
                                     val cartObject = cartArray.getJSONObject(k)
                                     val cartDetailsDto = CartDetailsDto()
+
+                                    cartDetailsDto.packageType = packageType
+
+                                    cartDetailsDto.offerType = offerType
 
                                     if (cartObject.has("_id") && !cartObject.isNull("_id")) {
                                         cartDetailsDto.cartItemId = cartObject.getString("_id")
@@ -586,6 +589,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
 
     private fun calculateTotal(cartItemList: java.util.ArrayList<CartItemDto>) {
         try {
+            var totalAmount = 0F
             for (k in 0 until cartItemList.size) {
                 val cartItemDto = cartItemList[k]
                 val cartDetailsList = cartItemDto.cartDetails
@@ -617,30 +621,6 @@ class CartItemActivity : SubModuleActivity(), CartListener {
             getString(R.string.Rs).plus(" ").plus("%.2f".format(totalPrice))
     }
 
-    private fun sortJsonArray(array: JSONArray): JSONArray {
-        val jsons: MutableList<JSONObject?> = ArrayList()
-        for (i in 0 until array.length()) {
-            try {
-                jsons.add(array.getJSONObject(i))
-            } catch (e: JSONException) {
-                e.printStackTrace()
-            }
-        }
-        jsons.sortWith(Comparator { lhs, rhs ->
-            var lid = 0
-            var rid = 0
-            try {
-                lid = lhs!!.getInt("unit")
-                rid = rhs!!.getInt("unit")
-            } catch (e: JSONException) {
-                e.printStackTrace()
-            }
-            // Here you could parse string id to integer and then compare.
-            lid.compareTo(rid)
-        })
-        return JSONArray(jsons)
-    }
-
     override fun selectItem(cartItemDto: CartItemDto) {
         try {
 
@@ -649,121 +629,50 @@ class CartItemActivity : SubModuleActivity(), CartListener {
         }
     }
 
-    override fun changeCount(
-        position: Int,
+    override fun handleItem(
         cartDetailsDto: CartDetailsDto,
         isAdd: Boolean,
-        cartItemDto: CartItemDto
+        itemGroupPosition: Int,
+        position: Int
     ) {
         try {
-            var quantity = cartDetailsDto.cartSelectedItemCount
-            quantity = if (isAdd) {
-                val value: Int = quantity + 1
-                value
+            if (isAdd) {
+                //Add Item From cart
+                Log.e("TAG", "Add Item")
+                addItem(cartDetailsDto, itemGroupPosition, position)
             } else {
-                val value: Int = quantity - 1
-                value
+                //Remove Item From cart
+                Log.e("TAG", "Remove Item")
+                removeItem(cartDetailsDto, itemGroupPosition, position)
+                addItem(cartDetailsDto, itemGroupPosition, position)
             }
-            if (quantity.toFloat() <= cartDetailsDto.availability.toFloat()) {
-                cartDetailsDto.cartSelectedItemCount = quantity
-                addItem(cartDetailsDto)
-            } else {
-                cartDetailsDto.cartSelectedItemCount = cartDetailsDto.availability
-                removeItem(cartDetailsDto)
-                addItem(cartDetailsDto)
-            }
-            cartItemListAdapter.notifyItemChanged(position, cartItemDto)
+            cartItemListAdapter.notifyItemChanged(itemGroupPosition)
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    override fun changeCountGmOrKg(
-        position: Int,
+    private fun addItem(
         cartDetailsDto: CartDetailsDto,
-        isAdd: Boolean,
-        isGm: Boolean,
-        count: Int,
-        cartItemDto: CartItemDto
+        itemGroupPosition: Int,
+        position: Int
     ) {
         try {
-            val quantity =
-                cartDetailsDto.cartSelectedMinUnit + (cartDetailsDto.cartSelectedMaxUnit * 1000)
-
-            var minQuantity = cartDetailsDto.cartSelectedMinUnit
-            var maxQuantity = cartDetailsDto.cartSelectedMaxUnit
-
-            if (isGm) {
-                minQuantity = if (isAdd) {
-                    if (count == 1) {
-                        val value: Int = cartDetailsDto.minUnit
-                        value
-                    } else {
-                        val value: Int = minQuantity + 50
-                        value
-                    }
-                } else {
-                    val value: Int = minQuantity - 50
-                    value
-                }
-
-                if (quantity.toFloat() < cartDetailsDto.maxUnit * 1000.toFloat()) {
-                    if (quantity.toFloat() < cartDetailsDto.minUnit.toFloat()) {
-                        Log.e("Less Than", "Min")
-                        Log.e("Less Than", "Comes Here")
-                        cartDetailsDto.cartSelectedMinUnit = 0
-                        removeItem(cartDetailsDto)
-                        ItemDetailsListAdapter.clickGmPlusCount = 0
-                    } else {
-                        val qty2 = minQuantity + (maxQuantity * 1000)
-                        cartDetailsDto.cartSelectedMinUnit = qty2
-                        removeItem(cartDetailsDto)
-                        addItem(cartDetailsDto)
-                    }
-                } else {
-                    val qty3 = (maxQuantity * 1000)
-                    cartDetailsDto.cartSelectedMinUnit = qty3
-                    addItem(cartDetailsDto)
-                }
-
-                cartItemListAdapter.notifyItemChanged(position, cartItemDto)
-
-            } else {
-                maxQuantity = if (isAdd) {
-                    val value: Int = maxQuantity + 1
-                    value
-                } else {
-                    val value: Int = maxQuantity - 1
-                    value
-                }
-                if (maxQuantity.toFloat() < cartDetailsDto.maxUnit.toFloat()) {
-                    val qty4 = minQuantity + (maxQuantity * 1000)
-                    cartDetailsDto.cartSelectedMaxUnit = qty4
-                    addItem(cartDetailsDto)
-                } else {
-                    cartDetailsDto.cartSelectedMaxUnit = cartDetailsDto.maxUnit * 1000
-                    removeItem(cartDetailsDto)
-                    addItem(cartDetailsDto)
-                }
-                cartItemListAdapter.notifyItemChanged(position, cartItemDto)
-            }
-
+            cartItemList[itemGroupPosition].cartDetails[position] = cartDetailsDto
+            calculateTotal(cartItemList)
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    private fun addItem(cartDetailsDto: CartDetailsDto) {
+    private fun removeItem(
+        cartDetailsDto: CartDetailsDto,
+        itemGroupPosition: Int,
+        position: Int
+    ) {
         try {
-
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    private fun removeItem(cartDetailsDto: CartDetailsDto) {
-        try {
-
+            cartItemList[itemGroupPosition].cartDetails[position] = cartDetailsDto
+            calculateTotal(cartItemList)
         } catch (e: Exception) {
             e.printStackTrace()
         }

@@ -1,12 +1,12 @@
 package com.develop.sns.cart.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.develop.sns.cart.dto.CartDetailsDto
-import com.develop.sns.cart.dto.CartItemDto
 import com.develop.sns.cart.listener.CartSubListener
 import com.develop.sns.databinding.CartSubItemListTmplBinding
 import com.develop.sns.utils.PreferenceHelper
@@ -14,8 +14,9 @@ import com.develop.sns.utils.PreferenceHelper
 
 class CartSubItemListAdapter(
     val context: Context,
-    val cartItemDto: CartItemDto,
+    val cartList: ArrayList<CartDetailsDto>,
     val cartSubListener: CartSubListener,
+    var itemGroupPosition: Int,
 ) : RecyclerView.Adapter<CartSubItemListAdapter.ViewHolder>() {
 
     var preferenceHelper = PreferenceHelper(context)
@@ -30,17 +31,17 @@ class CartSubItemListAdapter(
         return ViewHolder(binding)
     }
 
-    override fun getItemCount(): Int = cartItemDto.cartDetails.size
+    override fun getItemCount(): Int = cartList.size
 
     override fun onBindViewHolder(holder: CartSubItemListAdapter.ViewHolder, position: Int) =
-        holder.bind(cartItemDto.cartDetails[position], position)
+        holder.bind(cartList[position], position)
 
     inner class ViewHolder(val binding: CartSubItemListTmplBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(cartDetailsDto: CartDetailsDto, position: Int) {
             with(binding) {
 
-                if (cartItemDto.packageType == "loose" && cartItemDto.offerType == "normal") {
+                if (cartDetailsDto.packageType == "loose" && cartDetailsDto.offerType == "normal") {
                     val qty =
                         cartDetailsDto.cartSelectedMinUnit + (cartDetailsDto.cartSelectedMaxUnit * 1000)
 
@@ -48,15 +49,27 @@ class CartSubItemListAdapter(
                     lnAdd.visibility = View.GONE
                     lnLooseAdd.visibility = View.VISIBLE
 
-                    tvGmCount.text = cartDetailsDto.cartSelectedMinUnit.toString()
-                    tvKgCount.text = cartDetailsDto.cartSelectedMaxUnit.toString()
+                    val kg = qty.toDouble() * 0.001
+                    var minUnit = "0"
+                    var maxUnit = "0"
+                    val qtyStr = "%.3f".format(kg)
+                    minUnit = qtyStr.split(".")[1]
+                    maxUnit = qtyStr.split(".")[0]
+                    Log.e("min", minUnit)
+                    Log.e("max", maxUnit)
+                    if (minUnit == "000") {
+                        minUnit = "0"
+                    }
+
+                    tvGmCount.text = minUnit
+                    tvKgCount.text = maxUnit
 
                     tvOfferPercentage.text =
                         cartDetailsDto.offerPercentage.toString().plus(" ").plus("% OFF")
 
-                } else if ((cartItemDto.packageType == "packed" && cartItemDto.offerType == "normal")
-                    || (cartItemDto.packageType == "packed" && cartItemDto.offerType == "BOGO")
-                    || (cartItemDto.packageType == "packed" && cartItemDto.offerType == "BOGE")
+                } else if ((cartDetailsDto.packageType == "packed" && cartDetailsDto.offerType == "normal")
+                    || (cartDetailsDto.packageType == "packed" && cartDetailsDto.offerType == "BOGO")
+                    || (cartDetailsDto.packageType == "packed" && cartDetailsDto.offerType == "BOGE")
                 ) {
                     lnQuantity.visibility = View.VISIBLE
 
@@ -65,9 +78,9 @@ class CartSubItemListAdapter(
 
                     lnAdd.visibility = View.VISIBLE
                     lnLooseAdd.visibility = View.GONE
-
-                    tvCount.text = cartDetailsDto.cartSelectedItemCount.toString()
-
+                    if (cartDetailsDto.cartSelectedItemCount > 0) {
+                        tvCount.text = cartDetailsDto.cartSelectedItemCount.toString()
+                    }
                     tvOfferPercentage.text =
                         cartDetailsDto.offerPercentage.toString().plus(" ").plus("% OFF")
 
@@ -75,45 +88,58 @@ class CartSubItemListAdapter(
 
 
                 lnIncrease.setOnClickListener {
-                    cartSubListener.changeSubCount(position, cartDetailsDto, true,cartItemDto)
+                    cartSubListener.changeSubCount(
+                        position,
+                        true,
+                        itemGroupPosition
+                    )
                 }
 
                 lnDecrease.setOnClickListener {
-                    cartSubListener.changeSubCount(position, cartDetailsDto, false,cartItemDto)
+                    cartSubListener.changeSubCount(
+                        position,
+                        false,
+                        itemGroupPosition
+                    )
                 }
 
                 lnGmIncrease.setOnClickListener {
                     cartSubListener.changeSubCountGmOrKg(
-                        position, cartDetailsDto,
+                        position,
                         isAdd = true,
                         isGm = true,
-                        ++clickGmPlusCount,cartItemDto
+                        ++clickGmPlusCount,
+                        itemGroupPosition
                     )
                 }
 
                 lnGmDecrease.setOnClickListener {
                     cartSubListener.changeSubCountGmOrKg(
-                        position, cartDetailsDto,
+                        position,
                         isAdd = false,
-                        isGm = true, 0,cartItemDto
+                        isGm = true,
+                        0,
+                        itemGroupPosition
                     )
                 }
 
                 lnKgIncrease.setOnClickListener {
                     cartSubListener.changeSubCountGmOrKg(
                         position,
-                        cartDetailsDto,
                         isAdd = true,
-                        isGm = false, 0,cartItemDto
+                        isGm = false,
+                        0,
+                        itemGroupPosition
                     )
                 }
 
                 lnKgDecrease.setOnClickListener {
                     cartSubListener.changeSubCountGmOrKg(
                         position,
-                        cartDetailsDto,
                         isAdd = false,
-                        isGm = false, 0,cartItemDto
+                        isGm = false,
+                        0,
+                        itemGroupPosition
                     )
                 }
 

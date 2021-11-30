@@ -9,20 +9,11 @@ interface CartListener {
 
     fun selectItem(cartItemDto: CartItemDto)
 
-    fun changeCount(
-        position: Int,
+    fun handleItem(
         cartDetailsDto: CartDetailsDto,
         isAdd: Boolean,
-        cartItemDto: CartItemDto
-    )
-
-    fun changeCountGmOrKg(
-        position: Int,
-        cartDetailsDto: CartDetailsDto,
-        isAdd: Boolean,
-        isGm: Boolean,
-        count: Int,
-        cartItemDto: CartItemDto
+        itemGroupPosition: Int,
+        position: Int
     )
 
 }

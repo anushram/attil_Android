@@ -4,6 +4,8 @@ import java.io.Serializable
 
 class CartDetailsDto : Serializable {
 
+    var packageType: String = ""
+    var offerType: String = ""
     var cartItemId: String = ""
     var availability: Int = 0
     var cartSelectedMinUnit: Int = 0
