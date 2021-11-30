@@ -18,4 +18,9 @@ class CartViewModel : ViewModel() {
         val call = api.getCartItems("Bearer $token", requestObject)
         return apiRepository.callApi(call)
     }
+
+    fun removeCartItem(requestObject: JsonObject, token: String): LiveData<JSONObject> {
+        val call = api.removeCartItem("Bearer $token", requestObject)
+        return apiRepository.callApi(call)
+    }
 }

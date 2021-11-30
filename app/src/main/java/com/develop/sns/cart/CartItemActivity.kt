@@ -652,6 +652,15 @@ class CartItemActivity : SubModuleActivity(), CartListener {
         }
     }
 
+    override fun remove(itemGroupPosition: Int, position: Int) {
+        try {
+            val cartDetailsDto = cartItemList[itemGroupPosition].cartDetails[position]
+            removeCartItem(cartDetailsDto.cartItemId)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
     private fun addItem(
         cartDetailsDto: CartDetailsDto,
         itemGroupPosition: Int,
@@ -673,6 +682,55 @@ class CartItemActivity : SubModuleActivity(), CartListener {
         try {
             cartItemList[itemGroupPosition].cartDetails[position] = cartDetailsDto
             calculateTotal(cartItemList)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun removeCartItem(cartItemId: String) {
+        try {
+            if (AppUtils.isConnectedToInternet(context)) {
+                val requestObject = JsonObject()
+                requestObject.addProperty(
+                    "userId",
+                    preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_USER_ID)
+                )
+                requestObject.addProperty(
+                    "cartId",
+                    cartItemId
+                )
+                showProgressBar()
+                val cartViewModel = CartViewModel()
+                cartViewModel.removeCartItem(
+                    requestObject,
+                    preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!
+                ).observe(this, { jsonObject ->
+                    dismissProgressBar()
+                    parseRemoveCartItemResponse(jsonObject)
+                })
+            } else {
+                CommonClass.showToastMessage(
+                    context,
+                    binding.rootView,
+                    resources.getString(R.string.no_internet),
+                    Toast.LENGTH_SHORT
+                )
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun parseRemoveCartItemResponse(obj: JSONObject) {
+        try {
+            Log.e("removeCartItem", obj.toString())
+            if (obj.has("code") && obj.getInt("code") == 200) {
+                if (obj.has("status") && obj.getBoolean("status")) {
+
+                }
+            } else {
+                CommonClass.handleErrorResponse(context, obj, binding.rootView)
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }

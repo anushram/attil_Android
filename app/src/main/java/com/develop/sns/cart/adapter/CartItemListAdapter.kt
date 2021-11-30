@@ -295,4 +295,12 @@ class CartItemListAdapter(
         }
     }
 
+    override fun removeItem(position: Int, itemGroupPosition: Int) {
+        try {
+            cartListener.remove(itemGroupPosition, position)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
 }
