@@ -18,4 +18,6 @@ interface CartSubListener {
         count: Int,
         itemGroupPosition: Int
     )
+
+    fun removeItem(position: Int, itemGroupPosition: Int)
 }

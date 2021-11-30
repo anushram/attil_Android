@@ -86,7 +86,6 @@ class CartSubItemListAdapter(
 
                 }
 
-
                 lnIncrease.setOnClickListener {
                     cartSubListener.changeSubCount(
                         position,
@@ -141,6 +140,10 @@ class CartSubItemListAdapter(
                         0,
                         itemGroupPosition
                     )
+                }
+
+                lnClose.setOnClickListener {
+                    cartSubListener.removeItem(position, itemGroupPosition)
                 }
 
             }
