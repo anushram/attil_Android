@@ -7,17 +7,15 @@ interface CartSubListener {
 
     fun changeSubCount(
         position: Int,
-        cartDetailsDto: CartDetailsDto,
         isAdd: Boolean,
-        cartItemDto: CartItemDto
+        itemGroupPosition: Int
     )
 
     fun changeSubCountGmOrKg(
         position: Int,
-        cartDetailsDto: CartDetailsDto,
         isAdd: Boolean,
         isGm: Boolean,
         count: Int,
-        cartItemDto: CartItemDto
+        itemGroupPosition: Int
     )
 }
