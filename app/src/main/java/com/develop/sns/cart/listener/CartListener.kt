@@ -17,8 +17,12 @@ interface CartListener {
     )
 
     fun remove(
-        itemGroupPosition: Int,
         position: Int
+    )
+
+    fun removeCartItem(
+        itemGroupPosition: Int,
+        cartDetailsDto: CartDetailsDto
     )
 
 }

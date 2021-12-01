@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.develop.sns.R
 import com.develop.sns.SubModuleActivity
@@ -34,6 +35,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var cartItemListAdapter: CartItemListAdapter
     private lateinit var cartMap: HashMap<String, CartDetailsDto>
+    private lateinit var cartViewModel: CartViewModel
 
     var packageType = ""
     var offerType = ""
@@ -79,6 +81,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
 
     private fun initClassReference() {
         try {
+            cartViewModel = ViewModelProvider(this).get(CartViewModel::class.java)
             cartItemList = ArrayList()
             cartMap = java.util.HashMap()
         } catch (e: Exception) {
@@ -103,7 +106,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                     preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_USER_ID)
                 )
                 showProgressBar()
-                val cartViewModel = CartViewModel()
+
                 cartViewModel.getCartItem(
                     requestObject,
                     preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!
@@ -679,10 +682,20 @@ class CartItemActivity : SubModuleActivity(), CartListener {
         }
     }
 
-    override fun remove(itemGroupPosition: Int, position: Int) {
+    override fun remove(position: Int) {
         try {
-            val cartDetailsDto = cartItemList[itemGroupPosition].cartDetails[position]
-            removeCartItem(cartDetailsDto.cartItemId)
+            val cartItemDto = cartItemList[position]
+            removeCartItem(cartItemDto.id)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    override fun removeCartItem(itemGroupPosition: Int, cartDetailsDto: CartDetailsDto) {
+        try {
+            cartItemList[itemGroupPosition].cartDetails.remove(cartDetailsDto)
+            calculateTotal(cartItemList)
+            updateCart(cartItemList[itemGroupPosition], true)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -696,7 +709,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
         try {
             cartItemList[itemGroupPosition].cartDetails[position] = cartDetailsDto
             calculateTotal(cartItemList)
-            addToCart(cartItemList[itemGroupPosition])
+            updateCart(cartItemList[itemGroupPosition], false)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -728,7 +741,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                     cartItemId
                 )
                 showProgressBar()
-                val cartViewModel = CartViewModel()
+
                 cartViewModel.removeCartItem(
                     requestObject,
                     preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!
@@ -754,7 +767,8 @@ class CartItemActivity : SubModuleActivity(), CartListener {
             Log.e("removeCartItem", obj.toString())
             if (obj.has("code") && obj.getInt("code") == 200) {
                 if (obj.has("status") && obj.getBoolean("status")) {
-
+                    cartItemList.clear()
+                    getCartItems()
                 }
             } else {
                 CommonClass.handleErrorResponse(context, obj, binding.rootView)
@@ -764,7 +778,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
         }
     }
 
-    private fun addToCart(cartItemDto: CartItemDto) {
+    private fun updateCart(cartItemDto: CartItemDto, isRemove: Boolean) {
         try {
             if (AppUtils.isConnectedToInternet(context)) {
                 val requestObject = JsonObject()
@@ -818,7 +832,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                 }
                 requestObject.add("cartDetails", cartDetailsArray)
                 requestObject.addProperty("productId", cartItemDto.productId)
-                initService(requestObject)
+                initUpdateCartService(requestObject, isRemove)
                 Log.e("Request Object", requestObject.toString())
             } else {
                 CommonClass.showToastMessage(
@@ -833,7 +847,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
         }
     }
 
-    private fun initService(requestObject: JsonObject) {
+    private fun initUpdateCartService(requestObject: JsonObject, isRemove: Boolean) {
         try {
             showProgressBar()
             val itemDetailsViewModel = ItemDetailsViewModel()
@@ -844,7 +858,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                 Log.e("Response", jsonObject.toString())
                 if (jsonObject != null) {
                     dismissProgressBar()
-                    parseAddCartResponse(jsonObject)
+                    parseUpdateCartResponse(jsonObject, isRemove)
                 }
             })
         } catch (e: Exception) {
@@ -852,12 +866,17 @@ class CartItemActivity : SubModuleActivity(), CartListener {
         }
     }
 
-    private fun parseAddCartResponse(jsonObject: JSONObject) {
+    private fun parseUpdateCartResponse(obj: JSONObject, isRemove: Boolean) {
         try {
-            if (jsonObject.has("code") && jsonObject.getInt("code") == 200) {
-
+            if (obj.has("code") && obj.getInt("code") == 200) {
+                if (obj.has("status") && obj.getBoolean("status")) {
+                    if (isRemove) {
+                        cartItemList.clear()
+                        getCartItems()
+                    }
+                }
             } else {
-                CommonClass.handleErrorResponse(context, jsonObject, binding.rootView)
+                CommonClass.handleErrorResponse(context, obj, binding.rootView)
             }
         } catch (e: Exception) {
             e.printStackTrace()

@@ -165,6 +165,9 @@ class CartItemListAdapter(
                     cartListener.selectItem(itemDto)
                 }
 
+                ivCartDelete.setOnClickListener {
+                    cartListener.remove(position)
+                }
             }
         }
 
@@ -297,7 +300,8 @@ class CartItemListAdapter(
 
     override fun removeItem(position: Int, itemGroupPosition: Int) {
         try {
-            cartListener.remove(itemGroupPosition, position)
+            val cartDetailsDto = items!![itemGroupPosition].cartDetails[position]
+            cartListener.removeCartItem(itemGroupPosition, cartDetailsDto)
         } catch (e: Exception) {
             e.printStackTrace()
         }
