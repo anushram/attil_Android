@@ -240,7 +240,7 @@ class CartItemListAdapter(
                         if (quantity.toFloat() < cartDetailsDto.minUnit.toFloat()) {
                             Log.e("Less Than", "Min")
                             Log.e("Less Than", "Comes Here")
-                            cartDetailsDto.cartSelectedMinUnit = 0
+                            cartDetailsDto.cartSelectedMinUnit = cartDetailsDto.minUnit
                             cartDetailsDto.cartSelectedMaxUnit = 0
                             cartListener.handleItem(
                                 cartDetailsDto,
