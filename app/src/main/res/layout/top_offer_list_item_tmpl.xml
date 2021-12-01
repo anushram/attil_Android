@@ -64,19 +64,16 @@
                 android:id="@+id/ln_offer_percentage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
                 android:background="@drawable/boundary_primary"
                 android:paddingStart="10dp"
-                android:paddingTop="1dp"
-                android:paddingEnd="10dp"
-                android:paddingBottom="1dp">
+                android:paddingEnd="10dp">
 
                 <TextView
                     android:id="@+id/tv_offer_percentage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
-                    android:fontFamily="@font/noto_sans_bold"
+                    android:fontFamily="@font/noto_sans_semi_bold"
                     android:text="12% OFF"
                     android:textColor="@color/white"
                     android:textSize="13sp"

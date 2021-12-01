@@ -134,7 +134,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
         }
     }
 
-    fun hideKeyboard() {
+    private fun hideKeyboard() {
         try {
             val view = requireActivity().currentFocus
             if (view != null) {
@@ -279,7 +279,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
             intent.putExtra("filterPrice", filterPrice)
             intent.putExtra("filterView", filterView)
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
-            filterLauncher.launch(intent)
+            startActivity(intent)
         } catch (e: Exception) {
             e.printStackTrace()
         }
