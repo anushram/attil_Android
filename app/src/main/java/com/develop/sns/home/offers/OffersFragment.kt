@@ -26,8 +26,8 @@ import com.develop.sns.databinding.FragmentOffersBinding
 import com.develop.sns.home.details.ItemDetailsActivity
 import com.develop.sns.home.offers.adapter.NormalOffersListAdapter
 import com.develop.sns.home.offers.adapter.TopOffersListAdapter
-import com.develop.sns.home.offers.dto.NormalOfferDto
-import com.develop.sns.home.offers.dto.NormalOfferPriceDto
+import com.develop.sns.home.offers.dto.ProductDto
+import com.develop.sns.home.offers.dto.ProductPriceDto
 import com.develop.sns.home.offers.listener.NormalOfferListener
 import com.develop.sns.home.offers.listener.TopOfferListener
 import com.develop.sns.utils.AppConstant
@@ -47,8 +47,8 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
     private val binding by lazy { FragmentOffersBinding.inflate(layoutInflater) }
     private lateinit var preferenceHelper: PreferenceHelper
 
-    private lateinit var topOfferList: ArrayList<NormalOfferDto>
-    private lateinit var normalOfferList: ArrayList<NormalOfferDto>
+    private lateinit var topOfferList: ArrayList<ProductDto>
+    private lateinit var normalOfferList: ArrayList<ProductDto>
 
     private lateinit var normalOffersListAdapter: NormalOffersListAdapter
 
@@ -60,7 +60,6 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
 
     private var serviceFlag = false
     private var searchQueryFlag = false
-    private var isClose = false
     private var searchQuery = ""
 
     private val limit = 20
@@ -345,7 +344,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
                         val dataArray = obj.getJSONArray("data")
                         for (i in 0 until dataArray.length()) {
                             val itemObject = dataArray.getJSONObject(i)
-                            val topOfferDto = NormalOfferDto()
+                            val topOfferDto = ProductDto()
 
                             if (itemObject.has("_id") && !itemObject.isNull("_id")) {
                                 topOfferDto.id = itemObject.getString("_id")
@@ -394,13 +393,13 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
                                 topOfferDto.createdAtTZ = itemObject.getString("createdAtTZ")
                             }
 
-                            val priceDetailsArray = ArrayList<NormalOfferPriceDto>()
+                            val priceDetailsArray = ArrayList<ProductPriceDto>()
                             if (itemObject.has("priceDetails") && !itemObject.isNull("priceDetails")) {
                                 val priceArray = itemObject.getJSONArray("priceDetails")
                                 val sortedPriceArray = sortJsonArray(priceArray)
                                 for (k in 0 until sortedPriceArray.length()) {
                                     val priceObject = sortedPriceArray.getJSONObject(k)
-                                    val normalOfferPriceDto = NormalOfferPriceDto()
+                                    val normalOfferPriceDto = ProductPriceDto()
 
                                     normalOfferPriceDto.packageType = packageType
                                     normalOfferPriceDto.offerType = offerType
@@ -556,7 +555,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
                         val dataArray = obj.getJSONArray("data")
                         for (i in 0 until dataArray.length()) {
                             val itemObject = dataArray.getJSONObject(i)
-                            val normalOfferDto = NormalOfferDto()
+                            val normalOfferDto = ProductDto()
 
                             if (itemObject.has("_id") && !itemObject.isNull("_id")) {
                                 normalOfferDto.id = itemObject.getString("_id")
@@ -605,13 +604,13 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
                                 normalOfferDto.createdAtTZ = itemObject.getString("createdAtTZ")
                             }
 
-                            val priceDetailsArray = ArrayList<NormalOfferPriceDto>()
+                            val priceDetailsArray = ArrayList<ProductPriceDto>()
                             if (itemObject.has("priceDetails") && !itemObject.isNull("priceDetails")) {
                                 val priceArray = itemObject.getJSONArray("priceDetails")
                                 val sortedPriceArray = sortJsonArray(priceArray)
                                 for (k in 0 until sortedPriceArray.length()) {
                                     val priceObject = sortedPriceArray.getJSONObject(k)
-                                    val normalOfferPriceDto = NormalOfferPriceDto()
+                                    val normalOfferPriceDto = ProductPriceDto()
 
                                     normalOfferPriceDto.packageType = packageType
 
@@ -880,7 +879,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
         }
     }
 
-    override fun selectTopOfferItem(itemDto: NormalOfferDto) {
+    override fun selectTopOfferItem(itemDto: ProductDto) {
         try {
             launchItemDetailsActivity(itemDto)
         } catch (e: Exception) {
@@ -888,7 +887,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
         }
     }
 
-    override fun selectNormalOfferItem(itemDto: NormalOfferDto) {
+    override fun selectNormalOfferItem(itemDto: ProductDto) {
         try {
             launchItemDetailsActivity(itemDto)
         } catch (e: Exception) {
@@ -905,7 +904,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
             }
         }
 
-    private fun launchItemDetailsActivity(itemDto: NormalOfferDto) {
+    private fun launchItemDetailsActivity(itemDto: ProductDto) {
         try {
             val intent = Intent(context, ItemDetailsActivity::class.java)
             intent.putExtra("itemDto", itemDto)

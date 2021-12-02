@@ -6,15 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.develop.sns.cart.dto.CartDetailsDto
+import com.develop.sns.cart.dto.CartListDto
 import com.develop.sns.cart.listener.CartSubListener
 import com.develop.sns.databinding.CartSubItemListTmplBinding
 import com.develop.sns.utils.PreferenceHelper
+import java.io.Serializable
 
 
 class CartSubItemListAdapter(
     val context: Context,
-    val cartList: ArrayList<CartDetailsDto>,
+    private val cartList: ArrayList<CartListDto>,
     val cartSubListener: CartSubListener,
     var itemGroupPosition: Int,
 ) : RecyclerView.Adapter<CartSubItemListAdapter.ViewHolder>() {
@@ -38,12 +39,12 @@ class CartSubItemListAdapter(
 
     inner class ViewHolder(val binding: CartSubItemListTmplBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(cartDetailsDto: CartDetailsDto, position: Int) {
+        fun bind(cartListDto: CartListDto, position: Int) {
             with(binding) {
 
-                if (cartDetailsDto.packageType == "loose" && cartDetailsDto.offerType == "normal") {
+                if (cartListDto.packageType == "loose" && cartListDto.offerType == "normal") {
                     val qty =
-                        cartDetailsDto.cartSelectedMinUnit + (cartDetailsDto.cartSelectedMaxUnit * 1000)
+                        cartListDto.cartSelectedMinUnit + (cartListDto.cartSelectedMaxUnit * 1000)
 
                     lnQuantity.visibility = View.GONE
                     lnAdd.visibility = View.GONE
@@ -65,24 +66,24 @@ class CartSubItemListAdapter(
                     tvKgCount.text = maxUnit
 
                     tvOfferPercentage.text =
-                        cartDetailsDto.offerPercentage.toString().plus(" ").plus("% OFF")
+                        cartListDto.offerPercentage.toString().plus(" ").plus("% OFF")
 
-                } else if ((cartDetailsDto.packageType == "packed" && cartDetailsDto.offerType == "normal")
-                    || (cartDetailsDto.packageType == "packed" && cartDetailsDto.offerType == "BOGO")
-                    || (cartDetailsDto.packageType == "packed" && cartDetailsDto.offerType == "BOGE")
+                } else if ((cartListDto.packageType == "packed" && cartListDto.offerType == "normal")
+                    || (cartListDto.packageType == "packed" && cartListDto.offerType == "BOGO")
+                    || (cartListDto.packageType == "packed" && cartListDto.offerType == "BOGE")
                 ) {
                     lnQuantity.visibility = View.VISIBLE
 
                     tvQuantity.text =
-                        cartDetailsDto.unit.toString().plus(" ").plus(cartDetailsDto.measureType)
+                        cartListDto.unit.toString().plus(" ").plus(cartListDto.measureType)
 
                     lnAdd.visibility = View.VISIBLE
                     lnLooseAdd.visibility = View.GONE
-                    if (cartDetailsDto.cartSelectedItemCount > 0) {
-                        tvCount.text = cartDetailsDto.cartSelectedItemCount.toString()
+                    if (cartListDto.cartSelectedItemCount > 0) {
+                        tvCount.text = cartListDto.cartSelectedItemCount.toString()
                     }
                     tvOfferPercentage.text =
-                        cartDetailsDto.offerPercentage.toString().plus(" ").plus("% OFF")
+                        cartListDto.offerPercentage.toString().plus(" ").plus("% OFF")
 
                 }
 

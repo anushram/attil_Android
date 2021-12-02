@@ -110,8 +110,10 @@
                             android:id="@+id/ln_offer_percentage"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="start"
                             android:background="@drawable/boundary_primary"
                             android:paddingStart="10dp"
+                            android:visibility="visible"
                             android:paddingEnd="10dp">
 
                             <TextView

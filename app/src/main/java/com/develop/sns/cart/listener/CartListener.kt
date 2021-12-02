@@ -1,16 +1,14 @@
 package com.develop.sns.cart.listener
 
-import com.develop.sns.cart.dto.CartDetailsDto
-import com.develop.sns.cart.dto.CartItemDto
-import com.develop.sns.home.offers.dto.NormalOfferDto
-import com.develop.sns.home.offers.dto.NormalOfferPriceDto
+import com.develop.sns.cart.dto.CartListDto
+import com.develop.sns.home.offers.dto.ProductDto
 
 interface CartListener {
 
-    fun selectItem(cartItemDto: CartItemDto)
+    fun selectItem(productDto: ProductDto)
 
     fun handleItem(
-        cartDetailsDto: CartDetailsDto,
+        cartListDto: CartListDto,
         isAdd: Boolean,
         itemGroupPosition: Int,
         position: Int
@@ -22,7 +20,7 @@ interface CartListener {
 
     fun removeCartItem(
         itemGroupPosition: Int,
-        cartDetailsDto: CartDetailsDto
+        cartListDto: CartListDto
     )
 
 }

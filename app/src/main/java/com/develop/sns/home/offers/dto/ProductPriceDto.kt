@@ -2,7 +2,7 @@ package com.develop.sns.home.offers.dto
 
 import java.io.Serializable
 
-class NormalOfferPriceDto : Serializable {
+class ProductPriceDto : Serializable {
     var id: String = ""
     var measureType: String = ""
     var normalPrice: Int = 0
@@ -31,7 +31,7 @@ class NormalOfferPriceDto : Serializable {
     }
 
     override fun equals(other: Any?): Boolean {
-        if (other is NormalOfferPriceDto) {
+        if (other is ProductPriceDto) {
             return id == other.id
         }
         return false
