@@ -1,22 +1,26 @@
 package com.develop.sns.cart
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.develop.sns.R
 import com.develop.sns.SubModuleActivity
 import com.develop.sns.cart.adapter.CartItemListAdapter
-import com.develop.sns.cart.dto.CartDetailsDto
-import com.develop.sns.cart.dto.CartItemDto
+import com.develop.sns.cart.dto.CartListDto
 import com.develop.sns.cart.listener.CartListener
 import com.develop.sns.databinding.ActivityCartItemBinding
+import com.develop.sns.home.details.ItemDetailsActivity
 import com.develop.sns.home.details.ItemDetailsViewModel
-import com.develop.sns.home.offers.dto.NormalOfferPriceDto
+import com.develop.sns.home.offers.dto.ProductDto
+import com.develop.sns.home.offers.dto.ProductPriceDto
 import com.develop.sns.utils.AppConstant
 import com.develop.sns.utils.AppUtils
 import com.develop.sns.utils.CommonClass
@@ -25,16 +29,17 @@ import com.google.gson.JsonObject
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import java.io.Serializable
 
 class CartItemActivity : SubModuleActivity(), CartListener {
 
     private val context: Context = this@CartItemActivity
     private val binding by lazy { ActivityCartItemBinding.inflate(layoutInflater) }
 
-    private lateinit var cartItemList: ArrayList<CartItemDto>
+    private lateinit var cartItemList: ArrayList<ProductDto>
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var cartItemListAdapter: CartItemListAdapter
-    private lateinit var cartMap: HashMap<String, CartDetailsDto>
+    private lateinit var cartMap: HashMap<String, CartListDto>
     private lateinit var cartViewModel: CartViewModel
 
     var packageType = ""
@@ -137,10 +142,10 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                         val dataArray = obj.getJSONArray("data")
                         for (i in 0 until dataArray.length()) {
                             val itemObject = dataArray.getJSONObject(i)
-                            val cartItemDto = CartItemDto()
+                            val productDto = ProductDto()
 
                             if (itemObject.has("_id") && !itemObject.isNull("_id")) {
-                                cartItemDto.id = itemObject.getString("_id")
+                                productDto.id = itemObject.getString("_id")
                             }
 
                             if (itemObject.has("productDetails") && !itemObject.isNull("productDetails")) {
@@ -149,14 +154,14 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                                 if (productDetailsObj.has("_id")
                                     && !productDetailsObj.isNull("_id")
                                 ) {
-                                    cartItemDto.productId = productDetailsObj.getString("_id")
+                                    productDto.productId = productDetailsObj.getString("_id")
                                 }
 
                                 if (productDetailsObj.has("productCode") && !productDetailsObj.isNull(
                                         "productCode"
                                     )
                                 ) {
-                                    cartItemDto.productCode =
+                                    productDto.productCode =
                                         productDetailsObj.getString("productCode")
                                 }
 
@@ -164,7 +169,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                                         "productName"
                                     )
                                 ) {
-                                    cartItemDto.productName =
+                                    productDto.productName =
                                         productDetailsObj.getString("productName")
                                 }
 
@@ -179,24 +184,24 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                                         brandImageList.add(brandImageArray.getString(j))
                                     }
                                 }
-                                cartItemDto.brandImage = brandImageList
+                                productDto.brandImage = brandImageList
 
                                 if (productDetailsObj.has("brandId") && !productDetailsObj.isNull("brandId")) {
-                                    cartItemDto.brandId = productDetailsObj.getString("brandId")
+                                    productDto.brandId = productDetailsObj.getString("brandId")
                                 }
 
                                 if (productDetailsObj.has("brandName") && !productDetailsObj.isNull(
                                         "brandName"
                                     )
                                 ) {
-                                    cartItemDto.brandName = productDetailsObj.getString("brandName")
+                                    productDto.brandName = productDetailsObj.getString("brandName")
                                 }
 
                                 if (productDetailsObj.has("packageType") && !productDetailsObj.isNull(
                                         "packageType"
                                     )
                                 ) {
-                                    cartItemDto.packageType =
+                                    productDto.packageType =
                                         productDetailsObj.getString("packageType")
                                     packageType = productDetailsObj.getString("packageType")
                                 }
@@ -204,25 +209,25 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                                 if (productDetailsObj.has("offerType")
                                     && !productDetailsObj.isNull("offerType")
                                 ) {
-                                    cartItemDto.offerType = productDetailsObj.getString("offerType")
+                                    productDto.offerType = productDetailsObj.getString("offerType")
                                     offerType = productDetailsObj.getString("offerType")
                                 }
 
                                 if (productDetailsObj.has("description")
                                     && !productDetailsObj.isNull("description")
                                 ) {
-                                    cartItemDto.description =
+                                    productDto.description =
                                         productDetailsObj.getString("description")
                                 }
 
                                 if (productDetailsObj.has("createdAtTZ")
                                     && !productDetailsObj.isNull("createdAtTZ")
                                 ) {
-                                    cartItemDto.createdAtTZ =
+                                    productDto.createdAtTZ =
                                         productDetailsObj.getString("createdAtTZ")
                                 }
 
-                                val priceDetailsArray = ArrayList<NormalOfferPriceDto>()
+                                val priceDetailsArray = ArrayList<ProductPriceDto>()
                                 if (productDetailsObj.has("priceDetails")
                                     && !productDetailsObj.isNull("priceDetails")
                                 ) {
@@ -230,7 +235,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                                     val sortedPriceArray = sortJsonArray(priceArray)
                                     for (k in 0 until sortedPriceArray.length()) {
                                         val priceObject = sortedPriceArray.getJSONObject(k)
-                                        val normalOfferPriceDto = NormalOfferPriceDto()
+                                        val normalOfferPriceDto = ProductPriceDto()
 
                                         normalOfferPriceDto.packageType = packageType
 
@@ -364,49 +369,49 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                                         priceDetailsArray.add(normalOfferPriceDto)
                                     }
                                 }
-                                cartItemDto.priceDetails = priceDetailsArray
+                                productDto.priceDetails = priceDetailsArray
                             }
 
-                            val cartDetailsList = ArrayList<CartDetailsDto>()
+                            val cartList = ArrayList<CartListDto>()
                             if (itemObject.has("cart") && !itemObject.isNull("cart")) {
                                 val cartArray = itemObject.getJSONArray("cart")
                                 for (k in 0 until cartArray.length()) {
                                     val cartObject = cartArray.getJSONObject(k)
-                                    val cartDetailsDto = CartDetailsDto()
+                                    val cartListDto = CartListDto()
 
-                                    cartDetailsDto.packageType = packageType
+                                    cartListDto.packageType = packageType
 
-                                    cartDetailsDto.offerType = offerType
+                                    cartListDto.offerType = offerType
 
                                     if (cartObject.has("_id") && !cartObject.isNull("_id")) {
-                                        cartDetailsDto.cartItemId = cartObject.getString("_id")
+                                        cartListDto.cartItemId = cartObject.getString("_id")
                                     }
 
                                     if (cartObject.has("availability") && !cartObject.isNull("availability")) {
-                                        cartDetailsDto.availability =
+                                        cartListDto.availability =
                                             cartObject.getInt("availability")
                                     }
 
                                     if (cartObject.has("measureType") && !cartObject.isNull("measureType")) {
-                                        cartDetailsDto.measureType =
+                                        cartListDto.measureType =
                                             cartObject.getString("measureType")
                                     }
 
                                     if (cartObject.has("unit") && !cartObject.isNull("unit")) {
-                                        cartDetailsDto.unit = cartObject.getInt("unit")
+                                        cartListDto.unit = cartObject.getInt("unit")
                                     }
 
                                     if (cartObject.has("normalPrice") && !cartObject.isNull("normalPrice")) {
-                                        cartDetailsDto.normalPrice =
+                                        cartListDto.normalPrice =
                                             cartObject.getInt("normalPrice")
                                     }
 
                                     if (cartObject.has("attilPrice") && !cartObject.isNull("attilPrice")) {
-                                        cartDetailsDto.attilPrice = cartObject.getInt("attilPrice")
+                                        cartListDto.attilPrice = cartObject.getInt("attilPrice")
                                     }
 
                                     if (cartObject.has("createdAtTZ") && !cartObject.isNull("createdAtTZ")) {
-                                        cartDetailsDto.updatedAt =
+                                        cartListDto.updatedAt =
                                             CommonClass.getDateTimeFromUtc(
                                                 cartObject.getString("createdAtTZ"),
                                                 AppConstant.appDateFormat,
@@ -415,7 +420,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                                     }
 
                                     if (cartObject.has("updatedAtTZ") && !cartObject.isNull("updatedAtTZ")) {
-                                        cartDetailsDto.updatedAt =
+                                        cartListDto.updatedAt =
                                             CommonClass.getDateTimeFromUtc(
                                                 cartObject.getString("updatedAtTZ"),
                                                 AppConstant.appDateFormat,
@@ -427,12 +432,12 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                                         val minUnitObject = cartObject.getJSONObject("selectedMin")
 
                                         if (minUnitObject.has("measureType")) {
-                                            cartDetailsDto.cartMinUnitMeasureType =
+                                            cartListDto.cartMinUnitMeasureType =
                                                 minUnitObject.getString("measureType")
                                         }
 
                                         if (minUnitObject.has("unit") && !minUnitObject.isNull("unit")) {
-                                            cartDetailsDto.cartSelectedMinUnit =
+                                            cartListDto.cartSelectedMinUnit =
                                                 minUnitObject.getInt("unit")
                                         }
                                     }
@@ -442,11 +447,11 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                                         val maxUnitObject = cartObject.getJSONObject("selectedMax")
 
                                         if (maxUnitObject.has("measureType")) {
-                                            cartDetailsDto.cartMaxUnitMeasureType =
+                                            cartListDto.cartMaxUnitMeasureType =
                                                 maxUnitObject.getString("measureType")
                                         }
                                         if (maxUnitObject.has("unit") && !maxUnitObject.isNull("unit")) {
-                                            cartDetailsDto.cartSelectedMaxUnit =
+                                            cartListDto.cartSelectedMaxUnit =
                                                 maxUnitObject.getInt("unit")
                                         }
                                     }
@@ -455,12 +460,12 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                                         val minUnitObject = cartObject.getJSONObject("minUnit")
 
                                         if (minUnitObject.has("measureType")) {
-                                            cartDetailsDto.minUnitMeasureType =
+                                            cartListDto.minUnitMeasureType =
                                                 minUnitObject.getString("measureType")
                                         }
 
                                         if (minUnitObject.has("unit") && !minUnitObject.isNull("unit")) {
-                                            cartDetailsDto.minUnit =
+                                            cartListDto.minUnit =
                                                 minUnitObject.getInt("unit")
                                         }
                                     }
@@ -470,17 +475,17 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                                         val maxUnitObject = cartObject.getJSONObject("maxUnit")
 
                                         if (maxUnitObject.has("measureType")) {
-                                            cartDetailsDto.maxUnitMeasureType =
+                                            cartListDto.maxUnitMeasureType =
                                                 maxUnitObject.getString("measureType")
                                         }
                                         if (maxUnitObject.has("unit") && !maxUnitObject.isNull("unit")) {
-                                            cartDetailsDto.maxUnit =
+                                            cartListDto.maxUnit =
                                                 maxUnitObject.getInt("unit")
                                         }
                                     }
 
                                     if (cartObject.has("selectedItemCount") && !cartObject.isNull("selectedItemCount")) {
-                                        cartDetailsDto.cartSelectedItemCount =
+                                        cartListDto.cartSelectedItemCount =
                                             cartObject.getInt("selectedItemCount")
                                     }
 
@@ -488,7 +493,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                                         val offerDetailsObject =
                                             cartObject.getJSONObject("offerDetails")
                                         if (offerDetailsObject.has("measureType")) {
-                                            cartDetailsDto.offerMeasureType =
+                                            cartListDto.offerMeasureType =
                                                 offerDetailsObject.getString("measureType")
                                         }
 
@@ -496,7 +501,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                                                 "unit"
                                             )
                                         ) {
-                                            cartDetailsDto.offerUnit =
+                                            cartListDto.offerUnit =
                                                 offerDetailsObject.getInt("unit")
                                         }
 
@@ -505,7 +510,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                                                 "offerPercentage"
                                             )
                                         ) {
-                                            cartDetailsDto.offerPercentage =
+                                            cartListDto.offerPercentage =
                                                 offerDetailsObject.getInt("offerPercentage")
                                         }
 
@@ -517,7 +522,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                                             if (extraProdObj.has("productName")
                                                 && !extraProdObj.isNull("productName")
                                             ) {
-                                                cartDetailsDto.bogeProductName =
+                                                cartListDto.bogeProductName =
                                                     extraProdObj.getString("productName")
                                             }
                                             if (extraProdObj.has("brandImage")
@@ -525,7 +530,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                                             ) {
                                                 val extraBrandImg =
                                                     extraProdObj.getJSONArray("brandImage")
-                                                cartDetailsDto.bogeProductImg =
+                                                cartListDto.bogeProductImg =
                                                     extraBrandImg.getString(0)
                                             }
                                             if (extraProdObj.has("priceDetails")
@@ -538,26 +543,26 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                                                         "unit"
                                                     )
                                                 ) {
-                                                    cartDetailsDto.bogeUnit =
+                                                    cartListDto.bogeUnit =
                                                         extraPriceObj.getInt("unit")
                                                 }
                                                 if (extraPriceObj.has("measureType") && !extraPriceObj.isNull(
                                                         "measureType"
                                                     )
                                                 ) {
-                                                    cartDetailsDto.bogeMeasureType =
+                                                    cartListDto.bogeMeasureType =
                                                         extraPriceObj.getString("measureType")
                                                 }
                                             }
                                         }
                                     }
 
-                                    cartDetailsList.add(cartDetailsDto)
+                                    cartList.add(cartListDto)
                                 }
                             }
-                            cartItemDto.cartDetails = cartDetailsList
+                            productDto.cartList = cartList
 
-                            cartItemList.add(cartItemDto)
+                            cartItemList.add(productDto)
                         }
                     }
                 }
@@ -617,12 +622,12 @@ class CartItemActivity : SubModuleActivity(), CartListener {
         }
     }
 
-    private fun calculateTotal(cartItemList: java.util.ArrayList<CartItemDto>) {
+    private fun calculateTotal(cartItemList: java.util.ArrayList<ProductDto>) {
         try {
             var totalAmount = 0F
             for (k in 0 until cartItemList.size) {
                 val cartItemDto = cartItemList[k]
-                val cartDetailsList = cartItemDto.cartDetails
+                val cartDetailsList = cartItemDto.cartList
                 for (i in 0 until cartDetailsList.size) {
                     val cartDetailsDto = cartDetailsList[i]
                     if (cartItemDto.packageType == "loose" && cartItemDto.offerType == "normal") {
@@ -651,16 +656,35 @@ class CartItemActivity : SubModuleActivity(), CartListener {
             getString(R.string.Rs).plus(" ").plus("%.2f".format(totalPrice))
     }
 
-    override fun selectItem(cartItemDto: CartItemDto) {
+    override fun selectItem(productDto: ProductDto) {
         try {
+            launchItemDetailsActivity(productDto)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 
+    var resultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                cartItemList.clear()
+                getCartItems()
+            }
+        }
+
+    private fun launchItemDetailsActivity(productDto: ProductDto) {
+        try {
+            val intent = Intent(context, ItemDetailsActivity::class.java)
+            intent.putExtra("itemDto", productDto)
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+            resultLauncher.launch(intent)
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
     override fun handleItem(
-        cartDetailsDto: CartDetailsDto,
+        cartListDto: CartListDto,
         isAdd: Boolean,
         itemGroupPosition: Int,
         position: Int
@@ -669,12 +693,12 @@ class CartItemActivity : SubModuleActivity(), CartListener {
             if (isAdd) {
                 //Add Item From cart
                 Log.e("TAG", "Add Item")
-                addItem(cartDetailsDto, itemGroupPosition, position)
+                addItem(cartListDto, itemGroupPosition, position)
             } else {
                 //Remove Item From cart
                 Log.e("TAG", "Remove Item")
-                removeItem(cartDetailsDto, itemGroupPosition, position)
-                addItem(cartDetailsDto, itemGroupPosition, position)
+                removeItem(cartListDto, itemGroupPosition, position)
+                addItem(cartListDto, itemGroupPosition, position)
             }
             cartItemListAdapter.notifyItemChanged(itemGroupPosition)
         } catch (e: Exception) {
@@ -691,9 +715,9 @@ class CartItemActivity : SubModuleActivity(), CartListener {
         }
     }
 
-    override fun removeCartItem(itemGroupPosition: Int, cartDetailsDto: CartDetailsDto) {
+    override fun removeCartItem(itemGroupPosition: Int, cartListDto: CartListDto) {
         try {
-            cartItemList[itemGroupPosition].cartDetails.remove(cartDetailsDto)
+            cartItemList[itemGroupPosition].cartList.remove(cartListDto)
             calculateTotal(cartItemList)
             updateCart(cartItemList[itemGroupPosition], true)
         } catch (e: Exception) {
@@ -702,12 +726,12 @@ class CartItemActivity : SubModuleActivity(), CartListener {
     }
 
     private fun addItem(
-        cartDetailsDto: CartDetailsDto,
+        cartListDto: CartListDto,
         itemGroupPosition: Int,
         position: Int
     ) {
         try {
-            cartItemList[itemGroupPosition].cartDetails[position] = cartDetailsDto
+            cartItemList[itemGroupPosition].cartList[position] = cartListDto
             calculateTotal(cartItemList)
             updateCart(cartItemList[itemGroupPosition], false)
         } catch (e: Exception) {
@@ -716,12 +740,12 @@ class CartItemActivity : SubModuleActivity(), CartListener {
     }
 
     private fun removeItem(
-        cartDetailsDto: CartDetailsDto,
+        cartListDto: CartListDto,
         itemGroupPosition: Int,
         position: Int
     ) {
         try {
-            cartItemList[itemGroupPosition].cartDetails[position] = cartDetailsDto
+            cartItemList[itemGroupPosition].cartList[position] = cartListDto
             calculateTotal(cartItemList)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -778,7 +802,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
         }
     }
 
-    private fun updateCart(cartItemDto: CartItemDto, isRemove: Boolean) {
+    private fun updateCart(cartItemDto: ProductDto, isRemove: Boolean) {
         try {
             if (AppUtils.isConnectedToInternet(context)) {
                 val requestObject = JsonObject()
@@ -788,7 +812,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                 )
                 requestObject.addProperty("cartId", cartItemDto.id)
                 val cartDetailsArray = JsonArray()
-                val cartList = cartItemDto.cartDetails
+                val cartList = cartItemDto.cartList
                 for (j in 0 until cartList.size) {
                     val cartDetailsDto = cartList[j]
 

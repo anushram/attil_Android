@@ -13,7 +13,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.develop.sns.MainActivity
 import com.develop.sns.R
-import com.develop.sns.home.offers.dto.NormalOfferPriceDto
+import com.develop.sns.home.offers.dto.ProductPriceDto
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -145,7 +145,7 @@ class CommonClass {
             return width
         }
 
-        fun saveCartMap(context: Context, cartMap: HashMap<String, NormalOfferPriceDto>) {
+        fun saveCartMap(context: Context, cartMap: HashMap<String, ProductPriceDto>) {
             try {
                 val preferenceHelper = PreferenceHelper(context)
                 val gson = Gson()
@@ -167,15 +167,15 @@ class CommonClass {
             }
         }
 
-        fun getCartMap(context: Context): HashMap<String, NormalOfferPriceDto> {
-            var cartMap = HashMap<String, NormalOfferPriceDto>()
+        fun getCartMap(context: Context): HashMap<String, ProductPriceDto> {
+            var cartMap = HashMap<String, ProductPriceDto>()
             try {
                 val preferenceHelper = PreferenceHelper(context)
                 val gson = Gson()
                 val cartMapString =
                     preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_CART_ITEM)
                 if (cartMapString != null && cartMapString.trim().isNotEmpty()) {
-                    val type = object : TypeToken<HashMap<String?, NormalOfferPriceDto?>?>() {}.type
+                    val type = object : TypeToken<HashMap<String?, ProductPriceDto?>?>() {}.type
                     cartMap = gson.fromJson(cartMapString, type)
                 }
 

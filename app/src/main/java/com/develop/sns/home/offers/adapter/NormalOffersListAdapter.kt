@@ -10,8 +10,8 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.develop.sns.R
 import com.develop.sns.databinding.NormalOfferListItemTmplBinding
-import com.develop.sns.home.offers.dto.NormalOfferDto
-import com.develop.sns.home.offers.dto.NormalOfferPriceDto
+import com.develop.sns.home.offers.dto.ProductDto
+import com.develop.sns.home.offers.dto.ProductPriceDto
 import com.develop.sns.home.offers.listener.NormalOfferListener
 import com.develop.sns.utils.AppConstant
 import com.develop.sns.utils.PreferenceHelper
@@ -21,7 +21,7 @@ import org.json.JSONArray
 
 class NormalOffersListAdapter(
     val context: Context,
-    val items: ArrayList<NormalOfferDto>?,
+    val items: ArrayList<ProductDto>?,
     val normalOfferListener: NormalOfferListener,
 ) : RecyclerView.Adapter<NormalOffersListAdapter.ViewHolder>() {
 
@@ -45,7 +45,7 @@ class NormalOffersListAdapter(
 
     inner class ViewHolder(val binding: NormalOfferListItemTmplBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: NormalOfferDto, position: Int) {
+        fun bind(item: ProductDto, position: Int) {
             with(binding) {
 
                 when {
@@ -93,7 +93,7 @@ class NormalOffersListAdapter(
                         .into(ivProduct)
                 }
 
-                var normalOfferPriceDto: NormalOfferPriceDto?
+                var productPriceDto: ProductPriceDto?
 
                 val obj =
                     preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_MIN_UNITS)
@@ -102,25 +102,25 @@ class NormalOffersListAdapter(
 
                 if (item.packageType.equals("loose") && item.offerType.equals("normal")) {
 
-                    normalOfferPriceDto = item.priceDetails?.get(0)
+                    productPriceDto = item.priceDetails?.get(0)
 
                     measureText = context.getString(R.string.starts).plus(" @")
-                        .plus(normalOfferPriceDto!!.minUnit).plus(" ")
-                        .plus(normalOfferPriceDto.minUnitMeasureType)
+                        .plus(productPriceDto!!.minUnit).plus(" ")
+                        .plus(productPriceDto.minUnitMeasureType)
 
 
-                    minUnit = normalOfferPriceDto.minUnit.toDouble()
-                    if (!userexists(jsonArray, normalOfferPriceDto.minUnitMeasureType)) {
-                        minUnit = (normalOfferPriceDto.minUnit * 1000).toDouble()
+                    minUnit = productPriceDto.minUnit.toDouble()
+                    if (!userexists(jsonArray, productPriceDto.minUnitMeasureType)) {
+                        minUnit = (productPriceDto.minUnit * 1000).toDouble()
                     }
 
-                    val unit: Double = normalOfferPriceDto.unit.toDouble()
+                    val unit: Double = productPriceDto.unit.toDouble()
                     val result: Double = minUnit.div(unit)
                     Log.e("Double result", result.toString())
-                    val normalPrice = normalOfferPriceDto.normalPrice
+                    val normalPrice = productPriceDto.normalPrice
                     mrp = result.times(normalPrice)
 
-                    val offerPrice = normalOfferPriceDto.attilPrice
+                    val offerPrice = productPriceDto.attilPrice
                     offerMrp = result.times(offerPrice)
 
                     lnOfferPercentage.visibility = View.VISIBLE
@@ -128,7 +128,7 @@ class NormalOffersListAdapter(
                     ivBogo.visibility = View.GONE
 
                     tvOfferPercentage.text =
-                        normalOfferPriceDto.offerPercentage.toString().plus("% OFF")
+                        productPriceDto.offerPercentage.toString().plus("% OFF")
 
                     diff = (mrp - offerMrp)
 
@@ -184,13 +184,13 @@ class NormalOffersListAdapter(
                         false
                     )
                 ) {
-                    normalOfferPriceDto = item.priceDetails?.get(0)
+                    productPriceDto = item.priceDetails?.get(0)
                     measureText = context.getString(R.string.starts).plus(" @")
-                        .plus(normalOfferPriceDto!!.unit).plus(" ")
-                        .plus(normalOfferPriceDto.measureType)
+                        .plus(productPriceDto!!.unit).plus(" ")
+                        .plus(productPriceDto.measureType)
 
-                    mrp = normalOfferPriceDto.normalPrice.toDouble()
-                    offerMrp = normalOfferPriceDto.attilPrice.toDouble()
+                    mrp = productPriceDto.normalPrice.toDouble()
+                    offerMrp = productPriceDto.attilPrice.toDouble()
 
                     lnOfferPercentage.visibility = View.GONE
                     lnBogeMain.visibility = View.GONE
@@ -216,13 +216,13 @@ class NormalOffersListAdapter(
                         false
                     )
                 ) {
-                    normalOfferPriceDto = item.priceDetails?.get(0)
+                    productPriceDto = item.priceDetails?.get(0)
                     measureText = context.getString(R.string.starts).plus(" @")
-                        .plus(normalOfferPriceDto!!.unit).plus(" ")
-                        .plus(normalOfferPriceDto.measureType)
+                        .plus(productPriceDto!!.unit).plus(" ")
+                        .plus(productPriceDto.measureType)
 
-                    mrp = normalOfferPriceDto.normalPrice.toDouble()
-                    offerMrp = normalOfferPriceDto.attilPrice.toDouble()
+                    mrp = productPriceDto.normalPrice.toDouble()
+                    offerMrp = productPriceDto.attilPrice.toDouble()
 
                     diff = (mrp - offerMrp)
 
@@ -244,17 +244,17 @@ class NormalOffersListAdapter(
                     lnBogeMain.visibility = View.VISIBLE
                     ivBogo.visibility = View.GONE
 
-                    Picasso.with(context).load(normalOfferPriceDto.bogeProductImg)
+                    Picasso.with(context).load(productPriceDto.bogeProductImg)
                         .placeholder(R.drawable.product)
                         .error(R.drawable.product)
                         .into(ivBogeBrand)
-                    tvBogeName.text = normalOfferPriceDto.bogeProductName
-                    tvBogeQty.text = normalOfferPriceDto.bogeUnit.toString().plus(" ")
-                        .plus(normalOfferPriceDto.bogeMeasureType)
+                    tvBogeName.text = productPriceDto.bogeProductName
+                    tvBogeQty.text = productPriceDto.bogeUnit.toString().plus(" ")
+                        .plus(productPriceDto.bogeMeasureType)
                 }
 
                 lnMain.setOnClickListener {
-                    val itemDto: NormalOfferDto = items!!.get(position)
+                    val itemDto: ProductDto = items!!.get(position)
                     normalOfferListener.selectNormalOfferItem(itemDto)
                 }
 

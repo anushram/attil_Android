@@ -1,8 +1,5 @@
 package com.develop.sns.cart.listener
 
-import com.develop.sns.cart.dto.CartDetailsDto
-import com.develop.sns.cart.dto.CartItemDto
-
 interface CartSubListener {
 
     fun changeSubCount(

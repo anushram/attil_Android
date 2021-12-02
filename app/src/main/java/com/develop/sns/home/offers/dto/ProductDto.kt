@@ -1,10 +1,10 @@
-package com.develop.sns.cart.dto
+package com.develop.sns.home.offers.dto
 
 import com.develop.sns.cart.adapter.CartSubItemListAdapter
-import com.develop.sns.home.offers.dto.NormalOfferPriceDto
+import com.develop.sns.cart.dto.CartListDto
 import java.io.Serializable
 
-class CartItemDto : Serializable {
+class ProductDto : Serializable {
 
     var id: String = ""
     var productId: String = ""
@@ -17,22 +17,21 @@ class CartItemDto : Serializable {
     var offerType: String = ""
     var description: String = ""
     var createdAtTZ: String = ""
-    var priceDetails: ArrayList<NormalOfferPriceDto> = ArrayList()
-    var cartDetails: ArrayList<CartDetailsDto> = ArrayList()
-    var cartSubItemListAdapter: CartSubItemListAdapter? = null
+    var priceDetails: ArrayList<ProductPriceDto> = ArrayList()
+    var cartList: ArrayList<CartListDto> = ArrayList()
 
     override fun toString(): String {
         return productName
     }
 
     override fun equals(other: Any?): Boolean {
-        if (other is CartItemDto) {
+        if (other is ProductDto) {
             return id == other.id
         }
         return false
     }
 
     override fun hashCode(): Int {
-        return id.hashCode()
+        return productName.hashCode() ?: 0
     }
 }

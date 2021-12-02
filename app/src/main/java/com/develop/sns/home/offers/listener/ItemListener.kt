@@ -1,18 +1,20 @@
 package com.develop.sns.home.offers.listener
 
-import com.develop.sns.home.offers.dto.NormalOfferPriceDto
+import com.develop.sns.home.offers.dto.ProductPriceDto
 
 interface ItemListener {
-    fun changeCount(position: Int, itemDto: NormalOfferPriceDto?, isAdd: Boolean)
+    fun changeCount(position: Int, itemDto: ProductPriceDto, isAdd: Boolean)
 
     fun changeCountGmOrKg(
         position: Int,
-        itemDto: NormalOfferPriceDto?,
+        productPriceDto: ProductPriceDto,
         isAdd: Boolean,
         isGm: Boolean,
         count: Int,
     )
 
-    fun selectItem(position: Int, itemDto: NormalOfferPriceDto?, isSelect: Boolean)
+    fun selectItem(position: Int, productPriceDto: ProductPriceDto, isSelect: Boolean)
+
     fun takeActions(position: Int)
+
 }

@@ -8,7 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.develop.sns.R
 import com.develop.sns.databinding.TopOfferListItemTmplBinding
-import com.develop.sns.home.offers.dto.NormalOfferDto
+import com.develop.sns.home.offers.dto.ProductDto
 import com.develop.sns.home.offers.listener.TopOfferListener
 import com.develop.sns.utils.PreferenceHelper
 import com.squareup.picasso.Picasso
@@ -16,7 +16,7 @@ import com.squareup.picasso.Picasso
 
 class TopOffersListAdapter(
     val context: Context,
-    val items: ArrayList<NormalOfferDto>?,
+    val items: ArrayList<ProductDto>?,
     val topOfferListener: TopOfferListener,
     val screenWidth: Int,
 ) : RecyclerView.Adapter<TopOffersListAdapter.ViewHolder>() {
@@ -38,7 +38,7 @@ class TopOffersListAdapter(
 
     inner class ViewHolder(val binding: TopOfferListItemTmplBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: NormalOfferDto, position: Int) {
+        fun bind(item: ProductDto, position: Int) {
             with(binding) {
 
                 val tileWidth = (screenWidth - 32) / 2

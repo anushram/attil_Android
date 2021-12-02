@@ -2,7 +2,7 @@ package com.develop.sns.cart.dto
 
 import java.io.Serializable
 
-class CartDetailsDto : Serializable {
+class CartListDto : Serializable {
 
     var packageType: String = ""
     var offerType: String = ""
@@ -35,7 +35,7 @@ class CartDetailsDto : Serializable {
     }
 
     override fun equals(other: Any?): Boolean {
-        if (other is CartDetailsDto) {
+        if (other is CartListDto) {
             return cartItemId == other.cartItemId
         }
         return false

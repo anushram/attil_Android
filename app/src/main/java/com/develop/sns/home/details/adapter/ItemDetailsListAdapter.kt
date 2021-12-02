@@ -9,8 +9,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.develop.sns.R
 import com.develop.sns.databinding.ItemDetailsListItemTmplBinding
-import com.develop.sns.home.offers.dto.NormalOfferDto
-import com.develop.sns.home.offers.dto.NormalOfferPriceDto
+import com.develop.sns.home.offers.dto.ProductDto
+import com.develop.sns.home.offers.dto.ProductPriceDto
 import com.develop.sns.home.offers.listener.ItemListener
 import com.develop.sns.utils.AppConstant
 import com.develop.sns.utils.PreferenceHelper
@@ -20,8 +20,8 @@ import org.json.JSONArray
 
 class ItemDetailsListAdapter(
     val context: Context,
-    val normalOfferDto: NormalOfferDto,
-    private val priceDetailsList: ArrayList<NormalOfferPriceDto>?,
+    val productDto: ProductDto,
+    private val priceDetailsList: ArrayList<ProductPriceDto>,
     val itemListener: ItemListener,
 ) : RecyclerView.Adapter<ItemDetailsListAdapter.ViewHolder>() {
 
@@ -42,30 +42,30 @@ class ItemDetailsListAdapter(
         return ViewHolder(binding)
     }
 
-    override fun getItemCount(): Int = priceDetailsList?.size!!
+    override fun getItemCount(): Int = priceDetailsList.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) =
-        holder.bind(priceDetailsList?.get(position)!!, position)
+        holder.bind(priceDetailsList.get(position), position)
 
     inner class ViewHolder(val binding: ItemDetailsListItemTmplBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(priceDetailDto: NormalOfferPriceDto, position: Int) {
+        fun bind(priceDetailDto: ProductPriceDto, position: Int) {
             with(binding) {
-                tvProductName.text = normalOfferDto.productName
+                tvProductName.text = productDto.productName
 
                 val obj =
                     preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_MIN_UNITS)
 
                 val jsonArray = JSONArray(obj)
 
-                Picasso.with(context).load(normalOfferDto.brandImage!![0])
+                Picasso.with(context).load(productDto.brandImage[0])
                     .placeholder(R.drawable.product)
                     .error(R.drawable.product)
                     .into(ivProduct)
-                Log.e("PackageType", normalOfferDto.packageType!!)
-                Log.e("OfferType", normalOfferDto.offerType!!)
-                if (normalOfferDto.packageType.equals("loose", true)
-                    && normalOfferDto.offerType.equals("normal", true)
+                Log.e("PackageType", productDto.packageType)
+                Log.e("OfferType", productDto.offerType)
+                if (productDto.packageType.equals("loose", true)
+                    && productDto.offerType.equals("normal", true)
                 ) {
 
                     measureText = context.getString(R.string.available).plus(" ")
@@ -108,10 +108,10 @@ class ItemDetailsListAdapter(
                     tvOfferPrice.visibility = View.VISIBLE
                     tvSave.visibility = View.VISIBLE
 
-                } else if ((normalOfferDto.packageType.equals("packed", true)
-                            && normalOfferDto.offerType.equals("normal", true))
-                    || (normalOfferDto.packageType.equals("packed", true)
-                            && normalOfferDto.offerType.equals("special", true))
+                } else if ((productDto.packageType.equals("packed", true)
+                            && productDto.offerType.equals("normal", true))
+                    || (productDto.packageType.equals("packed", true)
+                            && productDto.offerType.equals("special", true))
                 ) {
                     measureText =
                         priceDetailDto.unit.toString().plus(" ").plus(priceDetailDto.measureType)
@@ -144,8 +144,8 @@ class ItemDetailsListAdapter(
                     tvOfferPrice.visibility = View.VISIBLE
                     tvSave.visibility = View.VISIBLE
 
-                } else if (normalOfferDto.packageType.equals("packed", true)
-                    && normalOfferDto.offerType.equals("BOGO", true)
+                } else if (productDto.packageType.equals("packed", true)
+                    && productDto.offerType.equals("BOGO", true)
                 ) {
                     measureText = priceDetailDto.unit.toString().plus(" ")
                         .plus(priceDetailDto.measureType)
@@ -172,8 +172,8 @@ class ItemDetailsListAdapter(
                         context.getString(R.string.you_save).plus(" ")
                             .plus(context.getString(R.string.Rs)).plus("")
                             .plus("%.2f".format(diff))
-                } else if (normalOfferDto.packageType.equals("packed", true)
-                    && normalOfferDto.offerType.equals("BOGE", true)
+                } else if (productDto.packageType.equals("packed", true)
+                    && productDto.offerType.equals("BOGE", true)
                 ) {
                     measureText = priceDetailDto.unit.toString().plus(" ")
                         .plus(priceDetailDto.measureType)
@@ -210,43 +210,43 @@ class ItemDetailsListAdapter(
                         .plus(priceDetailDto.bogeMeasureType)
                 }
 
-                if (normalOfferDto.packageType.equals("loose", true)
-                    && normalOfferDto.offerType.equals("normal", true)
-                ) {
-                    Log.e("Quantity", priceDetailDto.quantity.toString())
-                    btnAdd.visibility = View.GONE
-                    lnLooseAdd.visibility = View.VISIBLE
-                    lnAdd.visibility = View.GONE
-                    val kg = priceDetailDto.quantity.toDouble() * 0.001
-                    var minUnit = "0"
-                    var maxUnit = "0"
-                    val qtyStr = "%.3f".format(kg)
-                    minUnit = qtyStr.split(".")[1]
-                    maxUnit = qtyStr.split(".")[0]
-                    Log.e("min", minUnit)
-                    Log.e("max", maxUnit)
-                    if (minUnit.equals("000")) {
-                        minUnit = "0"
-                    }
-                    tvGmCount.text = minUnit
-                    tvKgCount.text = maxUnit
-                } else {
-                    if (priceDetailDto.quantity > 0) {
+                if (priceDetailDto.quantity > 0) {
+                    if (productDto.packageType.equals("loose", true)
+                        && productDto.offerType.equals("normal", true)
+                    ) {
+                        Log.e("Quantity", priceDetailDto.quantity.toString())
+                        btnAdd.visibility = View.GONE
+                        lnLooseAdd.visibility = View.VISIBLE
+                        lnAdd.visibility = View.GONE
+                        val kg = priceDetailDto.quantity.toDouble() * 0.001
+                        var minUnit = "0"
+                        var maxUnit = "0"
+                        val qtyStr = "%.3f".format(kg)
+                        minUnit = qtyStr.split(".")[1]
+                        maxUnit = qtyStr.split(".")[0]
+                        Log.e("min", minUnit)
+                        Log.e("max", maxUnit)
+                        if (minUnit.equals("000")) {
+                            minUnit = "0"
+                        }
+                        tvGmCount.text = minUnit
+                        tvKgCount.text = maxUnit
+                    } else {
                         btnAdd.visibility = View.GONE
                         lnLooseAdd.visibility = View.GONE
                         lnAdd.visibility = View.VISIBLE
                         tvCount.text = priceDetailDto.quantity.toString()
-                    } else {
-                        btnAdd.visibility = View.VISIBLE
-                        lnAdd.visibility = View.GONE
-                        lnLooseAdd.visibility = View.GONE
                     }
+                } else {
+                    btnAdd.visibility = View.VISIBLE
+                    lnAdd.visibility = View.GONE
+                    lnLooseAdd.visibility = View.GONE
                 }
 
                 btnAdd.setOnClickListener {
                     btnAdd.visibility = View.GONE
-                    if (normalOfferDto.packageType.equals("loose", true)
-                        && normalOfferDto.offerType.equals("normal", true)
+                    if (productDto.packageType.equals("loose", true)
+                        && productDto.offerType.equals("normal", true)
                     ) {
                         lnLooseAdd.visibility = View.VISIBLE
                         lnAdd.visibility = View.GONE
@@ -275,25 +275,30 @@ class ItemDetailsListAdapter(
                 }
 
                 lnGmDecrease.setOnClickListener {
-                    itemListener.changeCountGmOrKg(position, priceDetailDto,
+                    itemListener.changeCountGmOrKg(
+                        position, priceDetailDto,
                         isAdd = false,
-                        isGm = true, 0)
+                        isGm = true, 0
+                    )
                 }
 
                 lnKgIncrease.setOnClickListener {
-                    itemListener.changeCountGmOrKg(position,
+                    itemListener.changeCountGmOrKg(
+                        position,
                         priceDetailDto,
                         isAdd = true,
-                        isGm = false, 0)
+                        isGm = false, 0
+                    )
                 }
 
                 lnKgDecrease.setOnClickListener {
-                    itemListener.changeCountGmOrKg(position,
+                    itemListener.changeCountGmOrKg(
+                        position,
                         priceDetailDto,
                         isAdd = false,
-                        isGm = false, 0)
+                        isGm = false, 0
+                    )
                 }
-
 
             }
         }

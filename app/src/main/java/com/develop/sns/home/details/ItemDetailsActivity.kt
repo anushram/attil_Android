@@ -14,8 +14,8 @@ import com.develop.sns.SubModuleActivity
 import com.develop.sns.databinding.ActivityItemDetailsBinding
 import com.develop.sns.home.details.adapter.ItemDetailsListAdapter
 import com.develop.sns.home.offers.adapter.SliderAdapter
-import com.develop.sns.home.offers.dto.NormalOfferDto
-import com.develop.sns.home.offers.dto.NormalOfferPriceDto
+import com.develop.sns.home.offers.dto.ProductDto
+import com.develop.sns.home.offers.dto.ProductPriceDto
 import com.develop.sns.home.offers.listener.ItemListener
 import com.develop.sns.home.product.BrandListActivity
 import com.develop.sns.home.product.VarietyListActivity
@@ -33,9 +33,10 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
     private val context: Context = this@ItemDetailsActivity
     private val binding by lazy { ActivityItemDetailsBinding.inflate(layoutInflater) }
 
-    var itemMainDto: NormalOfferDto? = null
+    var itemMainDto: ProductDto? = null
+    var isCart: Boolean = false
     private var itemDetailsListAdapter: ItemDetailsListAdapter? = null
-    private lateinit var cartMap: HashMap<String, NormalOfferPriceDto>
+    private lateinit var cartMap: HashMap<String, ProductPriceDto>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,16 +53,16 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
 
         initialiseProgressBar(binding.lnProgressbar)
         initialiseErrorMessage(binding.lnError)
-        initClassReference()
         getIntentValue()
+        initClassReference()
         handleUiElement()
+        populateUiElement()
     }
 
     private fun getIntentValue() {
         try {
             val intent = intent
-            itemMainDto = intent.getSerializableExtra("itemDto") as NormalOfferDto?
-            populateUiElement()
+            itemMainDto = intent.getSerializableExtra("itemDto") as ProductDto?
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -227,7 +228,7 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
         }
     }
 
-    private fun populateItemList(itemDto: NormalOfferDto) {
+    private fun populateItemList(itemDto: ProductDto) {
         try {
             binding.lvProducts.layoutManager = LinearLayoutManager(context)
 
@@ -257,9 +258,9 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
         }
     }
 
-    override fun selectItem(position: Int, itemDto: NormalOfferPriceDto?, isSelect: Boolean) {
+    override fun selectItem(position: Int, itemDto: ProductPriceDto, isSelect: Boolean) {
         try {
-            val quantity: Int = itemDto!!.quantity
+            val quantity: Int = itemDto.quantity
             Log.e("selectItem", quantity.toString())
             if (itemDetailsListAdapter != null) {
                 itemDto.selectedFlag = isSelect
@@ -297,67 +298,28 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
         }
     }
 
-    override fun changeCount(position: Int, itemDto: NormalOfferPriceDto?, isAdd: Boolean) {
+    override fun changeCount(position: Int, itemDto: ProductPriceDto, isAdd: Boolean) {
         try {
             if (itemDetailsListAdapter != null) {
-                var quantity: Int = itemDto!!.quantity
-                if (itemMainDto!!.packageType.equals(
-                        "loose",
-                        true
-                    ) && itemMainDto!!.offerType.equals(
-                        "normal",
-                        true
-                    )
-                ) {
-                    quantity = if (isAdd) {
-                        val value: Int = quantity + 50
-                        value
-                    } else {
-                        val value: Int = quantity - 50
-                        value
-                    }
-
-                    if (quantity.toFloat() <= itemDto.maxUnit * 1000.toFloat()) {
-                        if (quantity.toFloat() < itemDto.minUnit.toFloat()) {
-                            itemDto.selectedFlag = false
-                            itemDto.quantity = itemDto.minUnit
-                            removeItem(itemDto)
-                        } else {
-                            itemDto.selectedFlag = true
-                            itemDto.quantity = quantity
-                            addItem(itemDto)
-                        }
-                        itemDetailsListAdapter!!.notifyItemChanged(position, itemDto)
-                    }
-
-                } else if ((itemMainDto!!.packageType.equals("packed", true)
-                            && itemMainDto!!.offerType.equals("normal", true))
-                    || (itemMainDto!!.packageType.equals("packed", true)
-                            && itemMainDto!!.offerType.equals("special", true))
-                    || (itemMainDto!!.packageType.equals("packed", true)
-                            && itemMainDto!!.offerType.equals("BOGO", true))
-                    || (itemMainDto!!.packageType.equals("packed", true)
-                            && itemMainDto!!.offerType.equals("BOGE", true))
-                ) {
-                    quantity = if (isAdd) {
-                        val value: Int = quantity + 1
-                        value
-                    } else {
-                        val value: Int = quantity - 1
-                        value
-                    }
-                    if (quantity.toFloat() <= itemDto.availability.toFloat()) {
-                        itemDto.selectedFlag = true
-                        itemDto.quantity = quantity
-                        addItem(itemDto)
-                    } else {
-                        itemDto.selectedFlag = false
-                        itemDto.quantity = itemDto.availability
-                        removeItem(itemDto)
-                        addItem(itemDto)
-                    }
-                    itemDetailsListAdapter!!.notifyItemChanged(position, itemDto)
+                var quantity: Int = itemDto.quantity
+                quantity = if (isAdd) {
+                    val value: Int = quantity + 1
+                    value
+                } else {
+                    val value: Int = quantity - 1
+                    value
                 }
+                if (quantity.toFloat() <= itemDto.availability.toFloat()) {
+                    itemDto.selectedFlag = true
+                    itemDto.quantity = quantity
+                    addItem(itemDto)
+                } else {
+                    itemDto.selectedFlag = false
+                    itemDto.quantity = itemDto.availability
+                    removeItem(itemDto)
+                    addItem(itemDto)
+                }
+                itemDetailsListAdapter!!.notifyItemChanged(position, itemDto)
             }
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
@@ -366,7 +328,7 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
 
     override fun changeCountGmOrKg(
         position: Int,
-        itemDto: NormalOfferPriceDto?,
+        productPriceDto: ProductPriceDto,
         isAdd: Boolean,
         isGm: Boolean,
         count: Int,
@@ -374,7 +336,7 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
         Log.e("Count", count.toString())
         try {
             if (itemDetailsListAdapter != null) {
-                var quantity: Int = itemDto!!.quantity
+                var quantity: Int = productPriceDto!!.quantity
 
                 val qty = quantity.toFloat().div(1000)
                 val qtyStr = "%.3f".format(qty)
@@ -386,7 +348,7 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
                     var minQuantity = Integer.parseInt(minUnit)
                     minQuantity = if (isAdd) {
                         if (count == 1) {
-                            val value: Int = itemDto.minUnit
+                            val value: Int = productPriceDto.minUnit
                             value
                         } else {
                             val value: Int = minQuantity + 50
@@ -399,30 +361,30 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
 
                     var maxQuantity = Integer.parseInt(maxUnit)
                     quantity = minQuantity + (maxQuantity * 1000)
-                    if (quantity.toFloat() < itemDto.maxUnit * 1000.toFloat()) {
-                        if (quantity.toFloat() < itemDto.minUnit.toFloat()) {
+                    if (quantity.toFloat() < productPriceDto.maxUnit * 1000.toFloat()) {
+                        if (quantity.toFloat() < productPriceDto.minUnit.toFloat()) {
                             Log.e("Less Than", "Min")
                             Log.e("Less Than", "Comes Here")
-                            itemDto.selectedFlag = false
-                            itemDto.quantity = 0
-                            removeItem(itemDto)
+                            productPriceDto.selectedFlag = false
+                            productPriceDto.quantity = 0
+                            removeItem(productPriceDto)
                             ItemDetailsListAdapter.clickGmPlusCount = 0
                         } else {
-                            itemDto.selectedFlag = true
+                            productPriceDto.selectedFlag = true
                             maxQuantity = Integer.parseInt(maxUnit)
                             val qty2 = minQuantity + (maxQuantity * 1000)
-                            itemDto.quantity = qty2
-                            removeItem(itemDto)
-                            addItem(itemDto)
+                            productPriceDto.quantity = qty2
+                            removeItem(productPriceDto)
+                            addItem(productPriceDto)
                         }
                     } else {
-                        itemDto.selectedFlag = true
+                        productPriceDto.selectedFlag = true
                         maxQuantity = Integer.parseInt(maxUnit)
                         val qty3 = (maxQuantity * 1000)
-                        itemDto.quantity = qty3
-                        addItem(itemDto)
+                        productPriceDto.quantity = qty3
+                        addItem(productPriceDto)
                     }
-                    itemDetailsListAdapter!!.notifyItemChanged(position, itemDto)
+                    itemDetailsListAdapter!!.notifyItemChanged(position, productPriceDto)
                 } else {
                     var maxQuantity = Integer.parseInt(maxUnit)
                     maxQuantity = if (isAdd) {
@@ -432,19 +394,19 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
                         val value: Int = maxQuantity - 1
                         value
                     }
-                    if (maxQuantity.toFloat() < itemDto.maxUnit.toFloat()) {
-                        itemDto.selectedFlag = true
+                    if (maxQuantity.toFloat() < productPriceDto.maxUnit.toFloat()) {
+                        productPriceDto.selectedFlag = true
                         val minQuantity = Integer.parseInt(minUnit)
                         val qty4 = minQuantity + (maxQuantity * 1000)
-                        itemDto.quantity = qty4
-                        addItem(itemDto)
+                        productPriceDto.quantity = qty4
+                        addItem(productPriceDto)
                     } else {
-                        itemDto.selectedFlag = false
-                        itemDto.quantity = itemDto.maxUnit * 1000
-                        removeItem(itemDto)
-                        addItem(itemDto)
+                        productPriceDto.selectedFlag = false
+                        productPriceDto.quantity = productPriceDto.maxUnit * 1000
+                        removeItem(productPriceDto)
+                        addItem(productPriceDto)
                     }
-                    itemDetailsListAdapter!!.notifyItemChanged(position, itemDto)
+                    itemDetailsListAdapter!!.notifyItemChanged(position, productPriceDto)
                 }
 
             }
@@ -453,12 +415,12 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
         }
     }
 
-    private fun addItem(normalOfferPriceDto: NormalOfferPriceDto) {
+    private fun addItem(productPriceDto: ProductPriceDto) {
         try {
-            if (cartMap.containsKey(normalOfferPriceDto.id)) {
-                cartMap.remove(normalOfferPriceDto.id)
+            if (cartMap.containsKey(productPriceDto.id)) {
+                cartMap.remove(productPriceDto.id)
             }
-            cartMap.put(normalOfferPriceDto.id, normalOfferPriceDto)
+            cartMap[productPriceDto.id] = productPriceDto
             CommonClass.saveCartMap(context, cartMap)
             cartMap = CommonClass.getCartMap(context)
             calculateTotal(cartMap)
@@ -467,9 +429,9 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
         }
     }
 
-    private fun removeItem(normalOfferPriceDto: NormalOfferPriceDto) {
+    private fun removeItem(productPriceDto: ProductPriceDto) {
         try {
-            cartMap.remove(normalOfferPriceDto.id)
+            cartMap.remove(productPriceDto.id)
             CommonClass.saveCartMap(context, cartMap)
             cartMap = CommonClass.getCartMap(context)
             calculateTotal(cartMap)
@@ -478,32 +440,32 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
         }
     }
 
-    private fun calculateTotal(cartMap: HashMap<String, NormalOfferPriceDto>) {
+    private fun calculateTotal(cartMap: HashMap<String, ProductPriceDto>) {
         try {
+            Log.e("Calculate", cartMap.size.toString())
             var totalPrice: Float = 0F
-            if (!cartMap.isEmpty()) {
+            if (cartMap.isNotEmpty()) {
                 for ((key, value) in cartMap) {
-                    println("$key = ${value.quantity.toString().plus(" ").plus(value.attilPrice)}")
-                    if (value.packageType.equals("loose", true) && value.offerType.equals(
-                            "normal",
-                            true
-                        )
-                    ) {
+                    println(
+                        "$key = ${
+                            value.packageType.plus(" ").plus(value.offerType).plus(" ")
+                                .plus(value.quantity.toString()).plus(" ")
+                                .plus(value.attilPrice)
+                        }"
+                    )
+                    if (value.packageType == "loose" && value.offerType == "normal") {
                         val result = value.quantity.toFloat() / value.unit.toFloat()
                         totalPrice += result.times(value.attilPrice)
-                    } else if ((value.packageType.equals("packed", true)
-                                && value.offerType.equals("normal", true))
-                        || (value.packageType.equals("packed", true)
-                                && value.offerType.equals("special", true))
-                        || (value.packageType.equals("packed", true)
-                                && value.offerType.equals("BOGO", true))
-                        || (value.packageType.equals("packed", true)
-                                && value.offerType.equals("BOGE", true))
+                    } else if ((value.packageType == "packed" && value.offerType == "normal")
+                        || (value.packageType == "packed" && value.offerType == "special")
+                        || (value.packageType == "packed" && value.offerType == "BOGO")
+                        || (value.packageType == "packed" && value.offerType == "BOGE")
                     ) {
                         totalPrice += value.quantity * value.attilPrice
+                        Log.e("tot", totalPrice.toString())
                     }
                     binding.tvTotalPrice.text =
-                        getString(R.string.Rs).plus(" ").plus("%.2f".format(totalPrice))
+                        getString(R.string.Rs).plus(".").plus("%.2f".format(totalPrice))
                 }
             } else {
                 binding.tvTotalPrice.text =
