@@ -465,7 +465,7 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
                         Log.e("tot", totalPrice.toString())
                     }
                     binding.tvTotalPrice.text =
-                        getString(R.string.Rs).plus(".").plus("%.2f".format(totalPrice))
+                        getString(R.string.Rs).plus(" ").plus("%.2f".format(totalPrice))
                 }
             } else {
                 binding.tvTotalPrice.text =
