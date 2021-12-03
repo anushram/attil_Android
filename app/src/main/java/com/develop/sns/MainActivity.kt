@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
@@ -83,7 +82,7 @@ class MainActivity : SubModuleActivity() {
     }
 
     private fun parseSystemConfigData(obj: JSONObject) {
-        Log.i("Version Main Response", "" + obj.toString())
+        //Log.i("Version Main Response", "" + obj.toString())
         try {
             if (obj.has("data") && !obj.isNull("data")) {
                 val dataObject = obj.getJSONObject("data")
@@ -199,12 +198,12 @@ class MainActivity : SubModuleActivity() {
                         requestObject.addProperty("password",
                             preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_USER_PWD)!!)
                         requestObject.addProperty("preferredLanguage", language)
-                        Log.e("requestObj", requestObject.toString())
+                        //Log.e("requestObj", requestObject.toString())
                         showProgressBar()
                         val loginViewModel = LoginViewModel()
                         loginViewModel.makeLogin(requestObject)
                             .observe(this, { jsonObject ->
-                                Log.e("jsonObject", jsonObject.toString() + "")
+                                //Log.e("jsonObject", jsonObject.toString() + "")
                                 if (jsonObject != null) {
                                     dismissProgressBar()
                                     parseSignInResponse(jsonObject)
@@ -228,7 +227,7 @@ class MainActivity : SubModuleActivity() {
 
     private fun parseSignInResponse(obj: JSONObject) {
         try {
-            Log.e("LoginResponse", obj.toString())
+            //Log.e("LoginResponse", obj.toString())
             if (obj.has("data") && !obj.isNull("data")) {
                 val dataObject = obj.getJSONObject("data")
                 if (dataObject.has("access_token") && !dataObject.isNull("access_token")) {
@@ -251,7 +250,7 @@ class MainActivity : SubModuleActivity() {
 
     private fun parseProductList(jsonObject: JSONObject?) {
         try {
-            Log.e("ProducrList", jsonObject.toString())
+            //Log.e("ProducrList", jsonObject.toString())
             if (jsonObject != null) {
                 if (jsonObject.has("code") && jsonObject.getInt("code") == 200) {
                     preferenceHelper!!.saveValueToSharedPrefs(

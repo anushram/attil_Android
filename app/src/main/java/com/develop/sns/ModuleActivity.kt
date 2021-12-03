@@ -1,6 +1,5 @@
 package com.develop.sns
 
-import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.view.Window
@@ -46,7 +45,4 @@ open class ModuleActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
 }

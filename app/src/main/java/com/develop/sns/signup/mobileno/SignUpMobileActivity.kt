@@ -4,11 +4,9 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.develop.sns.R
@@ -163,7 +161,7 @@ class SignUpMobileActivity : SubModuleActivity() {
 
                 if (dataObject.has("otp") && !dataObject.isNull("otp")) {
                     otp = dataObject.getString("otp")
-                    Log.e("otp", otp)
+                    //Log.e("otp", otp)
                 }
                 launchOTPVerifyActivity()
             } /*}*/ else {

@@ -3,10 +3,11 @@ package com.develop.sns.signup.password
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.method.PasswordTransformationMethod
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.widget.Toolbar
+import android.widget.CompoundButton
 import androidx.core.content.ContextCompat
 import com.develop.sns.R
 import com.develop.sns.SubModuleActivity
@@ -14,9 +15,6 @@ import com.develop.sns.databinding.ActivitySignUpPasswordBinding
 import com.develop.sns.signup.dto.SignUpDto
 import com.develop.sns.utils.CommonClass
 import com.develop.sns.utils.PreferenceHelper
-import android.text.method.PasswordTransformationMethod
-
-import android.widget.CompoundButton
 
 
 class SignUpPasswordActivity : SubModuleActivity() {
@@ -85,7 +83,7 @@ class SignUpPasswordActivity : SubModuleActivity() {
             binding.cbNewPassword.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
                 val start: Int
                 val end: Int
-                ////Log.i("inside checkbox chnge", "" + isChecked);
+                //////Log.i("inside checkbox chnge", "" + isChecked);
                 if (!isChecked) {
                     start = binding.etNewPassword.selectionStart
                     end = binding.etNewPassword.selectionEnd
@@ -102,7 +100,7 @@ class SignUpPasswordActivity : SubModuleActivity() {
             binding.cbConfirmPassword.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
                 val start: Int
                 val end: Int
-                ////Log.i("inside checkbox chnge", "" + isChecked);
+                //////Log.i("inside checkbox chnge", "" + isChecked);
                 if (!isChecked) {
                     start = binding.etConfirmPassword.selectionStart
                     end = binding.etConfirmPassword.selectionEnd

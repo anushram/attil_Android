@@ -1,7 +1,6 @@
 package com.talentmicro.icanrefer.dto
 
 import java.io.Serializable
-import java.util.*
 
 /**
  * Created by Sujit on 31-08-2017.

@@ -6,14 +6,10 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.RadioGroup
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import com.develop.sns.R
 import com.develop.sns.SubModuleActivity
 import com.develop.sns.databinding.ActivityFilterBinding
-import com.develop.sns.home.product.BrandListActivity
-import com.develop.sns.home.product.VarietyListActivity
 
 
 class FilterActivity : SubModuleActivity() {

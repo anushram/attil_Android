@@ -1,12 +1,17 @@
 package com.develop.sns.home
 
 import android.app.Activity
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.develop.sns.R
 import com.develop.sns.SubModuleActivity
 import com.develop.sns.databinding.ActivityHomeBinding
@@ -38,6 +43,10 @@ class HomeActivity : SubModuleActivity() {
         selectItem(AppConstant.OFFERS_FRAGMENT)
         initClassReference()
         handleUiElement()
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+            mMessageReceiver,
+            IntentFilter("custom-event-name")
+        )
     }
 
     private fun initClassReference() {
@@ -235,6 +244,15 @@ class HomeActivity : SubModuleActivity() {
             transaction.commitAllowingStateLoss()
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
+        }
+    }
+
+    private val mMessageReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent) {
+            // Get extra data included in the Intent
+            val cartCount = intent.getIntExtra("cartCount", 0)
+            //Log.d("receiver", "Got message: $cartCount")
+            binding.ivOffers.badgeValue = cartCount
         }
     }
 }

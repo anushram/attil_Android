@@ -2,13 +2,12 @@ package com.develop.sns.home.details
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
-import android.view.View
-import android.view.WindowInsets
-import android.view.WindowManager
-import android.widget.Toast
+import android.view.*
+import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.develop.sns.R
 import com.develop.sns.SubModuleActivity
@@ -40,14 +39,6 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.insetsController!!.hide(WindowInsets.Type.statusBars())
-        } else {
-            window.setFlags(
-                WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN
-            )
-        }
         setContentView(binding.root)
 
         initialiseProgressBar(binding.lnProgressbar)
@@ -105,9 +96,34 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
             binding.btnAddCart.setOnClickListener {
                 if (!cartMap.isEmpty()) {
                     addToCart()
+                } else {
+                    showErrorAlert()
                 }
             }
         } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun showErrorAlert() {
+        try {
+            var announcementDialog: AlertDialog? = null
+            val li = LayoutInflater.from(this@ItemDetailsActivity)
+            val promptsView: View = li.inflate(R.layout.info_dialog_layout, null)
+            val builder = AlertDialog.Builder(this@ItemDetailsActivity)
+            builder.setView(promptsView)
+
+            val btnOk = promptsView.findViewById<Button>(R.id.btn_got_it)
+            btnOk.setOnClickListener {
+                announcementDialog!!.dismiss()
+            }
+            announcementDialog = builder.create()
+            announcementDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            announcementDialog.setCanceledOnTouchOutside(false)
+            announcementDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            announcementDialog.setCancelable(false)
+            announcementDialog.show()
+        } catch (e: java.lang.Exception) {
             e.printStackTrace()
         }
     }
@@ -136,7 +152,7 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
 
                     requestObject.addProperty("productId", itemMainDto!!.id)
 
-                    Log.e("Packed Object", requestObject.toString())
+                    //Log.e("Packed Object", requestObject.toString())
                     initService(requestObject)
 
                 } else if (itemMainDto!!.packageType.equals("loose", true)) {
@@ -175,7 +191,7 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
                     }
                     requestObject.add("cartDetails", cartDetailsArray)
 
-                    Log.e("Loose Object", requestObject.toString())
+                    //Log.e("Loose Object", requestObject.toString())
                     initService(requestObject)
                 }
             } else {
@@ -199,7 +215,7 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
                 requestObject,
                 preferenceHelper?.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)
             ).observe(this, { jsonObject ->
-                Log.e("Response", jsonObject.toString())
+                //Log.e("Response", jsonObject.toString())
                 if (jsonObject != null) {
                     dismissProgressBar()
                     parseAddCartResponse(jsonObject)
@@ -238,11 +254,11 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
                 }
 
                 val imageHeight = CommonClass.getScreenWidth(this@ItemDetailsActivity) / 1.78
-                Log.e("imageHeight", imageHeight.toString())
+                //Log.e("imageHeight", imageHeight.toString())
                 binding.rlView.requestLayout()
                 binding.rlView.layoutParams.height = imageHeight.toInt()
 
-                val imageList = itemMainDto?.brandImage
+                val imageList = itemMainDto?.sliderImage
                 populateImageList(imageList)
 
                 populateItemList(itemMainDto!!)
@@ -275,7 +291,7 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
                     this,
                     imageList
                 )
-                binding.imageSlider.setSliderAdapter(adapter)
+                binding.imageSlider.setSliderAdapter(adapter, true)
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -289,7 +305,7 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
     ) {
         try {
             val quantity: Int = productPriceDto.quantity
-            Log.e("selectItem", quantity.toString())
+            //Log.e("selectItem", quantity.toString())
             if (itemDetailsListAdapter != null) {
                 productPriceDto.selectedFlag = isSelect
 
@@ -361,10 +377,10 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
         isGm: Boolean,
         count: Int,
     ) {
-        Log.e("Count", count.toString())
+        //Log.e("Count", count.toString())
         try {
             if (itemDetailsListAdapter != null) {
-                var quantity: Int = productPriceDto!!.quantity
+                var quantity: Int = productPriceDto.quantity
 
                 val qty = quantity.toFloat().div(1000)
                 val qtyStr = "%.3f".format(qty)
@@ -391,8 +407,8 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
                     quantity = minQuantity + (maxQuantity * 1000)
                     if (quantity.toFloat() < productPriceDto.maxUnit * 1000.toFloat()) {
                         if (quantity.toFloat() < productPriceDto.minUnit.toFloat()) {
-                            Log.e("Less Than", "Min")
-                            Log.e("Less Than", "Comes Here")
+                            //Log.e("Less Than", "Min")
+                            //Log.e("Less Than", "Comes Here")
                             productPriceDto.selectedFlag = false
                             productPriceDto.quantity = 0
                             removeItem(productPriceDto)
@@ -473,7 +489,7 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
 
     private fun calculateTotal(cartMap: HashMap<String, ProductPriceDto>) {
         try {
-            Log.e("Calculate", cartMap.size.toString())
+            //Log.e("Calculate", cartMap.size.toString())
             var totalPrice: Float = 0F
             if (cartMap.isNotEmpty()) {
                 for ((key, value) in cartMap) {
@@ -489,7 +505,7 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
                         totalPrice += result.times(value.attilPrice)
                     } else {
                         totalPrice += value.quantity * value.attilPrice
-                        Log.e("tot", totalPrice.toString())
+                        //Log.e("tot", totalPrice.toString())
                     }
                     binding.tvTotalPrice.text =
                         getString(R.string.Rs).plus(" ").plus("%.2f".format(totalPrice))

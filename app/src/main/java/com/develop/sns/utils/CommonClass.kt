@@ -13,17 +13,13 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.develop.sns.MainActivity
 import com.develop.sns.R
-import com.develop.sns.home.offers.dto.ProductPriceDto
 import com.google.android.material.snackbar.Snackbar
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import org.json.JSONObject
 import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
-import kotlin.collections.HashMap
 
 
 class CommonClass {

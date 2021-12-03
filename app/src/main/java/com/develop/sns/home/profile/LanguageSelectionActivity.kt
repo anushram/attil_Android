@@ -3,9 +3,7 @@ package com.develop.sns.home.profile
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import com.develop.sns.R
 import com.develop.sns.SubModuleActivity
@@ -57,7 +55,7 @@ class LanguageSelectionActivity : SubModuleActivity() {
     private fun setUpUiElement() {
         try {
             languageId = preferenceHelper!!.getIntFromSharedPrefs(AppConstant.KEY_LANGUAGE_ID)
-            Log.e("SetUpUI", languageId.toString())
+            //Log.e("SetUpUI", languageId.toString())
             setLanguageType(languageId)
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
@@ -72,8 +70,8 @@ class LanguageSelectionActivity : SubModuleActivity() {
                 } else if (position == 1) {
                     selectedLanguage = AppConstant.LANGUAGE_TYPE_ENGLISH
                 }
-                Log.e("onPosChange", languageId.toString())
-                Log.e("onPosChangeSL", selectedLanguage.toString())
+                //Log.e("onPosChange", languageId.toString())
+                //Log.e("onPosChangeSL", selectedLanguage.toString())
                 if (languageId != selectedLanguage) {
                     performLanguageSelection()
                 }

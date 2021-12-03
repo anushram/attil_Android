@@ -5,7 +5,6 @@ import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -17,6 +16,7 @@ import androidx.annotation.NonNull
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.develop.sns.R
@@ -41,6 +41,7 @@ import org.json.JSONObject
 import java.util.*
 import kotlin.Comparator
 import kotlin.collections.ArrayList
+
 
 class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
 
@@ -101,7 +102,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
     }
 
     override fun onResume() {
-        Log.e("onResume", "Comes")
+        //Log.e("onResume", "Comes")
         super.onResume()
         binding.svSearch.clearFocus()
         hideKeyboard()
@@ -178,7 +179,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
 
             binding.svSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
-                    Log.e("OnQuery", "Submit")
+                    //Log.e("OnQuery", "Submit")
                     searchQuery = query
                     serviceFlag = false
                     searchQueryFlag = true
@@ -189,7 +190,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
                 }
 
                 override fun onQueryTextChange(newText: String): Boolean {
-                    Log.e("OnQuery", "Change")
+                    //Log.e("OnQuery", "Change")
                     if (newText.isEmpty()) {
                         searchQuery = newText
                         serviceFlag = false
@@ -227,9 +228,9 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
                 ) {
                     super.onScrollStateChanged(recyclerView, newState)
                     if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        Log.d("-----", "end")
+                        //Log.d("-----", "end")
                         startPage++
-                        Log.e("StartPage", startPage.toString())
+                        //Log.e("StartPage", startPage.toString())
                         getNormalOffers()
                     }
                 }
@@ -246,7 +247,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
 
     var filterLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            Log.e("onACR", "Comes")
+            //Log.e("onACR", "Comes")
             isOnActivityRes = true
             if (result.resultCode == Activity.RESULT_OK) {
                 val data: Intent? = result.data
@@ -297,7 +298,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
             }
             normalOfferList = ArrayList()
             this.normalOfferList.clear()
-            Log.e("ResetSize", normalOfferList.size.toString())
+            //Log.e("ResetSize", normalOfferList.size.toString())
             getNormalOffers()
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
@@ -309,7 +310,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
             if (AppUtils.isConnectedToInternet(requireActivity())) {
                 val requestObject = JsonObject()
                 requestObject.addProperty("skip", 0)
-                Log.e("requestObj", requestObject.toString())
+                //Log.e("requestObj", requestObject.toString())
                 showProgressBar()
                 val offersViewModel = OffersViewModel()
                 offersViewModel.getTopOffers(
@@ -335,7 +336,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
 
     private fun parseTopOffersResponse(obj: JSONObject) {
         try {
-            Log.e("TopOffers", obj.toString())
+            //Log.e("TopOffers", obj.toString())
             var packageType = ""
             var offerType = ""
             if (obj.has("code") && obj.getInt("code") == 200) {
@@ -522,7 +523,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
                 requestObject.addProperty("packageType", "")
                 requestObject.addProperty("search", searchQuery)
                 requestObject.addProperty("view", "")
-                Log.e("Normal request", requestObject.toString())
+                //Log.e("Normal request", requestObject.toString())
                 val offersViewModel = OffersViewModel()
                 offersViewModel.getNormalOffers(
                     requestObject,
@@ -546,7 +547,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
 
     private fun parseNormalOffersResponse(obj: JSONObject) {
         try {
-            Log.e("NormalOffers", obj.toString())
+            //Log.e("NormalOffers", obj.toString())
             if (obj.has("code") && obj.getInt("code") == 200) {
                 if (obj.has("status") && obj.getBoolean("status")) {
                     if (obj.has("data") && !obj.isNull("data")) {
@@ -846,7 +847,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
 
     private fun parseCartCountResponse(obj: JSONObject) {
         try {
-            Log.e("CartCount", obj.toString())
+            //Log.e("CartCount", obj.toString())
             if (obj.has("status") && obj.getBoolean("status")) {
                 if (obj.has("data") && !obj.isNull("data")) {
                     cartCount = obj.getInt("data")
@@ -860,6 +861,9 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
                     Toast.LENGTH_SHORT
                 )
             }
+            val intent = Intent("custom-event-name")
+            intent.putExtra("cartCount", cartCount)
+            LocalBroadcastManager.getInstance(requireActivity()).sendBroadcast(intent)
         } catch (e: Exception) {
             e.printStackTrace()
         }

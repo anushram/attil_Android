@@ -1,6 +1,5 @@
 package com.develop.sns.signup.dto
 
-import com.talentmicro.icanrefer.dto.ModuleDto
 import java.io.Serializable
 
 class SignUpDto : Serializable {

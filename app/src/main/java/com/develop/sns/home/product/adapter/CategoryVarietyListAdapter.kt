@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.develop.sns.R
-import com.develop.sns.databinding.CategoryProductListItemTmplBinding
 import com.develop.sns.databinding.CategoryVarietlyListItemTmplBinding
 import com.develop.sns.home.product.listener.CategoryProductListener
 import com.develop.sns.utils.PreferenceHelper

@@ -1,6 +1,5 @@
 package com.develop.sns.repository
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import okhttp3.ResponseBody
 import org.json.JSONObject
@@ -28,7 +27,7 @@ class ApiRepository {
 
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                     val message: String = t.message.toString()
-                    Log.d("failure", message)
+                    //Log.d("failure", message)
 
                 }
             })

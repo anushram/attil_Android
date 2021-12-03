@@ -1,7 +1,9 @@
 package com.develop.sns.home.product.childfrag
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.develop.sns.databinding.FragmentPackedBinding
 import com.develop.sns.utils.PreferenceHelper

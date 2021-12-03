@@ -5,14 +5,13 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
+import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.develop.sns.R
@@ -26,7 +25,6 @@ import com.develop.sns.utils.CommonClass
 import com.develop.sns.utils.PreferenceHelper
 import com.google.gson.JsonObject
 import org.json.JSONObject
-import android.text.Editable
 
 
 class SignUpUserDetailActivity : SubModuleActivity() {
@@ -240,7 +238,7 @@ class SignUpUserDetailActivity : SubModuleActivity() {
                     signUpUserDetailViewModel.checkUserNameAvailability(
                         requestObject
                     )?.observe(this, Observer<JSONObject?> { jsonObject ->
-                        Log.e("jsonObject", jsonObject.toString() + "")
+                        //Log.e("jsonObject", jsonObject.toString() + "")
                         if (jsonObject != null) {
                             dismissProgressBar()
                             parseUserNameResponse(jsonObject)
@@ -263,7 +261,7 @@ class SignUpUserDetailActivity : SubModuleActivity() {
     private fun parseUserNameResponse(obj: JSONObject) {
         try {
             submitFlag = false
-            Log.e("LoginResponse", obj.toString())
+            //Log.e("LoginResponse", obj.toString())
             if (obj.has("status")) {
                 if (obj.getBoolean("status")) {
                     isValid = true

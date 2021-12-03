@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -19,8 +18,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.develop.sns.R
 import com.develop.sns.databinding.FragmentSubProductBinding
-import com.develop.sns.home.product.VarietyListActivity
 import com.develop.sns.home.product.ProductsViewModel
+import com.develop.sns.home.product.VarietyListActivity
 import com.develop.sns.home.product.adapter.CategoryMainListAdapter
 import com.develop.sns.home.product.adapter.CategoryProductListAdapter
 import com.develop.sns.home.product.listener.CategoryMainListener
@@ -176,9 +175,9 @@ class ProductSubFragment : Fragment(), CategoryMainListener, CategoryProductList
                 ) {
                     super.onScrollStateChanged(recyclerView, newState)
                     if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        Log.d("-----", "end")
+                        //Log.d("-----", "end")
                         startPage++
-                        Log.e("StartPage", startPage.toString())
+                        //Log.e("StartPage", startPage.toString())
                         getCategoryProducts(selectedCategoryDto)
                     }
                 }
@@ -203,7 +202,7 @@ class ProductSubFragment : Fragment(), CategoryMainListener, CategoryProductList
             }
             categoryProductList = ArrayList()
             this.categoryProductList.clear()
-            Log.e("ResetSize", categoryProductList.size.toString())
+            //Log.e("ResetSize", categoryProductList.size.toString())
             categoryProductListAdapter.notifyDataSetChanged()
             getCategoryProducts(selectedCategoryDto)
         } catch (e: java.lang.Exception) {
@@ -214,8 +213,8 @@ class ProductSubFragment : Fragment(), CategoryMainListener, CategoryProductList
     private fun checkForData() {
         try {
             val data = preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_PRODUCTS_OBJ)
-            Log.e("data", data!!)
-            if (data.isNotEmpty()) {
+            //Log.e("data", data!!)
+            if (data!!.isNotEmpty()) {
                 val dataObject = JSONObject(data)
                 parseCategoryResponse(dataObject)
             } else {
@@ -343,18 +342,20 @@ class ProductSubFragment : Fragment(), CategoryMainListener, CategoryProductList
     private fun getCategoryProducts(categoryMainDto: CategoryMainDto?) {
         try {
             if (AppUtils.isConnectedToInternet(requireActivity())) {
+                showProgressBar()
                 val requestObject = JsonObject()
                 requestObject.addProperty("skip", startPage)
                 requestObject.addProperty("sortByPrice", 0)
                 requestObject.addProperty("packageType", "")
                 requestObject.addProperty("search", searchQuery)
                 requestObject.addProperty("categoryId", categoryMainDto!!.id)
-                Log.e("CPRequestObj", requestObject.toString())
+                //Log.e("CPRequestObj", requestObject.toString())
                 val productsViewModel = ProductsViewModel()
                 productsViewModel.getProductFromCategory(requestObject,
                     preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!)
                     .observe(viewLifecycleOwner, { jsonObject ->
                         if (jsonObject != null) {
+                            dismissProgressBar()
                             parseCategoryProductsResponse(jsonObject)
                         }
                     })
@@ -374,7 +375,7 @@ class ProductSubFragment : Fragment(), CategoryMainListener, CategoryProductList
     private fun parseCategoryProductsResponse(obj: JSONObject) {
         try {
             categoryProductList.clear()
-            Log.e("ProductCategory", obj.toString())
+            //Log.e("ProductCategory", obj.toString())
             if (obj.has("code") && obj.getInt("code") == 200) {
                 if (obj.has("status") && obj.getBoolean("status")) {
                     if (obj.has("data") && !obj.isNull("data")) {
