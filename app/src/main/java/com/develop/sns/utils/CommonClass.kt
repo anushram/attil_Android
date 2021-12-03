@@ -145,7 +145,7 @@ class CommonClass {
             return width
         }
 
-        fun saveCartMap(context: Context, cartMap: HashMap<String, ProductPriceDto>) {
+        /*fun saveCartMap(context: Context, cartMap: HashMap<String, ProductPriceDto>) {
             try {
                 val preferenceHelper = PreferenceHelper(context)
                 val gson = Gson()
@@ -183,7 +183,7 @@ class CommonClass {
                 e.printStackTrace()
             }
             return cartMap
-        }
+        }*/
 
         fun handleErrorResponse(context: Context, jsonObject: JSONObject, view: View) {
             val statusCode = jsonObject.getInt("statusCode")

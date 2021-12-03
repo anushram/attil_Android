@@ -578,6 +578,15 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
                             }
                             normalOfferDto.brandImage = brandImageList
 
+                            val sliderImageList = ArrayList<String>()
+                            if (itemObject.has("sliderImage") && !itemObject.isNull("sliderImage")) {
+                                val brandImageArray = itemObject.getJSONArray("sliderImage")
+                                for (j in 0 until brandImageArray.length()) {
+                                    sliderImageList.add(brandImageArray.getString(j))
+                                }
+                            }
+                            normalOfferDto.sliderImage = sliderImageList
+
                             if (itemObject.has("brandId") && !itemObject.isNull("brandId")) {
                                 normalOfferDto.brandId = itemObject.getString("brandId")
                             }

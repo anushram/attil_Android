@@ -11,6 +11,7 @@ class ProductDto : Serializable {
     var productCode: String = ""
     var productName: String = ""
     var brandImage: ArrayList<String> = ArrayList()
+    var sliderImage: ArrayList<String> = ArrayList()
     var brandId: String = ""
     var brandName: String = ""
     var packageType: String = ""
@@ -18,7 +19,7 @@ class ProductDto : Serializable {
     var description: String = ""
     var createdAtTZ: String = ""
     var priceDetails: ArrayList<ProductPriceDto> = ArrayList()
-    var cartList: ArrayList<CartListDto> = ArrayList()
+    var cartList: ArrayList<CartListDto>? = null
 
     override fun toString(): String {
         return productName

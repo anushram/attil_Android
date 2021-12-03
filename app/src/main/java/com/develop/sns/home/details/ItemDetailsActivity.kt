@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.Toast
@@ -34,13 +35,11 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
     private val binding by lazy { ActivityItemDetailsBinding.inflate(layoutInflater) }
 
     var itemMainDto: ProductDto? = null
-    var isCart: Boolean = false
     private var itemDetailsListAdapter: ItemDetailsListAdapter? = null
     private lateinit var cartMap: HashMap<String, ProductPriceDto>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        @Suppress("DEPRECATION")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             window.insetsController!!.hide(WindowInsets.Type.statusBars())
         } else {
@@ -53,16 +52,38 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
 
         initialiseProgressBar(binding.lnProgressbar)
         initialiseErrorMessage(binding.lnError)
-        getIntentValue()
         initClassReference()
+        getIntentValue()
         handleUiElement()
-        populateUiElement()
     }
 
     private fun getIntentValue() {
         try {
             val intent = intent
             itemMainDto = intent.getSerializableExtra("itemDto") as ProductDto?
+
+            val cartList = itemMainDto!!.cartList
+            if (cartList != null && cartList.isNotEmpty()) {
+                val productPriceList = itemMainDto!!.priceDetails
+                for (j in 0 until productPriceList.size) {
+                    val productPriceDto = productPriceList[j]
+                    for (i in 0 until cartList.size) {
+                        val cartListDto = cartList[i]
+                        if (productPriceDto.unit == cartListDto.unit) {
+                            if (cartListDto.packageType == "loose" && cartListDto.offerType == "normal") {
+                                val qty =
+                                    cartListDto.cartSelectedMinUnit + (cartListDto.cartSelectedMaxUnit * 1000)
+                                productPriceDto.quantity = qty
+                            } else {
+                                productPriceDto.quantity = cartListDto.cartSelectedItemCount
+                            }
+                            itemMainDto!!.priceDetails[j] = productPriceDto
+                            addItem(productPriceDto)
+                        }
+                    }
+                }
+            }
+            populateUiElement()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -70,8 +91,7 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
 
     private fun initClassReference() {
         try {
-            cartMap = CommonClass.getCartMap(context)
-            calculateTotal(cartMap)
+            cartMap = HashMap()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -104,7 +124,7 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
                     requestObject.add("cartId", JsonNull.INSTANCE)
 
                     val cartDetailsArray = JsonArray()
-                    if (!cartMap.isEmpty()) {
+                    if (cartMap.isNotEmpty()) {
                         for ((_, value) in cartMap) {
                             val cartDetailsObject = JsonObject()
                             cartDetailsObject.addProperty("selectedItemCount", value.quantity)
@@ -193,8 +213,8 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
     private fun parseAddCartResponse(jsonObject: JSONObject) {
         try {
             if (jsonObject.has("code") && jsonObject.getInt("code") == 200) {
-                CommonClass.removeCartMap(context)
-                cartMap = CommonClass.getCartMap(context)
+                cartMap.clear()
+                cartMap = HashMap()
                 calculateTotal(cartMap)
                 handleResponse()
             } else {
@@ -210,9 +230,14 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
             if (itemMainDto != null) {
 
                 binding.tvProductName.text = itemMainDto!!.productName
-                binding.tvBrandName.text = itemMainDto!!.brandName
+                if (itemMainDto!!.brandName.trim().isNotEmpty()) {
+                    binding.tvBrandName.visibility = View.VISIBLE
+                    binding.tvBrandName.text = itemMainDto!!.brandName
+                } else {
+                    binding.tvBrandName.visibility = View.GONE
+                }
 
-                var imageHeight = CommonClass.getScreenWidth(this@ItemDetailsActivity) / 1.78
+                val imageHeight = CommonClass.getScreenWidth(this@ItemDetailsActivity) / 1.78
                 Log.e("imageHeight", imageHeight.toString())
                 binding.rlView.requestLayout()
                 binding.rlView.layoutParams.height = imageHeight.toInt()
@@ -221,7 +246,6 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
                 populateImageList(imageList)
 
                 populateItemList(itemMainDto!!)
-
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -258,19 +282,23 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
         }
     }
 
-    override fun selectItem(position: Int, itemDto: ProductPriceDto, isSelect: Boolean) {
+    override fun selectItem(
+        position: Int,
+        productPriceDto: ProductPriceDto,
+        isSelect: Boolean
+    ) {
         try {
-            val quantity: Int = itemDto.quantity
+            val quantity: Int = productPriceDto.quantity
             Log.e("selectItem", quantity.toString())
             if (itemDetailsListAdapter != null) {
-                itemDto.selectedFlag = isSelect
+                productPriceDto.selectedFlag = isSelect
 
                 if (itemMainDto!!.packageType.equals("loose", true)
                     && itemMainDto!!.offerType.equals("normal", true)
                 ) {
-                    if (quantity.toFloat() <= itemDto.maxUnit * 1000.toFloat()) {
-                        if (quantity.toFloat() < itemDto.minUnit.toFloat()) {
-                            itemDto.quantity = itemDto.minUnit
+                    if (quantity.toFloat() <= productPriceDto.maxUnit * 1000.toFloat()) {
+                        if (quantity.toFloat() < productPriceDto.minUnit.toFloat()) {
+                            productPriceDto.quantity = productPriceDto.minUnit
                         }
                     }
                 } else if ((itemMainDto!!.packageType.equals("packed")
@@ -282,15 +310,15 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
                     || (itemMainDto!!.packageType.equals("packed")
                             && itemMainDto!!.offerType.equals("BOGE", true))
                 ) {
-                    if (quantity.toFloat() <= itemDto.availability.toFloat()) {
-                        itemDto.quantity = quantity + 1
+                    if (quantity.toFloat() <= productPriceDto.availability.toFloat()) {
+                        productPriceDto.quantity = quantity + 1
                     }
                 }
-                itemDetailsListAdapter!!.notifyItemChanged(position, itemDto)
+                itemDetailsListAdapter!!.notifyItemChanged(position, productPriceDto)
                 if (isSelect) {
-                    addItem(itemDto)
+                    addItem(productPriceDto)
                 } else {
-                    removeItem(itemDto)
+                    removeItem(productPriceDto)
                 }
             }
         } catch (e: Exception) {
@@ -408,8 +436,15 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
                     }
                     itemDetailsListAdapter!!.notifyItemChanged(position, productPriceDto)
                 }
-
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    override fun addItemFromCart(position: Int, productPriceDto: ProductPriceDto) {
+        try {
+            addItem(productPriceDto)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -421,8 +456,6 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
                 cartMap.remove(productPriceDto.id)
             }
             cartMap[productPriceDto.id] = productPriceDto
-            CommonClass.saveCartMap(context, cartMap)
-            cartMap = CommonClass.getCartMap(context)
             calculateTotal(cartMap)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -432,8 +465,6 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
     private fun removeItem(productPriceDto: ProductPriceDto) {
         try {
             cartMap.remove(productPriceDto.id)
-            CommonClass.saveCartMap(context, cartMap)
-            cartMap = CommonClass.getCartMap(context)
             calculateTotal(cartMap)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -456,11 +487,7 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
                     if (value.packageType == "loose" && value.offerType == "normal") {
                         val result = value.quantity.toFloat() / value.unit.toFloat()
                         totalPrice += result.times(value.attilPrice)
-                    } else if ((value.packageType == "packed" && value.offerType == "normal")
-                        || (value.packageType == "packed" && value.offerType == "special")
-                        || (value.packageType == "packed" && value.offerType == "BOGO")
-                        || (value.packageType == "packed" && value.offerType == "BOGE")
-                    ) {
+                    } else {
                         totalPrice += value.quantity * value.attilPrice
                         Log.e("tot", totalPrice.toString())
                     }
@@ -492,13 +519,9 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
         }
     }
 
-    override fun takeActions(position: Int) {
-        TODO("Not yet implemented")
-    }
-
     override fun onBackPressed() {
-        CommonClass.removeCartMap(context)
-        cartMap = CommonClass.getCartMap(context)
+        cartMap.clear()
+        cartMap = HashMap()
         calculateTotal(cartMap)
         super.onBackPressed()
     }
