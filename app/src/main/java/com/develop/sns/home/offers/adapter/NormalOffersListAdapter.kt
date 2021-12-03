@@ -86,8 +86,8 @@ class NormalOffersListAdapter(
                 tvProductName.text = item.productName
                 tvBrandName.text = item.brandName
 
-                for (j in 0 until item.brandImage!!.size) {
-                    Picasso.with(context).load(item.brandImage!![j])
+                for (j in 0 until item.sliderImage!!.size) {
+                    Picasso.with(context).load(item.sliderImage!![j])
                         .placeholder(R.drawable.product)
                         .error(R.drawable.product)
                         .into(ivProduct)

@@ -186,6 +186,15 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                                 }
                                 productDto.brandImage = brandImageList
 
+                                val sliderImageList = ArrayList<String>()
+                                if (productDetailsObj.has("sliderImage") && !productDetailsObj.isNull("sliderImage")) {
+                                    val brandImageArray = productDetailsObj.getJSONArray("sliderImage")
+                                    for (j in 0 until brandImageArray.length()) {
+                                        sliderImageList.add(brandImageArray.getString(j))
+                                    }
+                                }
+                                productDto.sliderImage = sliderImageList
+
                                 if (productDetailsObj.has("brandId") && !productDetailsObj.isNull("brandId")) {
                                     productDto.brandId = productDetailsObj.getString("brandId")
                                 }
@@ -628,7 +637,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
             for (k in 0 until cartItemList.size) {
                 val cartItemDto = cartItemList[k]
                 val cartDetailsList = cartItemDto.cartList
-                for (i in 0 until cartDetailsList.size) {
+                for (i in 0 until cartDetailsList!!.size) {
                     val cartDetailsDto = cartDetailsList[i]
                     if (cartItemDto.packageType == "loose" && cartItemDto.offerType == "normal") {
                         val qty =
@@ -717,7 +726,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
 
     override fun removeCartItem(itemGroupPosition: Int, cartListDto: CartListDto) {
         try {
-            cartItemList[itemGroupPosition].cartList.remove(cartListDto)
+            cartItemList[itemGroupPosition].cartList!!.remove(cartListDto)
             calculateTotal(cartItemList)
             updateCart(cartItemList[itemGroupPosition], true)
         } catch (e: Exception) {
@@ -731,7 +740,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
         position: Int
     ) {
         try {
-            cartItemList[itemGroupPosition].cartList[position] = cartListDto
+            cartItemList[itemGroupPosition].cartList!![position] = cartListDto
             calculateTotal(cartItemList)
             updateCart(cartItemList[itemGroupPosition], false)
         } catch (e: Exception) {
@@ -745,7 +754,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
         position: Int
     ) {
         try {
-            cartItemList[itemGroupPosition].cartList[position] = cartListDto
+            cartItemList[itemGroupPosition].cartList!![position] = cartListDto
             calculateTotal(cartItemList)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -813,7 +822,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                 requestObject.addProperty("cartId", cartItemDto.id)
                 val cartDetailsArray = JsonArray()
                 val cartList = cartItemDto.cartList
-                for (j in 0 until cartList.size) {
+                for (j in 0 until cartList!!.size) {
                     val cartDetailsDto = cartList[j]
 
                     val cartDetailsObject = JsonObject()

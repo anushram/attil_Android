@@ -15,6 +15,5 @@ interface ItemListener {
 
     fun selectItem(position: Int, productPriceDto: ProductPriceDto, isSelect: Boolean)
 
-    fun takeActions(position: Int)
-
+    fun addItemFromCart(position: Int, productPriceDto: ProductPriceDto)
 }

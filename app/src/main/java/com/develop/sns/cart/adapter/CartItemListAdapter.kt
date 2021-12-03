@@ -47,8 +47,8 @@ class CartItemListAdapter(
 
                 tvProductName.text = productDto.productName
 
-                for (j in 0 until productDto.brandImage.size) {
-                    Picasso.with(context).load(productDto.brandImage[j])
+                for (j in 0 until productDto.sliderImage.size) {
+                    Picasso.with(context).load(productDto.sliderImage[j])
                         .placeholder(R.drawable.product)
                         .error(R.drawable.product)
                         .into(ivProduct)
@@ -60,7 +60,7 @@ class CartItemListAdapter(
 
                 val cartDetailsList = productDto.cartList
 
-                for (i in 0 until cartDetailsList.size) {
+                for (i in 0 until cartDetailsList!!.size) {
 
                     val cartDetailsDto = cartDetailsList[i]
 
@@ -108,13 +108,13 @@ class CartItemListAdapter(
                         lnPack.visibility = View.VISIBLE
                         tvAvailable.visibility = View.GONE
 
-                        if (productDto.cartList.size > 1) {
+                        if (productDto.cartList!!.size > 1) {
                             tvPack.text =
-                                productDto.cartList.size.toString().plus(" ")
+                                productDto.cartList!!.size.toString().plus(" ")
                                     .plus(context.getString(R.string.packs))
                         } else {
                             tvPack.text =
-                                productDto.cartList.size.toString().plus(" ")
+                                productDto.cartList!!.size.toString().plus(" ")
                                     .plus(context.getString(R.string.pack))
                         }
                         val qty = cartDetailsDto.cartSelectedItemCount
@@ -142,7 +142,7 @@ class CartItemListAdapter(
                     }
 
                     val cartList = productDto.cartList;
-                    if (!cartList.isEmpty()) {
+                    if (!cartList!!.isEmpty()) {
                         lvItems.visibility = View.VISIBLE
                         cartSubItemListAdapter =
                             CartSubItemListAdapter(
@@ -176,7 +176,7 @@ class CartItemListAdapter(
         itemGroupPosition: Int
     ) {
         try {
-            val cartListDto: CartListDto = items[itemGroupPosition].cartList[position]
+            val cartListDto: CartListDto = items[itemGroupPosition].cartList!![position]
             var quantity = cartListDto.cartSelectedItemCount
             quantity = if (isAdd) {
                 val value: Int = quantity + 1
@@ -208,7 +208,7 @@ class CartItemListAdapter(
         itemGroupPosition: Int
     ) {
         try {
-            val cartListDto: CartListDto = items[itemGroupPosition].cartList[position]
+            val cartListDto: CartListDto = items[itemGroupPosition].cartList!![position]
             val quantity: Int
 
             val minUnit = cartListDto.cartSelectedMinUnit
@@ -291,7 +291,7 @@ class CartItemListAdapter(
 
     override fun removeItem(position: Int, itemGroupPosition: Int) {
         try {
-            val cartDetailsDto = items[itemGroupPosition].cartList[position]
+            val cartDetailsDto = items[itemGroupPosition].cartList!![position]
             cartListener.removeCartItem(itemGroupPosition, cartDetailsDto)
         } catch (e: Exception) {
             e.printStackTrace()

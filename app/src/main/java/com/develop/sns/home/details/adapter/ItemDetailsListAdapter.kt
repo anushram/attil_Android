@@ -49,12 +49,11 @@ class ItemDetailsListAdapter(
 
     inner class ViewHolder(val binding: ItemDetailsListItemTmplBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(priceDetailDto: ProductPriceDto, position: Int) {
+        fun bind(productPriceDto: ProductPriceDto, position: Int) {
             with(binding) {
                 tvProductName.text = productDto.productName
 
-                val obj =
-                    preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_MIN_UNITS)
+                val obj = preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_MIN_UNITS)
 
                 val jsonArray = JSONArray(obj)
 
@@ -62,31 +61,30 @@ class ItemDetailsListAdapter(
                     .placeholder(R.drawable.product)
                     .error(R.drawable.product)
                     .into(ivProduct)
-                Log.e("PackageType", productDto.packageType)
-                Log.e("OfferType", productDto.offerType)
+
                 if (productDto.packageType.equals("loose", true)
                     && productDto.offerType.equals("normal", true)
                 ) {
 
                     measureText = context.getString(R.string.available).plus(" ")
-                        .plus(priceDetailDto.maxUnit).plus(" ")
-                        .plus(priceDetailDto.maxUnitMeasureType)
+                        .plus(productPriceDto.maxUnit).plus(" ")
+                        .plus(productPriceDto.maxUnitMeasureType)
 
 
-                    minUnit = priceDetailDto.minUnit.toDouble()
-                    if (!dataExists(jsonArray, priceDetailDto.minUnitMeasureType)) {
-                        minUnit = priceDetailDto.minUnit * 1000.toDouble()
+                    minUnit = productPriceDto.minUnit.toDouble()
+                    if (!dataExists(jsonArray, productPriceDto.minUnitMeasureType)) {
+                        minUnit = productPriceDto.minUnit * 1000.toDouble()
                     }
-                    val result: Double = minUnit / priceDetailDto.unit.toDouble()
-                    val normalPrice = priceDetailDto.normalPrice
+                    val result: Double = minUnit / productPriceDto.unit.toDouble()
+                    val normalPrice = productPriceDto.normalPrice
                     mrp = result.times(normalPrice)
 
-                    val offerPrice = priceDetailDto.attilPrice
+                    val offerPrice = productPriceDto.attilPrice
                     offerMrp = result.times(offerPrice)
 
                     lnOfferPercentage.visibility = View.VISIBLE
                     tvOfferPercentage.text =
-                        priceDetailDto.offerPercentage.toString().plus("% OFF")
+                        productPriceDto.offerPercentage.toString().plus("% OFF")
                     tvMeasure.text = measureText
 
                     tvMrp.text =
@@ -114,14 +112,14 @@ class ItemDetailsListAdapter(
                             && productDto.offerType.equals("special", true))
                 ) {
                     measureText =
-                        priceDetailDto.unit.toString().plus(" ").plus(priceDetailDto.measureType)
+                        productPriceDto.unit.toString().plus(" ").plus(productPriceDto.measureType)
 
-                    mrp = priceDetailDto.normalPrice.toDouble()
-                    offerMrp = priceDetailDto.attilPrice.toDouble()
+                    mrp = productPriceDto.normalPrice.toDouble()
+                    offerMrp = productPriceDto.attilPrice.toDouble()
 
                     lnOfferPercentage.visibility = View.VISIBLE
                     tvOfferPercentage.text =
-                        priceDetailDto.offerPercentage.toString().plus(" ").plus("% OFF")
+                        productPriceDto.offerPercentage.toString().plus(" ").plus("% OFF")
 
                     tvMeasure.text = measureText
 
@@ -147,11 +145,11 @@ class ItemDetailsListAdapter(
                 } else if (productDto.packageType.equals("packed", true)
                     && productDto.offerType.equals("BOGO", true)
                 ) {
-                    measureText = priceDetailDto.unit.toString().plus(" ")
-                        .plus(priceDetailDto.measureType)
+                    measureText = productPriceDto.unit.toString().plus(" ")
+                        .plus(productPriceDto.measureType)
 
-                    mrp = priceDetailDto.normalPrice.toDouble()
-                    offerMrp = priceDetailDto.attilPrice.toDouble()
+                    mrp = productPriceDto.normalPrice.toDouble()
+                    offerMrp = productPriceDto.attilPrice.toDouble()
 
                     lnOfferPercentage.visibility = View.GONE
                     lnBogeMain.visibility = View.GONE
@@ -175,11 +173,11 @@ class ItemDetailsListAdapter(
                 } else if (productDto.packageType.equals("packed", true)
                     && productDto.offerType.equals("BOGE", true)
                 ) {
-                    measureText = priceDetailDto.unit.toString().plus(" ")
-                        .plus(priceDetailDto.measureType)
+                    measureText = productPriceDto.unit.toString().plus(" ")
+                        .plus(productPriceDto.measureType)
 
-                    mrp = priceDetailDto.normalPrice.toDouble()
-                    offerMrp = priceDetailDto.attilPrice.toDouble()
+                    mrp = productPriceDto.normalPrice.toDouble()
+                    offerMrp = productPriceDto.attilPrice.toDouble()
 
                     diff = (mrp - offerMrp)
 
@@ -201,24 +199,24 @@ class ItemDetailsListAdapter(
                     lnBogeMain.visibility = View.VISIBLE
                     ivBogo.visibility = View.GONE
 
-                    Picasso.with(context).load(priceDetailDto.bogeProductImg)
+                    Picasso.with(context).load(productPriceDto.bogeProductImg)
                         .placeholder(R.drawable.product)
                         .error(R.drawable.product)
                         .into(ivBogeBrand)
-                    tvBogeName.text = priceDetailDto.bogeProductName
-                    tvBogeQty.text = priceDetailDto.bogeUnit.toString().plus(" ")
-                        .plus(priceDetailDto.bogeMeasureType)
+                    tvBogeName.text = productPriceDto.bogeProductName
+                    tvBogeQty.text = productPriceDto.bogeUnit.toString().plus(" ")
+                        .plus(productPriceDto.bogeMeasureType)
                 }
 
-                if (priceDetailDto.quantity > 0) {
+                if (productPriceDto.quantity > 0) {
                     if (productDto.packageType.equals("loose", true)
                         && productDto.offerType.equals("normal", true)
                     ) {
-                        Log.e("Quantity", priceDetailDto.quantity.toString())
+                        Log.e("Quantity", productPriceDto.quantity.toString())
                         btnAdd.visibility = View.GONE
                         lnLooseAdd.visibility = View.VISIBLE
                         lnAdd.visibility = View.GONE
-                        val kg = priceDetailDto.quantity.toDouble() * 0.001
+                        val kg = productPriceDto.quantity.toDouble() * 0.001
                         var minUnit = "0"
                         var maxUnit = "0"
                         val qtyStr = "%.3f".format(kg)
@@ -235,7 +233,7 @@ class ItemDetailsListAdapter(
                         btnAdd.visibility = View.GONE
                         lnLooseAdd.visibility = View.GONE
                         lnAdd.visibility = View.VISIBLE
-                        tvCount.text = priceDetailDto.quantity.toString()
+                        tvCount.text = productPriceDto.quantity.toString()
                     }
                 } else {
                     btnAdd.visibility = View.VISIBLE
@@ -254,20 +252,20 @@ class ItemDetailsListAdapter(
                         lnLooseAdd.visibility = View.GONE
                         lnAdd.visibility = View.VISIBLE
                     }
-                    itemListener.selectItem(position, priceDetailDto, true)
+                    itemListener.selectItem(position, productPriceDto, true)
                 }
 
                 lnIncrease.setOnClickListener {
-                    itemListener.changeCount(position, priceDetailDto, true)
+                    itemListener.changeCount(position, productPriceDto, true)
                 }
 
                 lnDecrease.setOnClickListener {
-                    itemListener.changeCount(position, priceDetailDto, false)
+                    itemListener.changeCount(position, productPriceDto, false)
                 }
 
                 lnGmIncrease.setOnClickListener {
                     itemListener.changeCountGmOrKg(
-                        position, priceDetailDto,
+                        position, productPriceDto,
                         isAdd = true,
                         isGm = true,
                         ++clickGmPlusCount
@@ -276,7 +274,7 @@ class ItemDetailsListAdapter(
 
                 lnGmDecrease.setOnClickListener {
                     itemListener.changeCountGmOrKg(
-                        position, priceDetailDto,
+                        position, productPriceDto,
                         isAdd = false,
                         isGm = true, 0
                     )
@@ -285,7 +283,7 @@ class ItemDetailsListAdapter(
                 lnKgIncrease.setOnClickListener {
                     itemListener.changeCountGmOrKg(
                         position,
-                        priceDetailDto,
+                        productPriceDto,
                         isAdd = true,
                         isGm = false, 0
                     )
@@ -294,7 +292,7 @@ class ItemDetailsListAdapter(
                 lnKgDecrease.setOnClickListener {
                     itemListener.changeCountGmOrKg(
                         position,
-                        priceDetailDto,
+                        productPriceDto,
                         isAdd = false,
                         isGm = false, 0
                     )
