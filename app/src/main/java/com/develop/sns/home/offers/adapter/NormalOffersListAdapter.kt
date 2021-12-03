@@ -2,7 +2,6 @@ package com.develop.sns.home.offers.adapter
 
 import android.content.Context
 import android.graphics.Paint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -86,8 +85,8 @@ class NormalOffersListAdapter(
                 tvProductName.text = item.productName
                 tvBrandName.text = item.brandName
 
-                for (j in 0 until item.sliderImage!!.size) {
-                    Picasso.with(context).load(item.sliderImage!![j])
+                for (j in 0 until item.sliderImage.size) {
+                    Picasso.with(context).load(item.sliderImage[j])
                         .placeholder(R.drawable.product)
                         .error(R.drawable.product)
                         .into(ivProduct)
@@ -102,10 +101,10 @@ class NormalOffersListAdapter(
 
                 if (item.packageType.equals("loose") && item.offerType.equals("normal")) {
 
-                    productPriceDto = item.priceDetails?.get(0)
+                    productPriceDto = item.priceDetails.get(0)
 
                     measureText = context.getString(R.string.starts).plus(" @")
-                        .plus(productPriceDto!!.minUnit).plus(" ")
+                        .plus(productPriceDto.minUnit).plus(" ")
                         .plus(productPriceDto.minUnitMeasureType)
 
 
@@ -116,7 +115,7 @@ class NormalOffersListAdapter(
 
                     val unit: Double = productPriceDto.unit.toDouble()
                     val result: Double = minUnit.div(unit)
-                    Log.e("Double result", result.toString())
+                    //Log.e("Double result", result.toString())
                     val normalPrice = productPriceDto.normalPrice
                     mrp = result.times(normalPrice)
 
@@ -149,19 +148,19 @@ class NormalOffersListAdapter(
                 } else if (item.packageType.equals("packed") && item.offerType.equals("normal")) {
 
                     measureText = context.getString(R.string.starts).plus(" @")
-                        .plus(item.priceDetails?.get(0)!!.unit).plus(" ")
-                        .plus(item.priceDetails?.get(0)!!.measureType)
+                        .plus(item.priceDetails.get(0).unit).plus(" ")
+                        .plus(item.priceDetails.get(0).measureType)
 
-                    mrp = item.priceDetails?.get(0)!!.normalPrice.toDouble()
-                    offerMrp = item.priceDetails?.get(0)!!.attilPrice.toDouble()
+                    mrp = item.priceDetails.get(0).normalPrice.toDouble()
+                    offerMrp = item.priceDetails.get(0).attilPrice.toDouble()
 
                     lnOfferPercentage.visibility = View.VISIBLE
                     lnBogeMain.visibility = View.GONE
                     ivBogo.visibility = View.GONE
 
                     tvOfferPercentage.text =
-                        item.priceDetails?.get(0)!!.offerPercentage.toString().plus("-")
-                            .plus(item.priceDetails?.get(item.priceDetails?.size!! - 1)!!.offerPercentage)
+                        item.priceDetails.get(0).offerPercentage.toString().plus("-")
+                            .plus(item.priceDetails.get(item.priceDetails.size - 1).offerPercentage)
                             .plus("% OFF")
                     diff = (mrp - offerMrp)
 
@@ -184,9 +183,9 @@ class NormalOffersListAdapter(
                         false
                     )
                 ) {
-                    productPriceDto = item.priceDetails?.get(0)
+                    productPriceDto = item.priceDetails.get(0)
                     measureText = context.getString(R.string.starts).plus(" @")
-                        .plus(productPriceDto!!.unit).plus(" ")
+                        .plus(productPriceDto.unit).plus(" ")
                         .plus(productPriceDto.measureType)
 
                     mrp = productPriceDto.normalPrice.toDouble()
@@ -216,9 +215,9 @@ class NormalOffersListAdapter(
                         false
                     )
                 ) {
-                    productPriceDto = item.priceDetails?.get(0)
+                    productPriceDto = item.priceDetails.get(0)
                     measureText = context.getString(R.string.starts).plus(" @")
-                        .plus(productPriceDto!!.unit).plus(" ")
+                        .plus(productPriceDto.unit).plus(" ")
                         .plus(productPriceDto.measureType)
 
                     mrp = productPriceDto.normalPrice.toDouble()

@@ -8,7 +8,6 @@ package com.develop.sns.customviews;/*  The number of items in the RecyclerView 
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Interpolator;
 import android.widget.Scroller;
@@ -150,9 +149,9 @@ public class SnapToBlock extends SnapHelper {
                 ? null : layoutManager.findViewByPosition(snapPos);
 
         if (snapView == null) {
-            Log.d(TAG, "<<<<findSnapView is returning null!");
+            //Log.d(TAG, "<<<<findSnapView is returning null!");
         }
-        Log.d(TAG, "<<<<findSnapView snapos=" + snapPos);
+        //Log.d(TAG, "<<<<findSnapView snapos=" + snapPos);
         return snapView;
     }
 

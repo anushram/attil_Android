@@ -90,22 +90,22 @@ class TopOffersListAdapter(
 
                 tvProductName.text = item.productName
 
-                for (j in 0 until item.brandImage!!.size) {
-                    Picasso.with(context).load(item.brandImage!![j])
+                for (j in 0 until item.brandImage.size) {
+                    Picasso.with(context).load(item.brandImage[j])
                         .placeholder(R.drawable.product)
                         .error(R.drawable.product).fit()
                         .into(ivProduct)
                 }
 
-                measureText = item.priceDetails!![0].unit.toString().plus(" ")
-                    .plus(item.priceDetails!![0].measureType).plus(" @ ")
+                measureText = item.priceDetails[0].unit.toString().plus(" ")
+                    .plus(item.priceDetails[0].measureType).plus(" @ ")
                     .plus(context.getString(R.string.Rs)).plus("")
-                    .plus(item.priceDetails!![0].attilPrice)
+                    .plus(item.priceDetails[0].attilPrice)
                 tvMeasure.text = measureText
 
                 lnOfferPercentage.visibility = View.VISIBLE
                 tvOfferPercentage.text =
-                    item.priceDetails?.get(0)!!.offerPercentage.toString().plus("% OFF")
+                    item.priceDetails.get(0).offerPercentage.toString().plus("% OFF")
 
                 lnMain.setOnClickListener {
                     topOfferListener.selectTopOfferItem(item)

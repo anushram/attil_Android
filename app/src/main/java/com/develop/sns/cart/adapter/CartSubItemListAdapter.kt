@@ -1,7 +1,6 @@
 package com.develop.sns.cart.adapter
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +9,6 @@ import com.develop.sns.cart.dto.CartListDto
 import com.develop.sns.cart.listener.CartSubListener
 import com.develop.sns.databinding.CartSubItemListTmplBinding
 import com.develop.sns.utils.PreferenceHelper
-import java.io.Serializable
 
 
 class CartSubItemListAdapter(
@@ -56,8 +54,8 @@ class CartSubItemListAdapter(
                     val qtyStr = "%.3f".format(kg)
                     minUnit = qtyStr.split(".")[1]
                     maxUnit = qtyStr.split(".")[0]
-                    Log.e("min", minUnit)
-                    Log.e("max", maxUnit)
+                    //Log.e("min", minUnit)
+                    //Log.e("max", maxUnit)
                     if (minUnit == "000") {
                         minUnit = "0"
                     }

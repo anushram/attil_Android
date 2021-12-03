@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
@@ -19,9 +18,9 @@ import com.develop.sns.R
 import com.develop.sns.SubModuleActivity
 import com.develop.sns.databinding.ActivityBrandListBinding
 import com.develop.sns.home.details.ItemDetailsActivity
+import com.develop.sns.home.offers.adapter.NormalOffersListAdapter
 import com.develop.sns.home.offers.dto.ProductDto
 import com.develop.sns.home.offers.dto.ProductPriceDto
-import com.develop.sns.home.offers.adapter.NormalOffersListAdapter
 import com.develop.sns.home.offers.listener.NormalOfferListener
 import com.develop.sns.utils.AppConstant
 import com.develop.sns.utils.AppUtils
@@ -183,9 +182,9 @@ class BrandListActivity : SubModuleActivity(), NormalOfferListener {
                 ) {
                     super.onScrollStateChanged(recyclerView, newState)
                     if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        Log.d("-----", "end")
+                        //Log.d("-----", "end")
                         startPage++
-                        Log.e("StartPage", startPage.toString())
+                        //Log.e("StartPage", startPage.toString())
                         getNormalOffers()
                     }
                 }
@@ -209,7 +208,7 @@ class BrandListActivity : SubModuleActivity(), NormalOfferListener {
             }
             normalOfferList = ArrayList()
             this.normalOfferList.clear()
-            Log.e("ResetSize", normalOfferList.size.toString())
+            //Log.e("ResetSize", normalOfferList.size.toString())
             normalOffersListAdapter.notifyDataSetChanged()
             getNormalOffers()
         } catch (e: java.lang.Exception) {
@@ -248,7 +247,7 @@ class BrandListActivity : SubModuleActivity(), NormalOfferListener {
 
     private fun parseNormalOffersResponse(obj: JSONObject) {
         try {
-            Log.e("Brands", obj.toString())
+            //Log.e("Brands", obj.toString())
             if (obj.has("code") && obj.getInt("code") == 200) {
                 if (obj.has("status") && obj.getBoolean("status")) {
                     if (obj.has("data") && !obj.isNull("data")) {

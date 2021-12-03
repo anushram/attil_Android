@@ -33,8 +33,8 @@ class SliderAdapter(private val context: Context, private val mSliderItems: Arra
         fun bind(item: String, position: Int) {
             with(binding) {
                 Picasso.with(context).load(item)
-                    .placeholder(R.drawable.product)
-                    .error(R.drawable.product).fit()
+                    .placeholder(R.drawable.no)
+                    .error(R.drawable.no_media).fit()
                     .into(ivAutoImageSlider)
             }
         }

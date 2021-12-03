@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
@@ -16,7 +15,6 @@ import androidx.annotation.NonNull
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.develop.sns.R
 import com.develop.sns.SubModuleActivity
@@ -173,9 +171,9 @@ class VarietyListActivity : SubModuleActivity(), CategoryProductListener {
                 ) {
                     super.onScrollStateChanged(recyclerView, newState)
                     if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        Log.d("-----", "end")
+                        //Log.d("-----", "end")
                         startPage++
-                        Log.e("StartPage", startPage.toString())
+                        //Log.e("StartPage", startPage.toString())
                         getProductByVariety()
                     }
                 }
@@ -199,7 +197,7 @@ class VarietyListActivity : SubModuleActivity(), CategoryProductListener {
             }
             productVaritiesList = ArrayList()
             productVaritiesList.clear()
-            Log.e("ResetSize", productVaritiesList.size.toString())
+            //Log.e("ResetSize", productVaritiesList.size.toString())
             categoryVarietyListAdapter.notifyDataSetChanged()
             getProductByVariety()
         } catch (e: java.lang.Exception) {
@@ -214,7 +212,7 @@ class VarietyListActivity : SubModuleActivity(), CategoryProductListener {
                 requestObject.addProperty("skip", startPage)
                 requestObject.addProperty("search", searchQuery)
                 requestObject.addProperty("commonProductId", categoryProductDto.commonProductId)
-                Log.e("VarietyRequestObj", requestObject.toString())
+                //Log.e("VarietyRequestObj", requestObject.toString())
                 val productsViewModel = ProductsViewModel()
                 productsViewModel.getProductFromVariety(
                     requestObject,
@@ -240,7 +238,7 @@ class VarietyListActivity : SubModuleActivity(), CategoryProductListener {
 
     private fun parseProductVarietyResponse(obj: JSONObject) {
         try {
-            Log.e("ProductCategory", obj.toString())
+            //Log.e("ProductCategory", obj.toString())
             if (obj.has("code") && obj.getInt("code") == 200) {
                 if (obj.has("status") && obj.getBoolean("status")) {
                     if (obj.has("data") && !obj.isNull("data")) {

@@ -1,6 +1,5 @@
 package com.develop.sns.home.offers.dto
 
-import com.develop.sns.cart.adapter.CartSubItemListAdapter
 import com.develop.sns.cart.dto.CartListDto
 import java.io.Serializable
 
@@ -33,6 +32,6 @@ class ProductDto : Serializable {
     }
 
     override fun hashCode(): Int {
-        return productName.hashCode() ?: 0
+        return productName.hashCode()
     }
 }

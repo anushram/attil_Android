@@ -1,12 +1,9 @@
 package com.develop.sns.utils
 
-import android.R.attr
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.os.StrictMode
-import android.text.TextUtils
-import android.util.Log
 import androidx.multidex.MultiDex
 import java.util.*
 
@@ -33,10 +30,10 @@ class ApplicationManager : Application() {
     fun setUpPhoneLanguage() {
         try {
             val languageId = preferenceHelper.getIntFromSharedPrefs(AppConstant.KEY_LANGUAGE_ID)
-            Log.e("AppMgr", languageId.toString())
+            //Log.e("AppMgr", languageId.toString())
             if (languageId == 0) {
                 val defaultLanguageCode = Locale.getDefault().language
-                Log.e("AppMgr LngCode", defaultLanguageCode.toString())
+                //Log.e("AppMgr LngCode", defaultLanguageCode.toString())
                 if (defaultLanguageCode == "ta") {
                     preferenceHelper.saveIntValueToSharedPrefs(
                         AppConstant.KEY_LANGUAGE_ID,

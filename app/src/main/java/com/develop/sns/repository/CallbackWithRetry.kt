@@ -1,6 +1,5 @@
 package com.develop.sns.repository
 
-import android.util.Log
 import retrofit2.Call
 import retrofit2.Callback
 
@@ -8,9 +7,9 @@ abstract class CallbackWithRetry<T>(private val call: Call<T>) : Callback<T> {
     private var retryCount = 0
 
     override fun onFailure(call: Call<T>, t: Throwable) {
-        Log.e(TAG, t.localizedMessage)
+        //Log.e(TAG, t.localizedMessage)
         if (retryCount++ < TOTAL_RETRIES) {
-            Log.i(TAG, "Retrying... ($retryCount out of $TOTAL_RETRIES)")
+            //Log.i(TAG, "Retrying... ($retryCount out of $TOTAL_RETRIES)")
             retry()
         }
     }

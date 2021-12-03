@@ -1,7 +1,6 @@
 package com.develop.sns.signup.mobileno
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.develop.sns.repository.Api
 import com.develop.sns.repository.ApiRepository

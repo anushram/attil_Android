@@ -4,11 +4,9 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import com.develop.sns.MainActivityViewModel
 import com.develop.sns.R
@@ -16,7 +14,6 @@ import com.develop.sns.SubModuleActivity
 import com.develop.sns.customviews.otpview.OnOtpCompletionListener
 import com.develop.sns.databinding.ActivityOtpBinding
 import com.develop.sns.home.HomeActivity
-import com.develop.sns.home.product.VarietyListActivity
 import com.develop.sns.login.LoginActivity
 import com.develop.sns.signup.dto.SignUpDto
 import com.develop.sns.utils.AppConstant
@@ -129,14 +126,14 @@ class OtpActivity : SubModuleActivity() {
                     )
                     requestObject.addProperty("isOtpVerified", true)
                     requestObject.addProperty("preferredLanguage", language)
-                    Log.e("Request", requestObject.toString())
+                    //Log.e("Request", requestObject.toString())
                     showProgressBar()
                     val otpViewModel = OtpViewModel()
                     if (isSignUp == true) {
                         otpViewModel.verifyOtpService(
                             requestObject
                         ).observe(this, { currencyPojos ->
-                            Log.e("currencyPojos", currencyPojos.toString() + "")
+                            //Log.e("currencyPojos", currencyPojos.toString() + "")
                             if (currencyPojos != null) {
                                 dismissProgressBar()
                                 parseVerifyOtpResponse(currencyPojos)
@@ -146,7 +143,7 @@ class OtpActivity : SubModuleActivity() {
                         otpViewModel.verifyLoginOtpService(
                             requestObject
                         ).observe(this, { currencyPojos ->
-                            Log.e("currencyPojos", currencyPojos.toString() + "")
+                            //Log.e("currencyPojos", currencyPojos.toString() + "")
                             if (currencyPojos != null) {
                                 //dismissProgressBar()
                                 parseVerifyOtpResponse(currencyPojos)
@@ -257,7 +254,7 @@ class OtpActivity : SubModuleActivity() {
 
     private fun parseProductList(jsonObject: JSONObject?) {
         try {
-            Log.e("ProducrList", jsonObject.toString())
+            //Log.e("ProducrList", jsonObject.toString())
             if (jsonObject != null) {
                 if (jsonObject.has("code") && jsonObject.getInt("code") == 200) {
                     preferenceHelper!!.saveValueToSharedPrefs(

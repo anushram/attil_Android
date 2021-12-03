@@ -61,20 +61,27 @@
                             android:id="@+id/ln_offers"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
                             android:layout_gravity="center"
+                            android:layout_weight="1"
                             android:gravity="center"
                             android:orientation="vertical"
                             android:visibility="visible">
 
-
-                            <ImageView
+                            <ru.nikartm.support.ImageBadgeView
                                 android:id="@+id/iv_offers"
                                 android:layout_width="29dp"
                                 android:layout_height="29dp"
-                                android:layout_centerInParent="true"
+                                android:layout_gravity="center"
                                 android:padding="2dp"
                                 android:src="@drawable/offer"
+                                app:ibv_badgeColor="@color/primary"
+                                app:ibv_badgeLimitValue="true"
+                                app:ibv_badgeTextColor="@color/white"
+                                app:ibv_badgeTextSize="8sp"
+                                app:ibv_badgeTextStyle="bold"
+                                app:ibv_badgeValue="0"
+                                app:ibv_fixedBadgeRadius="8dp"
+                                app:ibv_visibleBadge="false"
                                 app:tint="@color/grey" />
 
 

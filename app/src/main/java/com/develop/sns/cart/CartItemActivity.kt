@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -29,7 +28,6 @@ import com.google.gson.JsonObject
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import java.io.Serializable
 
 class CartItemActivity : SubModuleActivity(), CartListener {
 
@@ -134,7 +132,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
 
     private fun parseCartItemsResponse(obj: JSONObject) {
         try {
-            Log.e("CartItem", obj.toString())
+            //Log.e("CartItem", obj.toString())
             binding.rootView.visibility = View.VISIBLE
             if (obj.has("code") && obj.getInt("code") == 200) {
                 if (obj.has("status") && obj.getBoolean("status")) {
@@ -701,11 +699,11 @@ class CartItemActivity : SubModuleActivity(), CartListener {
         try {
             if (isAdd) {
                 //Add Item From cart
-                Log.e("TAG", "Add Item")
+                //Log.e("TAG", "Add Item")
                 addItem(cartListDto, itemGroupPosition, position)
             } else {
                 //Remove Item From cart
-                Log.e("TAG", "Remove Item")
+                //Log.e("TAG", "Remove Item")
                 removeItem(cartListDto, itemGroupPosition, position)
                 addItem(cartListDto, itemGroupPosition, position)
             }
@@ -797,7 +795,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
 
     private fun parseRemoveCartItemResponse(obj: JSONObject) {
         try {
-            Log.e("removeCartItem", obj.toString())
+            //Log.e("removeCartItem", obj.toString())
             if (obj.has("code") && obj.getInt("code") == 200) {
                 if (obj.has("status") && obj.getBoolean("status")) {
                     cartItemList.clear()
@@ -866,7 +864,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                 requestObject.add("cartDetails", cartDetailsArray)
                 requestObject.addProperty("productId", cartItemDto.productId)
                 initUpdateCartService(requestObject, isRemove)
-                Log.e("Request Object", requestObject.toString())
+                //Log.e("Request Object", requestObject.toString())
             } else {
                 CommonClass.showToastMessage(
                     context,
@@ -888,7 +886,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                 requestObject,
                 preferenceHelper?.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)
             ).observe(this, { jsonObject ->
-                Log.e("Response", jsonObject.toString())
+                //Log.e("Response", jsonObject.toString())
                 if (jsonObject != null) {
                     dismissProgressBar()
                     parseUpdateCartResponse(jsonObject, isRemove)

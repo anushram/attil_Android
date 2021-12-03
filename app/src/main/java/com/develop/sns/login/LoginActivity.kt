@@ -6,7 +6,6 @@ import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
 import android.text.method.PasswordTransformationMethod
-import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -78,15 +77,12 @@ class LoginActivity : SubModuleActivity() {
                 gcmId = getFireBaseToken()
 
                 val secretKey = gcmId.substring(0, 32)
-                Log.i("secretKey", "secretKey: $secretKey")
+                //Log.i("secretKey", "secretKey: $secretKey")
                 preferenceHelper!!.saveValueToSharedPrefs(AppConstant.KEY_SECRET, secretKey)
                 preferenceHelper!!.saveValueToSharedPrefs(AppConstant.KEY_GCM_ID, gcmId)
             } else {
-                Log.i(
-                    "secretKey",
-                    "secretKey: " + preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_SECRET)
-                )
-                Log.i("fcmId", "" + gcmId)
+                //Log.i( "secretKey","secretKey: " + preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_SECRET))
+                //Log.i("fcmId", "" + gcmId)
             }
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
@@ -101,7 +97,7 @@ class LoginActivity : SubModuleActivity() {
                 FirebaseDatabase.getInstance().setPersistenceEnabled(true)
             }
             gcmId = FirebaseInstanceId.getInstance().token.toString()
-            Log.i("fcmId", "" + gcmId)
+            //Log.i("fcmId", "" + gcmId)
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
         }
@@ -112,7 +108,7 @@ class LoginActivity : SubModuleActivity() {
         try {
             binding.lnError.ivClose.setOnClickListener(View.OnClickListener { hideErrorMessage() })
 
-            binding.etMobileNo.setOnEditorActionListener(OnEditorActionListener { v, actionId, event -> ////Log.i("onEditorAction", "onEditorAction");
+            binding.etMobileNo.setOnEditorActionListener(OnEditorActionListener { v, actionId, event -> //////Log.i("onEditorAction", "onEditorAction");
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     hideKeyboard()
                     binding.lnAfterMobileNo.visibility = View.VISIBLE
@@ -248,7 +244,7 @@ class LoginActivity : SubModuleActivity() {
 
     private fun parseGenerateOtpResponse(obj: JSONObject) {
         try {
-            Log.e("Login OTP RES", obj.toString())
+            //Log.e("Login OTP RES", obj.toString())
             submitFlag = false
             if (obj.has("data") && !obj.isNull("data")) {
                 val dataObject = obj.getJSONObject("data")
@@ -297,12 +293,12 @@ class LoginActivity : SubModuleActivity() {
                     )
                     requestObject.addProperty("password", binding.etPassword.text.toString())
                     requestObject.addProperty("preferredLanguage", language)
-                    Log.e("requestObj", requestObject.toString())
+                    //Log.e("requestObj", requestObject.toString())
                     showProgressBar()
                     val loginViewModel = LoginViewModel()
                     loginViewModel.makeLogin(requestObject)
                         .observe(this, { jsonObject ->
-                            Log.e("jsonObject", jsonObject.toString() + "")
+                            //Log.e("jsonObject", jsonObject.toString() + "")
                             if (jsonObject != null) {
                                 parseSignInResponse(jsonObject)
                             }
@@ -324,7 +320,7 @@ class LoginActivity : SubModuleActivity() {
     private fun parseSignInResponse(obj: JSONObject) {
         try {
             submitFlag = false
-            Log.e("LoginResponse", obj.toString())
+            //Log.e("LoginResponse", obj.toString())
             if (obj.has("data") && !obj.isNull("data")) {
                 preferenceHelper!!.saveValueToSharedPrefs(
                     AppConstant.KEY_USER_NAME,
@@ -383,7 +379,7 @@ class LoginActivity : SubModuleActivity() {
 
     private fun parseProductList(jsonObject: JSONObject?) {
         try {
-            Log.e("ProducrList", jsonObject.toString())
+            //Log.e("ProducrList", jsonObject.toString())
             if (jsonObject != null) {
                 if (jsonObject.has("code") && jsonObject.getInt("code") == 200) {
                     preferenceHelper!!.saveValueToSharedPrefs(

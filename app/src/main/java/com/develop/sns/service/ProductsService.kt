@@ -5,7 +5,6 @@ import android.app.job.JobScheduler
 import android.app.job.JobService
 import android.content.Context
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import com.develop.sns.MainActivityViewModel
 import com.develop.sns.utils.AppConstant
@@ -20,7 +19,7 @@ class ProductsService : JobService() {
     lateinit var token: String
 
     override fun onStartJob(params: JobParameters): Boolean {
-        Log.i(TAG, "onStartJob")
+        //Log.i(TAG, "onStartJob")
         preferenceHelper = PreferenceHelper(this)
         token = preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!
         val mainActivityModel = MainActivityViewModel()
@@ -31,7 +30,7 @@ class ProductsService : JobService() {
     }
 
     override fun onStopJob(params: JobParameters): Boolean {
-        Log.i(TAG, "onStopJob:")
+        //Log.i(TAG, "onStopJob:")
 
         return false
     }
@@ -40,7 +39,7 @@ class ProductsService : JobService() {
         try {
             val scheduler = context.getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
             scheduler.cancel(1)
-            Log.e("ProducrList", jsonObject.toString())
+            //Log.e("ProducrList", jsonObject.toString())
             preferenceHelper.saveValueToSharedPrefs(
                 AppConstant.KEY_PRODUCTS_OBJ,
                 jsonObject.toString()

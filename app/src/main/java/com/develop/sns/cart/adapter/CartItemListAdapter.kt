@@ -2,7 +2,6 @@ package com.develop.sns.cart.adapter
 
 import android.content.Context
 import android.graphics.Paint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +15,6 @@ import com.develop.sns.databinding.CartListItemTmplBinding
 import com.develop.sns.home.offers.dto.ProductDto
 import com.develop.sns.utils.PreferenceHelper
 import com.squareup.picasso.Picasso
-import java.io.Serializable
 
 
 class CartItemListAdapter(
@@ -47,12 +45,11 @@ class CartItemListAdapter(
 
                 tvProductName.text = productDto.productName
 
-                for (j in 0 until productDto.sliderImage.size) {
-                    Picasso.with(context).load(productDto.sliderImage[j])
-                        .placeholder(R.drawable.product)
-                        .error(R.drawable.product)
-                        .into(ivProduct)
-                }
+                Picasso.with(context).load(productDto.brandImage[0])
+                    .placeholder(R.drawable.product)
+                    .error(R.drawable.product)
+                    .into(ivProduct)
+
 
                 var mrp = 0F
                 var offerMrp = 0F
@@ -141,7 +138,7 @@ class CartItemListAdapter(
 
                     }
 
-                    val cartList = productDto.cartList;
+                    val cartList = productDto.cartList
                     if (!cartList!!.isEmpty()) {
                         lvItems.visibility = View.VISIBLE
                         cartSubItemListAdapter =
@@ -233,8 +230,8 @@ class CartItemListAdapter(
                 quantity = minQuantity + (maxQuantity * 1000)
                 if (quantity.toFloat() < cartListDto.maxUnit * 1000.toFloat()) {
                     if (quantity.toFloat() < cartListDto.minUnit.toFloat()) {
-                        Log.e("Less Than", "Min")
-                        Log.e("Less Than", "Comes Here")
+                        //Log.e("Less Than", "Min")
+                        //Log.e("Less Than", "Comes Here")
                         cartListDto.cartSelectedMinUnit = cartListDto.minUnit
                         cartListDto.cartSelectedMaxUnit = 0
                         cartListener.handleItem(

@@ -3,7 +3,6 @@ package com.develop.sns
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
@@ -65,7 +64,7 @@ open class SubModuleActivity : ModuleActivity() {
             token = preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)
             languageId = preferenceHelper!!.getIntFromSharedPrefs(AppConstant.KEY_LANGUAGE_ID)
             language = preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_LANGUAGE)!!
-            Log.e("SubMod LngCode", language)
+            //Log.e("SubMod LngCode", language)
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
         }

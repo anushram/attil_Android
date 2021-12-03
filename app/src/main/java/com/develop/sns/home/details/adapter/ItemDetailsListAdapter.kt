@@ -2,7 +2,6 @@ package com.develop.sns.home.details.adapter
 
 import android.content.Context
 import android.graphics.Paint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -212,7 +211,7 @@ class ItemDetailsListAdapter(
                     if (productDto.packageType.equals("loose", true)
                         && productDto.offerType.equals("normal", true)
                     ) {
-                        Log.e("Quantity", productPriceDto.quantity.toString())
+                        //Log.e("Quantity", productPriceDto.quantity.toString())
                         btnAdd.visibility = View.GONE
                         lnLooseAdd.visibility = View.VISIBLE
                         lnAdd.visibility = View.GONE
@@ -222,8 +221,8 @@ class ItemDetailsListAdapter(
                         val qtyStr = "%.3f".format(kg)
                         minUnit = qtyStr.split(".")[1]
                         maxUnit = qtyStr.split(".")[0]
-                        Log.e("min", minUnit)
-                        Log.e("max", maxUnit)
+                        //Log.e("min", minUnit)
+                        //Log.e("max", maxUnit)
                         if (minUnit.equals("000")) {
                             minUnit = "0"
                         }

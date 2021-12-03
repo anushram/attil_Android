@@ -6,14 +6,11 @@ import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.develop.sns.MainActivityViewModel
 import com.develop.sns.R
 import com.develop.sns.SubModuleActivity
 import com.develop.sns.databinding.ActivitySignUpBinding
@@ -233,7 +230,7 @@ class SignUpInfoActivity : SubModuleActivity(), AppUserListener {
                     "deviceToken",
                     preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_GCM_ID)!!
                 )
-                Log.e("Request Object", requestObject.toString())
+                //Log.e("Request Object", requestObject.toString())
                 showProgressBar()
                 val signUpViewModel = SignUpViewModel()
                 signUpViewModel.createAccount(requestObject).observe(this, { currencyPojos ->
@@ -257,7 +254,7 @@ class SignUpInfoActivity : SubModuleActivity(), AppUserListener {
 
     private fun parseCreateAccountResponse(obj: JSONObject) {
         try {
-            Log.e("Response", obj.toString())
+            //Log.e("Response", obj.toString())
             if (obj.has("code") && obj.getInt("code") == 200) {
                 if (obj.has("status") && obj.getBoolean("status")) {
                     if (obj.has("data") && !obj.isNull("data")) {
