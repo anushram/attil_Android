@@ -29,7 +29,8 @@ class CategoryVarietyListAdapter(
         val binding = CategoryVarietlyListItemTmplBinding.inflate(
             inflater,
             parent,
-            false)
+            false
+        )
         return ViewHolder(binding)
     }
 

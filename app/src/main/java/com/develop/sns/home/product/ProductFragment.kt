@@ -20,7 +20,6 @@ class ProductFragment : Fragment(), BrandSelectListener {
 
     private val binding by lazy { FragmentProductBinding.inflate(layoutInflater) }
     private var preferenceHelper: PreferenceHelper? = null
-    private var productsViewModel: ProductsViewModel = ProductsViewModel()
 
     private var currentFragment = 0
 

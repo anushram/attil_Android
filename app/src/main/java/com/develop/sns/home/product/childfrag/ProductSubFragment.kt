@@ -104,7 +104,8 @@ class ProductSubFragment : Fragment(), CategoryMainListener, CategoryProductList
             if (view != null) {
                 (requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
                     view.windowToken,
-                    InputMethodManager.HIDE_NOT_ALWAYS)
+                    InputMethodManager.HIDE_NOT_ALWAYS
+                )
             }
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
@@ -351,8 +352,10 @@ class ProductSubFragment : Fragment(), CategoryMainListener, CategoryProductList
                 requestObject.addProperty("categoryId", categoryMainDto!!.id)
                 //Log.e("CPRequestObj", requestObject.toString())
                 val productsViewModel = ProductsViewModel()
-                productsViewModel.getProductFromCategory(requestObject,
-                    preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!)
+                productsViewModel.getProductFromCategory(
+                    requestObject,
+                    preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!
+                )
                     .observe(viewLifecycleOwner, { jsonObject ->
                         if (jsonObject != null) {
                             dismissProgressBar()
@@ -479,7 +482,8 @@ class ProductSubFragment : Fragment(), CategoryMainListener, CategoryProductList
             mBrandSelectionSetListener = fragment as BrandSelectListener
         } catch (e: ClassCastException) {
             throw ClassCastException(
-                "$fragment must implement OnPlayerSelectionSetListener")
+                "$fragment must implement OnPlayerSelectionSetListener"
+            )
         }
     }
 

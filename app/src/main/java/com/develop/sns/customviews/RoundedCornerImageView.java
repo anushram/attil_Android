@@ -19,26 +19,17 @@ public class RoundedCornerImageView extends ImageView {
     private static final int DEFAULT_CORNER_COLOR = Color.WHITE;
     private static final int DEFAULT_CORNER_RADIUS = 6;
     private static final int CORNER_COUNT = 6;
-
-    private static class Corner {
-        int color = DEFAULT_CORNER_COLOR;
-        float radius = 0;
-        Bitmap bitmap = null;
-    }
-
     /*
      * cache sequence  left top, right top, left bottom, right bottom
      */
     private static final Corner[] mCacheCorners = new Corner[CORNER_COUNT];
-
+    private final Corner[] mCorners = new Corner[CORNER_COUNT];
     private float mDensityMultiplier;
     private int mCornerDisableFlag = 0;
     // sequence "left, top, right, bottom" 4 bit, 1 means true, 0 is false
     private int mRoundedCornerColor = DEFAULT_CORNER_COLOR;
     private float mRoundedCornerRadius = DEFAULT_CORNER_RADIUS;
     private float mRoundedCornerRadiusPx;
-    private final Corner[] mCorners = new Corner[CORNER_COUNT];
-
     public RoundedCornerImageView(Context context) {
         super(context);
     }
@@ -52,22 +43,22 @@ public class RoundedCornerImageView extends ImageView {
         mDensityMultiplier = context.getResources().getDisplayMetrics().density;
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.RoundedCornerImageView,
-                                                      defStyle, 0);
+                defStyle, 0);
 
         mRoundedCornerColor = a.getColor(R.styleable.RoundedCornerImageView_cornerColor,
-                                         Color.WHITE);
+                Color.WHITE);
         mRoundedCornerRadius = a.getDimension(R.styleable.RoundedCornerImageView_cornerRadius,
-                                              DEFAULT_CORNER_RADIUS);
+                DEFAULT_CORNER_RADIUS);
 
         mCornerDisableFlag = 0;
         mCornerDisableFlag += a.getBoolean(R.styleable.RoundedCornerImageView_cornerLeftDisable,
-                                           false) ? 1 << 3 : 0;
+                false) ? 1 << 3 : 0;
         mCornerDisableFlag += a.getBoolean(R.styleable.RoundedCornerImageView_cornerTopDisable,
-                                           false) ? 1 << 2 : 0;
+                false) ? 1 << 2 : 0;
         mCornerDisableFlag += a.getBoolean(R.styleable.RoundedCornerImageView_cornerRightDisable,
-                                           false) ? 1 << 1 : 0;
+                false) ? 1 << 1 : 0;
         mCornerDisableFlag += a.getBoolean(R.styleable.RoundedCornerImageView_cornerBottomDisable,
-                                           false) ? 1 : 0;
+                false) ? 1 : 0;
 
         a.recycle();
     }
@@ -121,7 +112,7 @@ public class RoundedCornerImageView extends ImageView {
 
         for (int i = 0; i < mCorners.length; i++) {
             if (mCorners[i] != null && mCorners[i].bitmap != null
-                && !(mCorners[i].bitmap.isRecycled())) {
+                    && !(mCorners[i].bitmap.isRecycled())) {
                 switch (i) {
                     case 0: // left top (binary 1100)
                         if ((mCornerDisableFlag & 12) == 0) {
@@ -141,7 +132,7 @@ public class RoundedCornerImageView extends ImageView {
                     case 3: // right bottom (binary 0011)
                         if ((mCornerDisableFlag & 3) == 0) {
                             canvas.drawBitmap(mCorners[i].bitmap, getWidth() - mRoundedCornerRadiusPx,
-                                              getHeight() - mRoundedCornerRadiusPx, null);
+                                    getHeight() - mRoundedCornerRadiusPx, null);
                         }
                         break;
                     default:
@@ -156,9 +147,9 @@ public class RoundedCornerImageView extends ImageView {
             if (mCorners[i] == null && mRoundedCornerRadiusPx > 0) {
                 // first check if cache has the corner bitmap
                 if (mCacheCorners[i] != null && mCacheCorners[i].bitmap != null
-                    && !(mCacheCorners[i].bitmap.isRecycled())
-                    && mCacheCorners[i].color == mRoundedCornerColor
-                    && mCacheCorners[i].radius == mRoundedCornerRadiusPx) {
+                        && !(mCacheCorners[i].bitmap.isRecycled())
+                        && mCacheCorners[i].color == mRoundedCornerColor
+                        && mCacheCorners[i].radius == mRoundedCornerRadiusPx) {
                     mCorners[i] = mCacheCorners[i];
                 } else {
                     mCorners[i] = new Corner();
@@ -210,5 +201,11 @@ public class RoundedCornerImageView extends ImageView {
                 break;
         }
         return output;
+    }
+
+    private static class Corner {
+        int color = DEFAULT_CORNER_COLOR;
+        float radius = 0;
+        Bitmap bitmap = null;
     }
 }

@@ -67,21 +67,22 @@ public class OtpView extends AppCompatEditText {
     private static final int VIEW_TYPE_LINE = 1;
     private static final int VIEW_TYPE_NONE = 2;
     private final int viewType;
-    private int otpViewItemCount;
-    private int otpViewItemWidth;
-    private int otpViewItemHeight;
-    private int otpViewItemRadius;
-    private int otpViewItemSpacing;
     private final Paint paint;
     private final TextPaint animatorTextPaint = new TextPaint();
-    private ColorStateList lineColor;
-    private int cursorLineColor = Color.BLACK;
-    private int lineWidth;
     private final Rect textRect = new Rect();
     private final RectF itemBorderRect = new RectF();
     private final RectF itemLineRect = new RectF();
     private final Path path = new Path();
     private final PointF itemCenterPoint = new PointF();
+    private final boolean rtlTextDirection;
+    private int otpViewItemCount;
+    private int otpViewItemWidth;
+    private int otpViewItemHeight;
+    private int otpViewItemRadius;
+    private int otpViewItemSpacing;
+    private ColorStateList lineColor;
+    private int cursorLineColor = Color.BLACK;
+    private int lineWidth;
     private ValueAnimator defaultAddAnimator;
     private boolean isAnimationEnable = false;
     private Blink blink;
@@ -93,7 +94,6 @@ public class OtpView extends AppCompatEditText {
     private int itemBackgroundResource;
     private Drawable itemBackground;
     private boolean hideLineWhenFilled;
-    private final boolean rtlTextDirection;
     private String maskingChar;
     private OnOtpCompletionListener onOtpCompletionListener;
 
@@ -144,6 +144,21 @@ public class OtpView extends AppCompatEditText {
         paint.setStrokeWidth(lineWidth);
         setupAnimator();
         setTextIsSelectable(false);
+    }
+
+    private static boolean isPasswordInputType(int inputType) {
+        final int variation =
+                inputType & (EditorInfo.TYPE_MASK_CLASS | EditorInfo.TYPE_MASK_VARIATION);
+        return variation
+                == (EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_VARIATION_PASSWORD)
+                || variation
+                == (EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_VARIATION_WEB_PASSWORD)
+                || variation
+                == (EditorInfo.TYPE_CLASS_NUMBER | EditorInfo.TYPE_NUMBER_VARIATION_PASSWORD);
+    }
+
+    private static boolean isNumberInputType(int inputType) {
+        return inputType == EditorInfo.TYPE_CLASS_NUMBER;
     }
 
     @Override
@@ -640,21 +655,6 @@ public class OtpView extends AppCompatEditText {
         itemCenterPoint.set(cx, cy);
     }
 
-    private static boolean isPasswordInputType(int inputType) {
-        final int variation =
-                inputType & (EditorInfo.TYPE_MASK_CLASS | EditorInfo.TYPE_MASK_VARIATION);
-        return variation
-                == (EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_VARIATION_PASSWORD)
-                || variation
-                == (EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_VARIATION_WEB_PASSWORD)
-                || variation
-                == (EditorInfo.TYPE_CLASS_NUMBER | EditorInfo.TYPE_NUMBER_VARIATION_PASSWORD);
-    }
-
-    private static boolean isNumberInputType(int inputType) {
-        return inputType == EditorInfo.TYPE_CLASS_NUMBER;
-    }
-
     @Override
     protected MovementMethod getDefaultMovementMethod() {
         return DefaultMovementMethod.getInstance();
@@ -714,6 +714,14 @@ public class OtpView extends AppCompatEditText {
     }
 
     /**
+     * @return Returns the width of the item's line.
+     * @see #setLineWidth(int)
+     */
+    public int getLineWidth() {
+        return lineWidth;
+    }
+
+    /**
      * Sets the line width.
      *
      * @attr ref R.styleable#OtpView_lineWidth
@@ -726,11 +734,11 @@ public class OtpView extends AppCompatEditText {
     }
 
     /**
-     * @return Returns the width of the item's line.
-     * @see #setLineWidth(int)
+     * @return Returns the count of items.
+     * @see #setItemCount(int)
      */
-    public int getLineWidth() {
-        return lineWidth;
+    public int getItemCount() {
+        return otpViewItemCount;
     }
 
     /**
@@ -746,11 +754,11 @@ public class OtpView extends AppCompatEditText {
     }
 
     /**
-     * @return Returns the count of items.
-     * @see #setItemCount(int)
+     * @return Returns the radius of square.
+     * @see #setItemRadius(int)
      */
-    public int getItemCount() {
-        return otpViewItemCount;
+    public int getItemRadius() {
+        return otpViewItemRadius;
     }
 
     /**
@@ -766,11 +774,12 @@ public class OtpView extends AppCompatEditText {
     }
 
     /**
-     * @return Returns the radius of square.
-     * @see #setItemRadius(int)
+     * @return Returns the spacing between two items.
+     * @see #setItemSpacing(int)
      */
-    public int getItemRadius() {
-        return otpViewItemRadius;
+    @Px
+    public int getItemSpacing() {
+        return otpViewItemSpacing;
     }
 
     /**
@@ -785,12 +794,11 @@ public class OtpView extends AppCompatEditText {
     }
 
     /**
-     * @return Returns the spacing between two items.
-     * @see #setItemSpacing(int)
+     * @return Returns the height of item.
+     * @see #setItemHeight(int)
      */
-    @Px
-    public int getItemSpacing() {
-        return otpViewItemSpacing;
+    public int getItemHeight() {
+        return otpViewItemHeight;
     }
 
     /**
@@ -806,11 +814,11 @@ public class OtpView extends AppCompatEditText {
     }
 
     /**
-     * @return Returns the height of item.
-     * @see #setItemHeight(int)
+     * @return Returns the width of item.
+     * @see #setItemWidth(int)
      */
-    public int getItemHeight() {
-        return otpViewItemHeight;
+    public int getItemWidth() {
+        return otpViewItemWidth;
     }
 
     /**
@@ -823,14 +831,6 @@ public class OtpView extends AppCompatEditText {
         otpViewItemWidth = itemWidth;
         checkItemRadius();
         requestLayout();
-    }
-
-    /**
-     * @return Returns the width of item.
-     * @see #setItemWidth(int)
-     */
-    public int getItemWidth() {
-        return otpViewItemWidth;
     }
 
     /**
@@ -919,6 +919,14 @@ public class OtpView extends AppCompatEditText {
     //region Cursor
 
     /**
+     * @return Returns the width (in pixels) of cursor.
+     * @see #setCursorWidth(int)
+     */
+    public int getCursorWidth() {
+        return cursorWidth;
+    }
+
+    /**
      * Sets the width (in pixels) of cursor.
      *
      * @attr ref R.styleable#OtpView_cursorWidth
@@ -932,11 +940,13 @@ public class OtpView extends AppCompatEditText {
     }
 
     /**
-     * @return Returns the width (in pixels) of cursor.
-     * @see #setCursorWidth(int)
+     * Gets the cursor color.
+     *
+     * @return Return current cursor color.
+     * @see #setCursorColor(int)
      */
-    public int getCursorWidth() {
-        return cursorWidth;
+    public int getCursorColor() {
+        return cursorColor;
     }
 
     /**
@@ -955,14 +965,8 @@ public class OtpView extends AppCompatEditText {
         }
     }
 
-    /**
-     * Gets the cursor color.
-     *
-     * @return Return current cursor color.
-     * @see #setCursorColor(int)
-     */
-    public int getCursorColor() {
-        return cursorColor;
+    public String getMaskingChar() {
+        return maskingChar;
     }
 
     public void setMaskingChar(String maskingChar) {
@@ -970,8 +974,9 @@ public class OtpView extends AppCompatEditText {
         requestLayout();
     }
 
-    public String getMaskingChar() {
-        return maskingChar;
+    @Override
+    public boolean isCursorVisible() {
+        return isCursorVisible;
     }
 
     @Override
@@ -981,11 +986,6 @@ public class OtpView extends AppCompatEditText {
             invalidateCursor(isCursorVisible);
             makeBlink();
         }
-    }
-
-    @Override
-    public boolean isCursorVisible() {
-        return isCursorVisible;
     }
 
     @Override
@@ -1056,6 +1056,11 @@ public class OtpView extends AppCompatEditText {
                 otpViewItemHeight - getTextSize() > delta ? getTextSize() + delta : getTextSize();
     }
 
+    private int dpToPx() {
+        return (int) ((float) 2 * getResources().getDisplayMetrics().density + 0.5f);
+    }
+    //endregion
+
     private class Blink implements Runnable {
         private boolean cancelled;
 
@@ -1083,10 +1088,5 @@ public class OtpView extends AppCompatEditText {
         private void unCancel() {
             cancelled = false;
         }
-    }
-    //endregion
-
-    private int dpToPx() {
-        return (int) ((float) 2 * getResources().getDisplayMetrics().density + 0.5f);
     }
 }

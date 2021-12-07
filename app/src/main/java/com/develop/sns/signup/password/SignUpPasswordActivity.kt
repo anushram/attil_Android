@@ -161,7 +161,8 @@ class SignUpPasswordActivity : SubModuleActivity() {
                     .trim() != binding.etConfirmPassword.text.toString().trim()
             ) {
                 binding.etConfirmPassword.requestFocus()
-                binding.etConfirmPassword.error = resources.getString(R.string.new_password_match_validation)
+                binding.etConfirmPassword.error =
+                    resources.getString(R.string.new_password_match_validation)
                 flag = false
             }
         } catch (e: Exception) {

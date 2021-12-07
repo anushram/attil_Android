@@ -118,7 +118,7 @@ class ItemDetailsListAdapter(
 
                     lnOfferPercentage.visibility = View.VISIBLE
                     tvOfferPercentage.text =
-                        productPriceDto.offerPercentage.toString().plus(" ").plus("% OFF")
+                        productPriceDto.offerPercentage.toString().plus("% OFF")
 
                     tvMeasure.text = measureText
 
