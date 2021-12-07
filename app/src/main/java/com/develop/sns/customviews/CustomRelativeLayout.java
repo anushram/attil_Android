@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 
 
-public class CustomRelativeLayout extends RelativeLayout{
+public class CustomRelativeLayout extends RelativeLayout {
     public CustomRelativeLayout(Context context) {
         super(context);
         //setFont();

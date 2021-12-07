@@ -15,7 +15,6 @@
         android:padding="5dp">
 
         <ImageView
-            android:id="@+id/iv_picture"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center_vertical"
@@ -39,7 +38,6 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/tv_number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -51,7 +49,6 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/iv_select"
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:layout_marginStart="5dp"

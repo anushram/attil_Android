@@ -185,8 +185,12 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                                 productDto.brandImage = brandImageList
 
                                 val sliderImageList = ArrayList<String>()
-                                if (productDetailsObj.has("sliderImage") && !productDetailsObj.isNull("sliderImage")) {
-                                    val brandImageArray = productDetailsObj.getJSONArray("sliderImage")
+                                if (productDetailsObj.has("sliderImage") && !productDetailsObj.isNull(
+                                        "sliderImage"
+                                    )
+                                ) {
+                                    val brandImageArray =
+                                        productDetailsObj.getJSONArray("sliderImage")
                                     for (j in 0 until brandImageArray.length()) {
                                         sliderImageList.add(brandImageArray.getString(j))
                                     }

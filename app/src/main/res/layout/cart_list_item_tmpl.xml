@@ -6,7 +6,6 @@
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cv_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardBackgroundColor="@color/white"
@@ -22,7 +21,7 @@
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
             android:orientation="vertical"
-            android:padding="8dp">
+            android:padding="5dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -42,7 +41,6 @@
                     android:textSize="16sp" />
 
                 <ImageView
-                    android:id="@+id/iv_cart_delete"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:contentDescription="@string/delete"
@@ -52,15 +50,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="4dp"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:orientation="horizontal">
 
                 <com.makeramen.roundedimageview.RoundedImageView
-                    android:id="@+id/iv_product"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/sample"
                     app:riv_border_color="@color/transparent"
@@ -74,7 +71,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="3dp"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -84,50 +81,68 @@
                         android:orientation="horizontal">
 
                         <LinearLayout
-                            android:id="@+id/ln_pack"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:visibility="gone">
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:orientation="horizontal"
+                                android:visibility="gone">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="3"
+                                    android:ellipsize="end"
+                                    android:fontFamily="@font/noto_sans_semi_bold"
+                                    android:maxLines="1"
+
+                                    android:text="@string/picked"
+                                    android:textColor="@color/text_color"
+                                    android:textSize="14sp"
+                                    android:visibility="visible" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/noto_sans_bold"
+                                    android:text=":"
+                                    android:textColor="@color/black"
+                                    android:textSize="12sp" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:ellipsize="end"
+                                    android:fontFamily="@font/noto_sans_semi_bold"
+                                    android:maxLines="1"
+                                    android:paddingStart="2dp"
+                                    android:text="2 பேக்குகள்"
+                                    android:textColor="@color/primary"
+                                    android:textSize="14sp"
+                                    android:visibility="visible" />
+                            </LinearLayout>
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:ellipsize="end"
-                                android:fontFamily="@font/noto_sans_semi_bold"
-                                android:text="@string/picked"
+                                android:fontFamily="@font/noto_sans_regular"
                                 android:textColor="@color/text_color"
-                                android:textSize="14sp"
-                                android:visibility="visible" />
-
-                            <TextView
-                                android:id="@+id/tv_pack"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:ellipsize="end"
-                                android:fontFamily="@font/noto_sans_semi_bold"
-                                android:text="1 Pack"
-                                android:textColor="@color/primary"
-                                android:textSize="14sp"
+                                android:textSize="13sp"
                                 android:visibility="visible" />
                         </LinearLayout>
 
                         <TextView
-                            android:id="@+id/tv_available"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:ellipsize="end"
-                            android:fontFamily="@font/noto_sans_regular"
-                            android:textColor="@color/text_color"
-                            android:textSize="13sp"
-                            android:visibility="gone" />
-
-                        <TextView
-                            android:id="@+id/tv_date"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_weight="1"
                             android:ellipsize="end"
                             android:fontFamily="@font/noto_sans_regular"
                             android:gravity="end|center"
@@ -138,11 +153,10 @@
                     </LinearLayout>
 
                     <TextView
-                        android:id="@+id/tv_mrp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="start"
-                        android:layout_marginTop="4dp"
+                        android:layout_marginTop="2dp"
                         android:ellipsize="end"
                         android:fontFamily="@font/noto_sans_regular"
                         android:text="\u20B9 33.33"
@@ -151,36 +165,33 @@
                         android:visibility="visible" />
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="bottom"
-                        android:layout_marginTop="4dp"
+                        android:layout_marginTop="2dp"
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/tv_offer_price"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_gravity="end"
                             android:ellipsize="end"
                             android:fontFamily="@font/noto_sans_bold"
                             android:gravity="end|center"
-                            android:text="10"
+                            android:text="\u20B9 256.00"
                             android:textColor="@color/text_color"
-                            android:textSize="16sp"
+                            android:textSize="14sp"
                             android:visibility="visible" />
 
                         <TextView
-                            android:id="@+id/tv_save"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:ellipsize="end"
                             android:fontFamily="@font/noto_sans_semi_bold"
-                            android:gravity="end|center"
+                            android:gravity="start|center"
                             android:paddingStart="5dp"
-                            android:text="You save \u20B9 5"
+                            android:text="மொத்தம் நீங்கள் சேமிக்கிறீர்கள் \u20B9 44.00"
                             android:textColor="@color/primary"
-                            android:textSize="12sp"
+                            android:textSize="10sp"
                             android:visibility="visible" />
 
                     </LinearLayout>
@@ -189,7 +200,6 @@
             </LinearLayout>
 
             <com.develop.sns.customviews.CustomRecyclerView
-                android:id="@+id/lv_items"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:overScrollMode="never"

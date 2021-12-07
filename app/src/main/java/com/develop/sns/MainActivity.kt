@@ -193,10 +193,14 @@ class MainActivity : SubModuleActivity() {
                 ) {
                     if (AppUtils.isConnectedToInternet(context)) {
                         val requestObject = JsonObject()
-                        requestObject.addProperty("phoneNumber",
-                            preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_USER_NAME)!!)
-                        requestObject.addProperty("password",
-                            preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_USER_PWD)!!)
+                        requestObject.addProperty(
+                            "phoneNumber",
+                            preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_USER_NAME)!!
+                        )
+                        requestObject.addProperty(
+                            "password",
+                            preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_USER_PWD)!!
+                        )
                         requestObject.addProperty("preferredLanguage", language)
                         //Log.e("requestObj", requestObject.toString())
                         showProgressBar()

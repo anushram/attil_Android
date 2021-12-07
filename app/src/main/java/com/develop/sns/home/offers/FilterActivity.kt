@@ -151,9 +151,9 @@ class FilterActivity : SubModuleActivity() {
     private fun handleResponse() {
         try {
             val intent = Intent()
-            intent.putExtra("filterType",filterType)
-            intent.putExtra("filterPrice",filterPrice)
-            intent.putExtra("filterView",filterView)
+            intent.putExtra("filterType", filterType)
+            intent.putExtra("filterPrice", filterPrice)
+            intent.putExtra("filterView", filterView)
             setResult(RESULT_OK, intent)
             finish()
         } catch (e: Exception) {

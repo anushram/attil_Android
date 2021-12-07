@@ -16,6 +16,6 @@
 package com.develop.sns.customviews.otpview;
 
 public interface OnOtpCompletionListener {
-  void onOtpCompleted(String otp);
+    void onOtpCompleted(String otp);
 
 }

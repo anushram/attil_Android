@@ -30,7 +30,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField "String", "BASE_API_URL", "\"http://yaazhproducts.herokuapp.com/\""
         }
-        debug{
+        debug {
             buildConfigField "String", "BASE_API_URL", "\"http://yaazhproducts.herokuapp.com/\""
         }
     }

@@ -64,7 +64,7 @@ class CartSubItemListAdapter(
                     tvKgCount.text = maxUnit
 
                     tvOfferPercentage.text =
-                        cartListDto.offerPercentage.toString().plus(" ").plus("% OFF")
+                        cartListDto.offerPercentage.toString().plus("% OFF")
 
                 } else if ((cartListDto.packageType == "packed" && cartListDto.offerType == "normal")
                     || (cartListDto.packageType == "packed" && cartListDto.offerType == "BOGO")
@@ -81,7 +81,7 @@ class CartSubItemListAdapter(
                         tvCount.text = cartListDto.cartSelectedItemCount.toString()
                     }
                     tvOfferPercentage.text =
-                        cartListDto.offerPercentage.toString().plus(" ").plus("% OFF")
+                        cartListDto.offerPercentage.toString().plus("% OFF")
 
                 }
 

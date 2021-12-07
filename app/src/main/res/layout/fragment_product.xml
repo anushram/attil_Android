@@ -61,24 +61,28 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:ellipsize="end"
                             android:fontFamily="@font/noto_sans_bold"
                             android:padding="8dp"
+                            app:linesCount="1"
                             app:selectedTextColor="@color/white"
                             app:text="@string/products"
                             app:textColor="@color/text_color"
-                            app:textSize="18sp" />
+                            app:textSize="16sp" />
 
                         <com.addisonelliott.segmentedbutton.SegmentedButton
                             android:id="@+id/sb_packed"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:ellipsize="end"
                             android:fontFamily="@font/noto_sans_bold"
                             android:padding="8dp"
+                            app:linesCount="1"
                             app:selectedTextColor="@color/white"
                             app:text="@string/packed"
                             app:textColor="@color/text_color"
-                            app:textSize="18sp" />
+                            app:textSize="16sp" />
 
                     </com.addisonelliott.segmentedbutton.SegmentedButtonGroup>
 
