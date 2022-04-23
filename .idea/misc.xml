@@ -4,6 +4,11 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.27760416666666665" />
+        <entry key="..\:/Kumar/attil_Android/app/src/main/res/layout/activity_cart_item.xml" value="0.1" />
+        <entry key="..\:/Kumar/attil_Android/app/src/main/res/layout/app_toolbar.xml" value="0.14130434782608695" />
+        <entry key="..\:/Kumar/attil_Android/app/src/main/res/layout/cart_list_item_tmpl.xml" value="0.1" />
+        <entry key="..\:/Kumar/attil_Android/app/src/main/res/layout/cart_sub_item_list_tmpl.xml" value="0.1" />
+        <entry key="..\:/Kumar/attil_Android/app/src/main/res/layout/item_details_list_item_tmpl.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/circle_normal_primary.xml" value="0.2972222222222222" />
         <entry key="app/src/main/res/drawable/circle_normal_tick.xml" value="0.2972222222222222" />
         <entry key="app/src/main/res/drawable/custom_radio_drawable.xml" value="0.2972222222222222" />
@@ -39,7 +44,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="JDK" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>

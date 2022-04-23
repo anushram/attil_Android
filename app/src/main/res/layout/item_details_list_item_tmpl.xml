@@ -6,6 +6,7 @@
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cv_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="-5dp"
@@ -30,6 +31,7 @@
                 android:orientation="horizontal">
 
                 <com.makeramen.roundedimageview.RoundedImageView
+                    android:id="@+id/iv_product"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:scaleType="fitXY"
@@ -63,6 +65,7 @@
                         android:textSize="16sp" />
 
                     <TextView
+                        android:id="@+id/tv_measure"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
@@ -80,6 +83,7 @@
                     android:orientation="horizontal">
 
                     <Button
+                        android:id="@+id/btn_add"
                         style="@style/ButtonChatPlain"
                         android:fontFamily="@font/noto_sans_bold"
                         android:text="@string/add"
@@ -88,6 +92,7 @@
                         android:visibility="visible" />
 
                     <LinearLayout
+                        android:id="@+id/ln_add"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/boundary_no"
@@ -96,6 +101,7 @@
                         android:visibility="gone">
 
                         <LinearLayout
+                            android:id="@+id/ln_decrease"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_gravity="center_vertical"
@@ -112,6 +118,7 @@
                         </LinearLayout>
 
                         <TextView
+                            android:id="@+id/tv_count"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
@@ -126,6 +133,7 @@
                             android:textSize="16sp" />
 
                         <LinearLayout
+                            android:id="@+id/ln_increase"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
@@ -147,6 +155,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ln_loose_add"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -180,6 +189,7 @@
                         android:visibility="visible">
 
                         <LinearLayout
+                            android:id="@+id/ln_gm_decrease"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_gravity="center_vertical"
@@ -196,6 +206,7 @@
                         </LinearLayout>
 
                         <TextView
+                            android:id="@+id/tv_gm_count"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
@@ -211,6 +222,7 @@
                             android:textSize="16sp" />
 
                         <LinearLayout
+                            android:id="@+id/ln_gm_increase"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
@@ -257,6 +269,7 @@
                         android:visibility="visible">
 
                         <LinearLayout
+                            android:id="@+id/ln_kg_decrease"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_gravity="center_vertical"
@@ -273,6 +286,7 @@
                         </LinearLayout>
 
                         <TextView
+                            android:id="@+id/tv_kg_count"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
@@ -288,6 +302,7 @@
                             android:textSize="16sp" />
 
                         <LinearLayout
+                            android:id="@+id/ln_kg_increase"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
@@ -323,6 +338,7 @@
                     android:orientation="vertical">
 
                     <LinearLayout
+                        android:id="@+id/ln_boge_main"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="start"
@@ -339,6 +355,7 @@
                             android:padding="3dp">
 
                             <com.develop.sns.customviews.CircleImageView
+                                android:id="@+id/iv_boge_brand"
                                 android:layout_width="35dp"
                                 android:layout_height="35dp"
                                 android:layout_gravity="center"
@@ -354,6 +371,7 @@
                                 android:orientation="vertical">
 
                                 <TextView
+                                    android:id="@+id/tv_boge_name"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:ellipsize="end"
@@ -365,6 +383,7 @@
                                     android:visibility="visible" />
 
                                 <TextView
+                                    android:id="@+id/tv_boge_qty"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:ellipsize="end"
@@ -388,6 +407,7 @@
                     </LinearLayout>
 
                     <pl.droidsonroids.gif.GifImageView
+                        android:id="@+id/iv_bogo"
                         android:layout_width="45dp"
                         android:layout_height="45dp"
                         android:layout_gravity="start"
@@ -395,7 +415,8 @@
                         android:visibility="gone" />
 
                     <LinearLayout
-                        android:layout_width="70dp"
+                        android:id="@+id/ln_offer_percentage"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="start"
                         android:background="@drawable/boundary_primary"
@@ -404,19 +425,21 @@
                         android:visibility="visible">
 
                         <TextView
-                            android:layout_width="match_parent"
+                            android:id="@+id/tv_offer_percentage"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
                             android:fontFamily="@font/noto_sans_semi_bold"
-                            android:text="14% OFF"
+                            android:text="12% OFF"
                             android:textColor="@color/white"
-                            android:textSize="12sp"
+                            android:textSize="13sp"
                             android:visibility="visible" />
                     </LinearLayout>
 
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ln_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|end"
@@ -425,6 +448,7 @@
                     android:visibility="visible">
 
                     <TextView
+                        android:id="@+id/tv_mrp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
@@ -442,27 +466,29 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            android:id="@+id/tv_save"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:ellipsize="end"
                             android:fontFamily="@font/noto_sans_semi_bold"
                             android:gravity="end|center"
-                            android:paddingEnd="5dp"
-                            android:text="நீங்கள் சேமிக்கிறீர்கள் \u20B9 10.00"
+                            android:paddingEnd="10dp"
+                            android:text=""
                             android:textColor="@color/primary"
-                            android:textSize="11sp"
+                            android:textSize="12sp"
                             android:visibility="visible" />
 
                         <TextView
+                            android:id="@+id/tv_offer_price"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_gravity="end"
                             android:ellipsize="end"
                             android:fontFamily="@font/noto_sans_bold"
                             android:gravity="end|center"
-                            android:text="\u20B9 40.00"
+                            android:text=""
                             android:textColor="@color/text_color"
-                            android:textSize="14sp"
+                            android:textSize="16sp"
                             android:visibility="visible" />
 
                     </LinearLayout>

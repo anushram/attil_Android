@@ -98,10 +98,7 @@ class CartItemListAdapter(
                                 .plus(context.getString(R.string.Rs)).plus("")
                                 .plus("%.2f".format(diff))
 
-                    } else if ((productDto.packageType == "packed" && productDto.offerType == "normal")
-                        || (productDto.packageType == "packed" && productDto.offerType == "BOGO")
-                        || (productDto.packageType == "packed" && productDto.offerType == "BOGE")
-                    ) {
+                    } else  {
                         lnPack.visibility = View.VISIBLE
                         tvAvailable.visibility = View.GONE
 

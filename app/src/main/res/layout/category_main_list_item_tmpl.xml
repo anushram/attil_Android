@@ -6,6 +6,7 @@
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cv_main"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:cardBackgroundColor="@color/white"
@@ -25,6 +26,7 @@
             android:paddingBottom="4dp">
 
             <com.develop.sns.customviews.CircleImageView
+                android:id="@+id/iv_product"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center"

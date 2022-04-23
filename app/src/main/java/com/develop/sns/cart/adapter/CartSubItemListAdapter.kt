@@ -66,10 +66,7 @@ class CartSubItemListAdapter(
                     tvOfferPercentage.text =
                         cartListDto.offerPercentage.toString().plus("% OFF")
 
-                } else if ((cartListDto.packageType == "packed" && cartListDto.offerType == "normal")
-                    || (cartListDto.packageType == "packed" && cartListDto.offerType == "BOGO")
-                    || (cartListDto.packageType == "packed" && cartListDto.offerType == "BOGE")
-                ) {
+                } else {
                     lnQuantity.visibility = View.VISIBLE
 
                     tvQuantity.text =

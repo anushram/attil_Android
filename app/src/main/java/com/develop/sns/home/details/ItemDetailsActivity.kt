@@ -214,13 +214,13 @@ class ItemDetailsActivity : SubModuleActivity(), ItemListener {
             itemDetailsViewModel.addToCart(
                 requestObject,
                 preferenceHelper?.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)
-            ).observe(this, { jsonObject ->
+            ).observe(this) { jsonObject ->
                 //Log.e("Response", jsonObject.toString())
                 if (jsonObject != null) {
                     dismissProgressBar()
                     parseAddCartResponse(jsonObject)
                 }
-            })
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }

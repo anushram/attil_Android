@@ -5,6 +5,7 @@ import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -856,7 +857,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
 
     private fun parseCartCountResponse(obj: JSONObject) {
         try {
-            //Log.e("CartCount", obj.toString())
+            Log.e("CartCount", obj.toString())
             if (obj.has("status") && obj.getBoolean("status")) {
                 if (obj.has("data") && !obj.isNull("data")) {
                     cartCount = obj.getInt("data")

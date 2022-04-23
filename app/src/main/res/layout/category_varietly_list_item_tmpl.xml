@@ -6,6 +6,7 @@
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cv_main"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:cardBackgroundColor="@color/white"
@@ -24,6 +25,7 @@
             android:padding="12dp">
 
             <com.develop.sns.customviews.CircleImageView
+                android:id="@+id/iv_product"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_gravity="center"
@@ -41,6 +43,7 @@
                 android:textSize="16sp" />
 
             <LinearLayout
+                android:id="@+id/ln_variety"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -49,6 +52,7 @@
                 android:padding="4dp">
 
                 <TextView
+                    android:id="@+id/tv_variety"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
