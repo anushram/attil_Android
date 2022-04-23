@@ -34,6 +34,7 @@
         <entry key="app/src/main/res/layout/info_dialog_layout.xml" value="0.16399622997172478" />
         <entry key="app/src/main/res/layout/item_details_list_item_tmpl.xml" value="0.3288201160541586" />
         <entry key="app/src/main/res/layout/normal_offer_list_item_tmpl.xml" value="0.2935222672064777" />
+        <entry key="app/src/main/res/layout/progress_bar_layout.xml" value="0.3703125" />
         <entry key="app/src/main/res/layout/top_offer_list_item_tmpl.xml" value="0.19655797101449277" />
       </map>
     </option>
