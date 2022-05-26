@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
@@ -82,7 +83,7 @@ class MainActivity : SubModuleActivity() {
     }
 
     private fun parseSystemConfigData(obj: JSONObject) {
-        //Log.i("Version Main Response", "" + obj.toString())
+        Log.i("SystemConfig", "" + obj.toString())
         try {
             if (obj.has("data") && !obj.isNull("data")) {
                 val dataObject = obj.getJSONObject("data")
