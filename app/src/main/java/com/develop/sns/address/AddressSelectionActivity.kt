@@ -36,6 +36,9 @@ class AddressSelectionActivity : SubModuleActivity() {
 
     private lateinit var addressViewModel: AddressViewModel
 
+    var totalAmount = 0F
+    var deliveryCharge = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -70,6 +73,7 @@ class AddressSelectionActivity : SubModuleActivity() {
     private fun getIntentValue() {
         try {
             val intent = intent
+            totalAmount = intent.getFloatExtra("total", 0F);
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -78,6 +82,39 @@ class AddressSelectionActivity : SubModuleActivity() {
     private fun initClassReference() {
         try {
             addressViewModel = ViewModelProvider(this).get(AddressViewModel::class.java)
+
+            binding.tvTotalAmount.text =
+                getString(R.string.total_item_price).plus(" ").plus(getString(R.string.Rs))
+                    .plus(" ")
+                    .plus("%.2f".format(totalAmount))
+
+            val minFreeDelivery =
+                preferenceHelper?.getIntFromSharedPrefs(AppConstant.KEY_MIN_FREE_DELIVERY)
+                    ?.toFloat()
+
+            if (totalAmount >= minFreeDelivery!!.toFloat()) {
+                deliveryCharge = "FREE"
+                binding.tvDeliveryCharge.text = deliveryCharge
+            } else {
+                deliveryCharge =
+                    preferenceHelper!!.getIntFromSharedPrefs(AppConstant.KEY_DELIVERY_COST)
+                        .toString()
+                binding.tvDeliveryCharge.text =
+                    getString(R.string.Rs).plus(" ").plus("%.2f".format(deliveryCharge))
+            }
+
+            binding.tvDeliveryChargeInfo.text =
+                getString(R.string.purchase_above).plus(" ").plus(getString(R.string.Rs)).plus(" ")
+                    .plus("%.2f".format(minFreeDelivery)).plus(" ")
+                    .plus(getString(R.string.free_delivery))
+
+            val packingCharges =
+                preferenceHelper!!.getIntFromSharedPrefs(AppConstant.KEY_PACKAGE_COST).toFloat()
+            binding.tvPackingCharges.text =
+                getString(R.string.packing_charges).plus(" ").plus(getString(R.string.Rs)).plus(" ")
+                    .plus("%.2f".format(packingCharges))
+            binding.tvTotalPrice.text =
+                getString(R.string.Rs).plus(" ").plus("%.2f".format(totalAmount))
         } catch (e: Exception) {
             e.printStackTrace()
         }

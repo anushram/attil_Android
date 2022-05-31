@@ -86,4 +86,15 @@
     <string name="alert_title">Alert!</string>
     <string name="adress">Address Selection</string>
     <string name="pay_now">Pay Now</string>
+    <string name="use_current_location">Use Current Location</string>
+    <string name="delivery_to">Delivery To</string>
+    <string name="delivery_charge">Delivery Charge</string>
+    <string name="or">OR</string>
+    <string name="add_new_address">ADD NEW ADDRESS</string>
+    <string name="no_address_found">No Address Found</string>
+    <string name="total_amount">Total Amount</string>
+    <string name="packing_charges">Packing Charges</string>
+    <string name="total_item_price">Total Item Price</string>
+    <string name="purchase_above">Purchase above</string>
+    <string name="free_delivery">and get FREE delivery</string>
 </resources>

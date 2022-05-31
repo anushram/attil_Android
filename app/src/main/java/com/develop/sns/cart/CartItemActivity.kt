@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.develop.sns.R
 import com.develop.sns.SubModuleActivity
+import com.develop.sns.address.AddressSelectionActivity
 import com.develop.sns.cart.adapter.CartItemListAdapter
 import com.develop.sns.cart.dto.CartListDto
 import com.develop.sns.cart.listener.CartListener
@@ -44,6 +45,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
 
     var packageType = ""
     var offerType = ""
+    var totalAmount = 0F
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -106,10 +108,11 @@ class CartItemActivity : SubModuleActivity(), CartListener {
 
     private fun launchAddressSelectionActivity() {
         try {
-            val intent = Intent(context, AddressSelctionActivity::class.java)
+            val intent = Intent(context, AddressSelectionActivity::class.java)
+            intent.putExtra("total", totalAmount)
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
             startActivity(intent)
-        }catch (e:Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
         }
     }
@@ -127,10 +130,10 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                 cartViewModel.getCartItem(
                     requestObject,
                     preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!
-                ).observe(this, { jsonObject ->
+                ).observe(this) { jsonObject ->
                     dismissProgressBar()
                     parseCartItemsResponse(jsonObject)
-                })
+                }
             } else {
                 CommonClass.showToastMessage(
                     context,
@@ -649,7 +652,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
 
     private fun calculateTotal(cartItemList: java.util.ArrayList<ProductDto>) {
         try {
-            var totalAmount = 0F
+
             for (k in 0 until cartItemList.size) {
                 val cartItemDto = cartItemList[k]
                 val cartDetailsList = cartItemDto.cartList
