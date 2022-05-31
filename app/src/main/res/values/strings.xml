@@ -84,4 +84,6 @@
     <string name="cart_error">Please add any product!</string>
     <string name="okay_title">Okay</string>
     <string name="alert_title">Alert!</string>
+    <string name="adress">Address Selection</string>
+    <string name="pay_now">Pay Now</string>
 </resources>

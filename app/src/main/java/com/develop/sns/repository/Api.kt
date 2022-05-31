@@ -118,6 +118,12 @@ interface Api {
         @Body requestObject: JsonObject,
     ): Call<ResponseBody>
 
+    @POST("customer/userAddress/getAll")
+    fun getSavedAddrList(
+        @Header("Authorization") authorization: String,
+        @Body requestObject: JsonObject,
+    ): Call<ResponseBody>
+
     companion object {
 
         fun initRetrofit(): Api {

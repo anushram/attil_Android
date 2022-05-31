@@ -21,6 +21,7 @@ import com.develop.sns.home.details.ItemDetailsActivity
 import com.develop.sns.home.details.ItemDetailsViewModel
 import com.develop.sns.home.offers.dto.ProductDto
 import com.develop.sns.home.offers.dto.ProductPriceDto
+import com.develop.sns.login.LoginActivity
 import com.develop.sns.utils.AppConstant
 import com.develop.sns.utils.AppUtils
 import com.develop.sns.utils.CommonClass
@@ -95,8 +96,20 @@ class CartItemActivity : SubModuleActivity(), CartListener {
 
     private fun handleUiElement() {
         try {
-
+            binding.btnAddCart.setOnClickListener {
+                launchAddressSelectionActivity();
+            }
         } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun launchAddressSelectionActivity() {
+        try {
+            val intent = Intent(context, AddressSelctionActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+            startActivity(intent)
+        }catch (e:Exception){
             e.printStackTrace()
         }
     }
