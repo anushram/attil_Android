@@ -98,7 +98,7 @@ class CartItemListAdapter(
                                 .plus(context.getString(R.string.Rs)).plus("")
                                 .plus("%.2f".format(diff))
 
-                    } else  {
+                    } else {
                         lnPack.visibility = View.VISIBLE
                         tvAvailable.visibility = View.GONE
 

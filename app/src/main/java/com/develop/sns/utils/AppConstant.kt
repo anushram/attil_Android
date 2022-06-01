@@ -34,6 +34,7 @@ object AppConstant {
     const val KEY_PRODUCTS_OBJ = "productObj"
     const val KEY_USER_NAME = "userName"
     const val KEY_USER_PWD = "userPwd"
+    const val KEY_ADDRESS_MAIN_ID = "addressMainId"
 
     //LanguageId
     var LANGUAGE_ID = 1

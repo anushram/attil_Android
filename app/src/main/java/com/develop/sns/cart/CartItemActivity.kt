@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.develop.sns.R
 import com.develop.sns.SubModuleActivity
 import com.develop.sns.address.AddressSelectionActivity
+import com.develop.sns.cart.adapter.AddressItemListAdapter
 import com.develop.sns.cart.adapter.CartItemListAdapter
 import com.develop.sns.cart.dto.CartListDto
 import com.develop.sns.cart.listener.CartListener
@@ -22,7 +23,6 @@ import com.develop.sns.home.details.ItemDetailsActivity
 import com.develop.sns.home.details.ItemDetailsViewModel
 import com.develop.sns.home.offers.dto.ProductDto
 import com.develop.sns.home.offers.dto.ProductPriceDto
-import com.develop.sns.login.LoginActivity
 import com.develop.sns.utils.AppConstant
 import com.develop.sns.utils.AppUtils
 import com.develop.sns.utils.CommonClass

@@ -4,13 +4,15 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.27760416666666665" />
+        <entry key="..\:/Kumar/attil_Android/app/src/main/res/drawable/boundary_gray.xml" value="0.1075" />
         <entry key="..\:/Kumar/attil_Android/app/src/main/res/drawable/circle_normal_tick.xml" value="0.1075" />
         <entry key="..\:/Kumar/attil_Android/app/src/main/res/drawable/custom_radio_drawable.xml" value="0.1075" />
-        <entry key="..\:/Kumar/attil_Android/app/src/main/res/layout/activity_address_selection.xml" value="0.22" />
+        <entry key="..\:/Kumar/attil_Android/app/src/main/res/layout/activity_address_selection.xml" value="0.37142857142857144" />
         <entry key="..\:/Kumar/attil_Android/app/src/main/res/layout/activity_cart_item.xml" value="0.1" />
         <entry key="..\:/Kumar/attil_Android/app/src/main/res/layout/activity_filter.xml" value="0.14130434782608695" />
         <entry key="..\:/Kumar/attil_Android/app/src/main/res/layout/activity_login.xml" value="0.14130434782608695" />
         <entry key="..\:/Kumar/attil_Android/app/src/main/res/layout/activity_sign_up_password.xml" value="0.14130434782608695" />
+        <entry key="..\:/Kumar/attil_Android/app/src/main/res/layout/address_list_item_tmpl.xml" value="0.23504867872044508" />
         <entry key="..\:/Kumar/attil_Android/app/src/main/res/layout/app_toolbar.xml" value="0.14130434782608695" />
         <entry key="..\:/Kumar/attil_Android/app/src/main/res/layout/cart_list_item_tmpl.xml" value="0.1" />
         <entry key="..\:/Kumar/attil_Android/app/src/main/res/layout/cart_sub_item_list_tmpl.xml" value="0.1" />

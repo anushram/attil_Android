@@ -1,43 +1,37 @@
 package com.develop.sns.address
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.develop.sns.R
 import com.develop.sns.SubModuleActivity
-import com.develop.sns.cart.adapter.CartItemListAdapter
-import com.develop.sns.cart.dto.CartListDto
+import com.develop.sns.address.dto.AddressListDto
+import com.develop.sns.address.listener.AddressListener
+import com.develop.sns.cart.adapter.AddressItemListAdapter
 import com.develop.sns.databinding.ActivityAddressSelectionBinding
-import com.develop.sns.home.details.ItemDetailsActivity
-import com.develop.sns.home.details.ItemDetailsViewModel
-import com.develop.sns.home.offers.dto.ProductDto
-import com.develop.sns.home.offers.dto.ProductPriceDto
 import com.develop.sns.utils.AppConstant
 import com.develop.sns.utils.AppUtils
 import com.develop.sns.utils.CommonClass
-import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import org.json.JSONArray
-import org.json.JSONException
 import org.json.JSONObject
 
-class AddressSelectionActivity : SubModuleActivity() {
+class AddressSelectionActivity : SubModuleActivity(), AddressListener {
 
     private val context: Context = this@AddressSelectionActivity
     private val binding by lazy { ActivityAddressSelectionBinding.inflate(layoutInflater) }
 
     private lateinit var addressViewModel: AddressViewModel
+    private lateinit var addressItemList: ArrayList<AddressListDto>
+    private lateinit var linearLayoutManager: LinearLayoutManager
+    private lateinit var addressItemListAdapter: AddressItemListAdapter
 
-    var totalAmount = 0F
-    var deliveryCharge = ""
+    private var totalAmount = 0F
+    private var deliveryCharge = 0F
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,6 +76,7 @@ class AddressSelectionActivity : SubModuleActivity() {
     private fun initClassReference() {
         try {
             addressViewModel = ViewModelProvider(this).get(AddressViewModel::class.java)
+            addressItemList = ArrayList()
 
             binding.tvTotalAmount.text =
                 getString(R.string.total_item_price).plus(" ").plus(getString(R.string.Rs))
@@ -91,14 +86,13 @@ class AddressSelectionActivity : SubModuleActivity() {
             val minFreeDelivery =
                 preferenceHelper?.getIntFromSharedPrefs(AppConstant.KEY_MIN_FREE_DELIVERY)
                     ?.toFloat()
-
+            Log.e("min", minFreeDelivery.toString());
             if (totalAmount >= minFreeDelivery!!.toFloat()) {
-                deliveryCharge = "FREE"
-                binding.tvDeliveryCharge.text = deliveryCharge
+                binding.tvDeliveryCharge.text = getString(R.string.free)
             } else {
                 deliveryCharge =
                     preferenceHelper!!.getIntFromSharedPrefs(AppConstant.KEY_DELIVERY_COST)
-                        .toString()
+                        .toFloat()
                 binding.tvDeliveryCharge.text =
                     getString(R.string.Rs).plus(" ").plus("%.2f".format(deliveryCharge))
             }
@@ -123,6 +117,9 @@ class AddressSelectionActivity : SubModuleActivity() {
     private fun handleUiElement() {
         try {
 
+            binding.btnAddAddress.setOnClickListener {
+                binding.rgType.
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -165,10 +162,69 @@ class AddressSelectionActivity : SubModuleActivity() {
             if (obj.has("code") && obj.getInt("code") == 200) {
                 if (obj.has("status") && obj.getBoolean("status")) {
                     if (obj.has("data") && !obj.isNull("data")) {
-                        val dataArray = obj.getJSONArray("data")
-                        for (i in 0 until dataArray.length()) {
-                            val itemObject = dataArray.getJSONObject(i)
+                        val dataObject = obj.getJSONObject("data")
 
+                        if (dataObject.has("_id") && !dataObject.isNull("_id")) {
+                            val id = dataObject.getString("_id")
+                            preferenceHelper!!.saveValueToSharedPrefs(
+                                AppConstant.KEY_ADDRESS_MAIN_ID,
+                                id
+                            )
+                        }
+
+                        if (dataObject.has("address") && !dataObject.isNull("address")) {
+                            val addressObject = dataObject.getJSONArray("address")
+                            Log.e("Address", addressObject.toString())
+                            for (i in 0 until addressObject.length()) {
+                                val itemObject = addressObject.getJSONObject(i)
+                                val addressListDto = AddressListDto()
+                                if (itemObject.has("geo") && !itemObject.isNull("geo")) {
+                                    val geoObject = itemObject.getJSONObject("geo")
+                                    if (geoObject.has("lat") && !geoObject.isNull("lat")) {
+                                        addressListDto.lat = geoObject.getString("lat")
+                                    }
+                                    if (geoObject.has("lng") && !geoObject.isNull("lng")) {
+                                        addressListDto.lng = geoObject.getString("lng")
+                                    }
+                                }
+
+                                if (itemObject.has("createdAt") && !itemObject.isNull("createdAt")) {
+                                    addressListDto.createdAt = itemObject.getString("createdAt")
+                                }
+
+                                if (itemObject.has("createdAtTZ") && !itemObject.isNull("createdAtTZ")) {
+                                    addressListDto.createdAtTZ = itemObject.getString("createdAtTZ")
+                                }
+
+                                if (itemObject.has("_id") && !itemObject.isNull("_id")) {
+                                    addressListDto._id = itemObject.getString("_id")
+                                }
+
+                                if (itemObject.has("street") && !itemObject.isNull("street")) {
+                                    addressListDto.street = itemObject.getString("street")
+                                }
+
+                                if (itemObject.has("phoneNumber") && !itemObject.isNull("phoneNumber")) {
+                                    addressListDto.phoneNumber = itemObject.getString("phoneNumber")
+                                }
+
+                                if (itemObject.has("doorNo") && !itemObject.isNull("doorNo")) {
+                                    addressListDto.doorNo = itemObject.getString("doorNo")
+                                }
+
+                                if (itemObject.has("landmark") && !itemObject.isNull("landmark")) {
+                                    addressListDto.landmark = itemObject.getString("landmark")
+                                }
+
+                                if (itemObject.has("pinCode") && !itemObject.isNull("pinCode")) {
+                                    addressListDto.pinCode = itemObject.getString("pinCode")
+                                }
+
+                                if (itemObject.has("townORcity") && !itemObject.isNull("townORcity")) {
+                                    addressListDto.townORcity = itemObject.getString("townORcity")
+                                }
+                                addressItemList.add(addressListDto)
+                            }
                         }
                     }
                 }
@@ -177,27 +233,42 @@ class AddressSelectionActivity : SubModuleActivity() {
                 binding.tvNoData.visibility = View.VISIBLE
                 CommonClass.handleErrorResponse(context, obj, binding.rootView)
             }
-            populateCartItemList()
+            populateAddressItemList()
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    private fun populateCartItemList() {
+    private fun populateAddressItemList() {
         try {
-            /*if (!cartItemList.isNullOrEmpty()) {
+            if (!addressItemList.isNullOrEmpty()) {
                 binding.lvProducts.visibility = View.VISIBLE
                 binding.tvNoData.visibility = View.GONE
                 linearLayoutManager = LinearLayoutManager(context)
                 binding.lvProducts.layoutManager = linearLayoutManager
-                cartItemListAdapter =
-                    CartItemListAdapter(context, cartItemList, this@AddressSelectionActivity)
-                binding.lvProducts.adapter = cartItemListAdapter
+                addressItemListAdapter =
+                    AddressItemListAdapter(context, addressItemList, this@AddressSelectionActivity)
+                binding.lvProducts.adapter = addressItemListAdapter
             } else {
                 binding.lvProducts.visibility = View.GONE
                 binding.tvNoData.visibility = View.VISIBLE
             }
-            calculateTotal(cartItemList)*/
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    override fun selectItem(addressListDto: AddressListDto) {
+        try {
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    override fun edit(addressListDto: AddressListDto) {
+        try {
+
         } catch (e: Exception) {
             e.printStackTrace()
         }

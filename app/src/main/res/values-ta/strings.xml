@@ -96,4 +96,6 @@
     <string name="total_item_price">Total Item Price</string>
     <string name="purchase_above">Purchase above</string>
     <string name="free_delivery">and get FREE delivery</string>
+    <string name="free">FREE</string>
+    <string name="landmark_title">Landmark:</string>
 </resources>
