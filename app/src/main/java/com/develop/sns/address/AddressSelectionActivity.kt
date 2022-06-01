@@ -1,14 +1,29 @@
 package com.develop.sns.address
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.IntentSender.SendIntentException
+import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
+import android.os.Looper
+import com.develop.sns.R
+import android.telecom.VideoProfile.isVideo
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
+import android.view.View.OnTouchListener
+import android.widget.RadioGroup
 import android.widget.Toast
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.develop.sns.R
 import com.develop.sns.SubModuleActivity
 import com.develop.sns.address.dto.AddressListDto
 import com.develop.sns.address.listener.AddressListener
@@ -17,8 +32,23 @@ import com.develop.sns.databinding.ActivityAddressSelectionBinding
 import com.develop.sns.utils.AppConstant
 import com.develop.sns.utils.AppUtils
 import com.develop.sns.utils.CommonClass
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.*
 import com.google.gson.JsonObject
 import org.json.JSONObject
+import java.lang.String
+import kotlin.Array
+import kotlin.Boolean
+import kotlin.Exception
+import kotlin.Int
+import kotlin.IntArray
+import kotlin.arrayOf
+import kotlin.assert
+import kotlin.getValue
+import kotlin.lazy
+import kotlin.toString
+
 
 class AddressSelectionActivity : SubModuleActivity(), AddressListener {
 
@@ -33,6 +63,40 @@ class AddressSelectionActivity : SubModuleActivity(), AddressListener {
     private var totalAmount = 0F
     private var deliveryCharge = 0F
 
+    private lateinit var mFusedLocationClient: FusedLocationProviderClient
+    private lateinit var mSettingsClient: SettingsClient
+    private lateinit var mLocationRequest: LocationRequest
+    private lateinit var mLocationSettingsRequest: LocationSettingsRequest
+
+    private var latitude = "0"
+    private var longitude = "0"
+
+    private val REQUEST_FINE_LOCATION = 104
+    private val REQUEST_CHECK_SETTINGS = 100
+    private var isRadioClicked = false
+
+    private val mLocationCallback: LocationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            try {
+                val mLastLocation: Location? = locationResult.lastLocation
+                if (mLastLocation != null) {
+                    latitude = String.valueOf(mLastLocation.getLatitude())
+                    longitude = String.valueOf(mLastLocation.getLongitude())
+                    preferenceHelper!!.saveValueToSharedPrefs(
+                        AppConstant.KEY_CURRENT_LATITUDE,
+                        latitude
+                    )
+                    preferenceHelper!!.saveValueToSharedPrefs(
+                        AppConstant.KEY_CURRENT_LONGITUDE,
+                        longitude
+                    )
+                }
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -41,6 +105,7 @@ class AddressSelectionActivity : SubModuleActivity(), AddressListener {
         initToolBar()
         getIntentValue()
         initClassReference()
+        initLocationReference()
         handleUiElement()
         getSavedAddress()
     }
@@ -117,8 +182,35 @@ class AddressSelectionActivity : SubModuleActivity(), AddressListener {
     private fun handleUiElement() {
         try {
 
+            binding.rbCurrentLocation.setOnTouchListener(OnTouchListener { v, event ->
+                if (event.action == MotionEvent.ACTION_DOWN) {
+                    isRadioClicked = true
+                } else if (event.action == MotionEvent.ACTION_MOVE) {
+                    isRadioClicked = true
+                } else if (event.action == MotionEvent.ACTION_UP) {
+                    isRadioClicked = true
+                }
+                false
+            })
+
+            binding.rgType.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { group, checkedId -> //Log.e("HandleUi", "Element");
+                when (checkedId) {
+                    R.id.rb_current_location -> {
+                        if (isRadioClicked) {
+                            checkLocationPermission()
+                        }
+                    }
+                    else -> {
+                    }
+                }
+            })
             binding.btnAddAddress.setOnClickListener {
-                binding.rgType.
+                isRadioClicked = false
+                binding.tvAddress.text = ""
+                binding.tvAddress.visibility = View.GONE
+                binding.rgType.clearCheck()
+                latitude = ""
+                longitude = ""
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -272,5 +364,166 @@ class AddressSelectionActivity : SubModuleActivity(), AddressListener {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    private fun checkLocationPermission() {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
+                != PackageManager.PERMISSION_GRANTED
+            ) {
+                requestPermissions(
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                    REQUEST_FINE_LOCATION
+                )
+            } else {
+                getLastLocation()
+            }
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun initLocationReference() {
+        try {
+            mSettingsClient = LocationServices.getSettingsClient(this)
+            mLocationRequest = LocationRequest()
+            mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+            mLocationRequest.setInterval(0)
+            mLocationRequest.setFastestInterval(0)
+            mLocationRequest.setNumUpdates(1)
+            val builder = LocationSettingsRequest.Builder()
+            builder.addLocationRequest(mLocationRequest)
+            builder.setNeedBle(true)
+            mLocationSettingsRequest = builder.build()
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out kotlin.String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_FINE_LOCATION) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getLastLocation()
+            } else {
+                finish()
+            }
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun getLastLocation() {
+        try {
+            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+            if (isLocationEnabled()) {
+                mFusedLocationClient.getLastLocation().addOnCompleteListener { task ->
+                    val location = task.result
+                    if (location == null) {
+                        requestNewLocationData()
+                    } else {
+                        latitude = location.latitude.toString()
+                        longitude = location.longitude.toString()
+                        val addressDto = CommonClass.getCurrentAddress(
+                            context,
+                            latitude, longitude
+                        )
+                        var text = ""
+                        if (addressDto != null) {
+                            var address1 = ""
+                            if (addressDto.houseNo.trim().isNotEmpty()
+                            ) {
+                                address1 = addressDto.houseNo + ", "
+                            }
+                            if (addressDto.subHouseNo.trim().isNotEmpty()
+                            ) {
+                                address1 = address1 + addressDto.subHouseNo + ", "
+                            }
+                            text = text + address1
+                            if (addressDto.area.trim().isNotEmpty()
+                            ) {
+                                text = text + addressDto.area + ", "
+                            }
+                            if (addressDto.city.trim().isNotEmpty()
+                            ) {
+                                text = text + addressDto.city + ", "
+                            }
+                            if (addressDto.state.trim().isNotEmpty()
+                            ) {
+                                text = text + addressDto.state + ", "
+                            }
+                            if (addressDto.country.trim().isNotEmpty()
+                            ) {
+                                text = text + addressDto.country + ", "
+                            }
+                            text = text.replace(", $".toRegex(), "")
+                        } else {
+                            text = getString(R.string.location_selected)
+                        }
+                        binding.tvAddress.visibility = View.VISIBLE
+                        binding.tvAddress.text = text
+                    }
+                }
+            } else {
+                mSettingsClient.checkLocationSettings(mLocationSettingsRequest)
+                    .addOnFailureListener(this) { e ->
+                        when ((e as ApiException).statusCode) {
+                            LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> try {
+                                val rae = e as ResolvableApiException
+                                val intentSenderRequest =
+                                    IntentSenderRequest.Builder(rae.resolution.intentSender).build()
+                                locationIntentResultLauncher.launch(intentSenderRequest)
+                            } catch (sie: SendIntentException) {
+                            }
+                            LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> {
+                                val errorMessage =
+                                    "Location settings are inadequate, and cannot be " +
+                                            "fixed here. Fix in Settings."
+                                CommonClass.showToastMessage(
+                                    this,
+                                    binding.rootView,
+                                    errorMessage,
+                                    Toast.LENGTH_LONG
+                                )
+                            }
+                        }
+                    }
+            }
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private val locationIntentResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
+            if (result != null) {
+                getLastLocation()
+            }
+        }
+
+    @SuppressLint("MissingPermission")
+    private fun requestNewLocationData() {
+        try {
+            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+            mFusedLocationClient.requestLocationUpdates(
+                mLocationRequest, mLocationCallback,
+                Looper.myLooper()
+            )
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun isLocationEnabled(): Boolean {
+        val locationManager = this.getSystemService(LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
+            LocationManager.NETWORK_PROVIDER
+        )
     }
 }

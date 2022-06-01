@@ -20,8 +20,8 @@
             android:layout_height="match_parent"
             android:background="@color/md_grey_50"
             android:orientation="vertical"
-            android:visibility="visible"
-            tools:context=".cart.CartItemActivity">
+            android:visibility="gone"
+            tools:context=".address.AddressSelectionActivity">
 
             <include
                 android:id="@+id/ln_toolbar"
@@ -186,7 +186,7 @@
                             android:orientation="vertical">
 
                             <RadioButton
-                                android:id="@+id/rb_local"
+                                android:id="@+id/rb_current_location"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:background="?selectableItemBackground"

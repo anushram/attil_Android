@@ -5,7 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Point
 import android.graphics.Typeface
+import android.location.Geocoder
 import android.os.Build
+import android.location.Address
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.TextView
@@ -13,6 +16,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.develop.sns.MainActivity
 import com.develop.sns.R
+import com.develop.sns.address.dto.AddressDto
 import com.google.android.material.snackbar.Snackbar
 import org.json.JSONObject
 import java.io.*
@@ -141,46 +145,6 @@ class CommonClass {
             return width
         }
 
-        /*fun saveCartMap(context: Context, cartMap: HashMap<String, ProductPriceDto>) {
-            try {
-                val preferenceHelper = PreferenceHelper(context)
-                val gson = Gson()
-                preferenceHelper.saveValueToSharedPrefs(
-                    AppConstant.KEY_CART_ITEM,
-                    gson.toJson(cartMap)
-                )
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-
-        fun removeCartMap(context: Context?) {
-            try {
-                val preferenceHelper = PreferenceHelper(context!!)
-                preferenceHelper.saveValueToSharedPrefs(AppConstant.KEY_CART_ITEM, "")
-            } catch (e: java.lang.Exception) {
-                e.printStackTrace()
-            }
-        }
-
-        fun getCartMap(context: Context): HashMap<String, ProductPriceDto> {
-            var cartMap = HashMap<String, ProductPriceDto>()
-            try {
-                val preferenceHelper = PreferenceHelper(context)
-                val gson = Gson()
-                val cartMapString =
-                    preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_CART_ITEM)
-                if (cartMapString != null && cartMapString.trim().isNotEmpty()) {
-                    val type = object : TypeToken<HashMap<String?, ProductPriceDto?>?>() {}.type
-                    cartMap = gson.fromJson(cartMapString, type)
-                }
-
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            return cartMap
-        }*/
-
         fun handleErrorResponse(context: Context, jsonObject: JSONObject, view: View) {
             val statusCode = jsonObject.getInt("statusCode")
             if (statusCode == 401) {
@@ -215,5 +179,99 @@ class CommonClass {
             }
             return dateTime
         }
+
+        fun getCurrentAddress(
+            context: Context,
+            latitude: String?,
+            longitude: String?
+        ): AddressDto? {
+            var addressDto: AddressDto? = null
+            try {
+                if (latitude != null && latitude.trim { it <= ' ' }.length > 0 && longitude != null && longitude.trim { it <= ' ' }.length > 0) {
+                    addressDto = AddressDto()
+                    val addresses: List<Address>?
+                    val geocoder = Geocoder(context, Locale.ENGLISH)
+                    addresses =
+                        geocoder.getFromLocation(latitude.toDouble(), longitude.toDouble(), 1)
+                    if (addresses != null && addresses.isNotEmpty()) {
+                        for (j in addresses.indices) {
+                            val locationAddress: Address = addresses[j]
+                            //Log.i("ssssss0", "" + locationAddress.getAddressLine(0));
+//                        Log.i("ssssss1", "" + locationAddress.getSubLocality());
+//                        Log.i("ssssss2", "" + locationAddress.getSubAdminArea());
+                        }
+                        val locationAddress: Address = addresses[0]
+                        val sb = StringBuilder()
+                        for (i in 0 until locationAddress.maxAddressLineIndex) {
+//                        Log.i("ssssss" + i, "" + locationAddress.getAddressLine(i));
+                            sb.append(locationAddress.getAddressLine(i)).append(", ")
+                        }
+                        val address: String = locationAddress.getAddressLine(0)
+
+                        val city: String = locationAddress.locality
+                        val state: String = locationAddress.adminArea
+                        val country: String = locationAddress.countryName
+                        val postalCode: String = locationAddress.postalCode
+                        val countryCode: String = locationAddress.countryCode
+                        val houseNo: String? = locationAddress.subThoroughfare
+                        val subHouseNo: String? = locationAddress.thoroughfare
+                        val area: String = locationAddress.subLocality
+
+
+                        Log.e("getSubAdminArea", "" + locationAddress.subAdminArea)
+                        Log.e("getSubLocality", "" + locationAddress.subLocality)
+                        Log.e("getLocality", "" + locationAddress.locality)
+                        Log.e("getAdminArea", "" + locationAddress.adminArea)
+                        Log.e("getCountryName", "" + locationAddress.countryName)
+                        Log.e("getFeatureName", "" + locationAddress.featureName)
+                        Log.e("getPostalCode", "" + locationAddress.postalCode)
+                        Log.e("getThoroughfare", "" + locationAddress.thoroughfare)
+                        Log.e("getSubThoroughfare", "" + locationAddress.subThoroughfare)
+
+                        addressDto.city = city
+                        addressDto.state = state
+                        addressDto.country = country
+                        addressDto.pinCode = postalCode
+                        addressDto.addressLine2 = address
+                        var address1 = ""
+                        if (houseNo != null) {
+                            if (houseNo.trim { it <= ' ' }.isNotEmpty()) {
+                                address1 = "$houseNo, "
+                            }
+                        }
+                        if (subHouseNo != null) {
+                            if (subHouseNo.trim { it <= ' ' }.isNotEmpty()) {
+                                address1 = "$address1$subHouseNo, "
+                            }
+                        }
+                        if (area.trim { it <= ' ' }.isNotEmpty()) {
+                            address1 = "$address1$area, "
+                        }
+                        address1 = address1.replace(", $".toRegex(), "")
+                        addressDto.addressLine1 = address1
+                        addressDto.countryCode = countryCode
+                        if (houseNo != null) {
+                            addressDto.houseNo = houseNo
+                        }
+                        if (subHouseNo != null) {
+                            addressDto.subHouseNo = subHouseNo
+                        }
+                        addressDto.area = area
+                        addressDto.latitude = latitude
+                        addressDto.longitude = longitude
+                    }
+                } else {
+                    Toast.makeText(
+                        context,
+                        context.resources.getString(R.string.no_internet),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+            }
+            return addressDto
+        }
+
     }
 }
