@@ -130,6 +130,12 @@ interface Api {
         @Body requestObject: JsonObject,
     ): Call<ResponseBody>
 
+    @POST("shop-info/findShopByCoordinates")
+    fun findShop(
+        @Header("Authorization") authorization: String,
+        @Body requestObject: JsonObject,
+    ): Call<ResponseBody>
+
 
     companion object {
 

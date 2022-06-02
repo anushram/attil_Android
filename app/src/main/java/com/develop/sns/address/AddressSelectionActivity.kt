@@ -75,6 +75,11 @@ class AddressSelectionActivity : SubModuleActivity(), AddressListener {
     private val REQUEST_FINE_LOCATION = 104
     private val REQUEST_CHECK_SETTINGS = 100
     private var isRadioClicked = false
+    private var isCurrLoc = false
+    private var isFromList = false
+
+    private lateinit var selectedAddressListDto: AddressListDto
+    private var lastCheckedPosition = -1
 
     private val mLocationCallback: LocationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
@@ -198,6 +203,13 @@ class AddressSelectionActivity : SubModuleActivity(), AddressListener {
                 when (checkedId) {
                     R.id.rb_current_location -> {
                         if (isRadioClicked) {
+                            isCurrLoc = true
+                            isFromList = false;
+                            addressItemListAdapter.lastCheckedPosition = -1
+                            addressItemListAdapter.notifyItemRangeChanged(
+                                0,
+                                addressItemList.size - 1
+                            )
                             checkLocationPermission()
                         }
                     }
@@ -205,6 +217,7 @@ class AddressSelectionActivity : SubModuleActivity(), AddressListener {
                     }
                 }
             })
+
             binding.btnAddAddress.setOnClickListener {
                 isRadioClicked = false
                 binding.tvAddress.text = ""
@@ -213,6 +226,26 @@ class AddressSelectionActivity : SubModuleActivity(), AddressListener {
                 latitude = ""
                 longitude = ""
                 launchAddNewAddressActivity(null)
+            }
+
+            binding.btnPayNow.setOnClickListener {
+                if (!isCurrLoc && !isFromList) {
+                    CommonClass.showToastMessage(
+                        context,
+                        binding.rootView,
+                        "Please add / choose address",
+                        Toast.LENGTH_SHORT
+                    )
+                } else {
+                    if (isCurrLoc) {
+                        findShopByCoordinates(latitude, longitude)
+                    } else if (isFromList) {
+                        findShopByCoordinates(
+                            selectedAddressListDto.lat,
+                            selectedAddressListDto.lng
+                        )
+                    }
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -368,7 +401,15 @@ class AddressSelectionActivity : SubModuleActivity(), AddressListener {
 
     override fun selectItem(addressListDto: AddressListDto) {
         try {
-
+            this.selectedAddressListDto = addressListDto
+            isRadioClicked = false
+            binding.tvAddress.text = ""
+            binding.tvAddress.visibility = View.GONE
+            binding.rgType.clearCheck()
+            latitude = ""
+            longitude = ""
+            isFromList = true
+            isCurrLoc = false
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -377,6 +418,54 @@ class AddressSelectionActivity : SubModuleActivity(), AddressListener {
     override fun edit(addressListDto: AddressListDto) {
         try {
             launchAddNewAddressActivity(addressListDto)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun findShopByCoordinates(latitude: kotlin.String, longitude: kotlin.String) {
+        try {
+            if (AppUtils.isConnectedToInternet(context)) {
+                val requestObject = JsonObject()
+                requestObject.addProperty("lat", "13.089174642337015")
+                requestObject.addProperty("lng", "80.16765408199427")
+                showProgressBar()
+
+                addressViewModel.findShop(
+                    requestObject,
+                    preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!
+                ).observe(this) { jsonObject ->
+                    dismissProgressBar()
+                    parseFindShopResponse(jsonObject)
+                }
+            } else {
+                CommonClass.showToastMessage(
+                    context,
+                    binding.rootView,
+                    resources.getString(R.string.no_internet),
+                    Toast.LENGTH_SHORT
+                )
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun parseFindShopResponse(obj: JSONObject) {
+        try {
+            Log.e("FindShop", obj.toString())
+            binding.rootView.visibility = View.VISIBLE
+            if (obj.has("code") && obj.getInt("code") == 200) {
+                if (obj.has("status") && obj.getBoolean("status")) {
+                    if (obj.has("data") && !obj.isNull("data")) {
+
+                    }
+                }
+            } else {
+                binding.lvProducts.visibility = View.GONE
+                binding.tvNoData.visibility = View.VISIBLE
+                CommonClass.handleErrorResponse(context, obj, binding.rootView)
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }

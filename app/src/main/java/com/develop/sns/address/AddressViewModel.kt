@@ -22,4 +22,9 @@ class AddressViewModel : ViewModel() {
         val call = api.saveAddress("Bearer $token", requestObject)
         return apiRepository.callApi(call)
     }
+
+    fun findShop(requestObject: JsonObject, token: String): LiveData<JSONObject> {
+        val call = api.findShop("Bearer $token", requestObject)
+        return apiRepository.callApi(call)
+    }
 }

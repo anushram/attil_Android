@@ -18,7 +18,7 @@ class AddressItemListAdapter(
 ) : RecyclerView.Adapter<AddressItemListAdapter.ViewHolder>() {
 
     var preferenceHelper = PreferenceHelper(context)
-    private var lastCheckedPosition = -1
+    var lastCheckedPosition = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
