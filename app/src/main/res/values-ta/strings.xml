@@ -114,4 +114,6 @@
     <string name="debit_credit_card">Debit / Credit Card</string>
     <string name="upi">UPI</string>
     <string name="cash_on_delivery">Cash On Delivery</string>
+    <string name="update_address">Update Address</string>
+    <string name="address">Address</string>
 </resources>

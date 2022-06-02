@@ -100,7 +100,7 @@ class AddressAddActivity : SubModuleActivity() {
     private fun initToolBar() {
         try {
             binding.lnToolbar.toolbar.title =
-                resources.getString(R.string.add_address)
+                resources.getString(R.string.address)
             setSupportActionBar(binding.lnToolbar.toolbar)
             assert(supportActionBar != null)
             supportActionBar?.setDisplayShowHomeEnabled(true)
@@ -129,6 +129,7 @@ class AddressAddActivity : SubModuleActivity() {
         try {
             addressViewModel = ViewModelProvider(this).get(AddressViewModel::class.java)
             if (addressListDto != null) {
+                binding.btnAddAddress.text = getString(R.string.update_address)
                 addressId = addressListDto._id
                 binding.etFullName.setText(addressListDto.fullName)
                 binding.etMobileNo.setText(addressListDto.phoneNumber)
