@@ -23,7 +23,7 @@
             android:background="@drawable/boundary_gray"
             android:gravity="center"
             android:orientation="horizontal"
-            android:padding="5dp">
+            android:padding="8dp">
 
             <RadioButton
                 android:id="@+id/rb_select"
@@ -81,6 +81,7 @@
                 android:id="@+id/tv_change"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
                 android:fontFamily="@font/noto_sans_bold"
                 android:text="Change"
                 android:textColor="@color/accent"

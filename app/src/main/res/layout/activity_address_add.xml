@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="Address"
+            type="com.develop.sns.address.AddressViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/root_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/md_grey_50"
+            android:orientation="vertical"
+            android:visibility="visible"
+            tools:context=".address.AddressAddActivity">
+
+            <include
+                android:id="@+id/ln_toolbar"
+                layout="@layout/app_toolbar" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <include
+                    android:id="@+id/ln_error"
+                    layout="@layout/custom_error_snackbar"
+                    android:visibility="gone" />
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@+id/btn_add_address"
+                    android:layout_below="@+id/ln_error"
+                    android:overScrollMode="never"
+                    android:scrollingCache="false">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:orientation="vertical">
+
+                        <EditText
+                            android:id="@+id/et_full_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:background="@drawable/boundary_gray"
+                            android:fontFamily="@font/noto_sans_semi_bold"
+                            android:gravity="start"
+                            android:hint="@string/full_name"
+                            android:imeOptions="actionNext"
+                            android:inputType="text"
+                            android:maxLength="50"
+                            android:maxLines="1"
+                            android:padding="8dp"
+                            android:textColor="@color/text_color"
+                            android:textColorHint="#A5A5A5"
+                            android:textCursorDrawable="@null"
+                            android:textSize="14sp" />
+
+                        <EditText
+                            android:id="@+id/et_mobile_no"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:background="@drawable/boundary_gray"
+                            android:fontFamily="@font/noto_sans_semi_bold"
+                            android:gravity="start"
+                            android:hint="@string/mobile_number"
+                            android:imeOptions="actionNext"
+                            android:inputType="number"
+                            android:maxLength="50"
+                            android:maxLines="1"
+                            android:padding="8dp"
+                            android:textColor="@color/text_color"
+                            android:textColorHint="#A5A5A5"
+                            android:textCursorDrawable="@null"
+                            android:textSize="14sp" />
+
+                        <EditText
+                            android:id="@+id/et_additional_mobile_no"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:background="@drawable/boundary_gray"
+                            android:fontFamily="@font/noto_sans_semi_bold"
+                            android:gravity="start"
+                            android:hint="@string/additional_phone_number_optional"
+                            android:imeOptions="actionNext"
+                            android:inputType="number"
+                            android:maxLength="50"
+                            android:maxLines="1"
+                            android:padding="8dp"
+                            android:textColor="@color/text_color"
+                            android:textColorHint="#A5A5A5"
+                            android:textCursorDrawable="@null"
+                            android:textSize="14sp" />
+
+                        <EditText
+                            android:id="@+id/et_ppin_code"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:background="@drawable/boundary_gray"
+                            android:fontFamily="@font/noto_sans_semi_bold"
+                            android:gravity="start"
+                            android:hint="@string/pin_code"
+                            android:imeOptions="actionNext"
+                            android:inputType="number"
+                            android:maxLength="50"
+                            android:maxLines="1"
+                            android:padding="8dp"
+                            android:textColor="@color/text_color"
+                            android:textColorHint="#A5A5A5"
+                            android:textCursorDrawable="@null"
+                            android:textSize="14sp" />
+
+                        <EditText
+                            android:id="@+id/et_flat_no"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:background="@drawable/boundary_gray"
+                            android:fontFamily="@font/noto_sans_semi_bold"
+                            android:gravity="start"
+                            android:hint="@string/flat_hint"
+                            android:imeOptions="actionNext"
+                            android:inputType="text"
+                            android:maxLength="250"
+                            android:padding="8dp"
+                            android:textColor="@color/text_color"
+                            android:textColorHint="#A5A5A5"
+                            android:textCursorDrawable="@null"
+                            android:textSize="14sp" />
+
+                        <EditText
+                            android:id="@+id/et_area"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:background="@drawable/boundary_gray"
+                            android:fontFamily="@font/noto_sans_semi_bold"
+                            android:gravity="start"
+                            android:hint="@string/area_hint"
+                            android:imeOptions="actionNext"
+                            android:inputType="text"
+                            android:maxLength="250"
+                            android:padding="8dp"
+                            android:textColor="@color/text_color"
+                            android:textColorHint="#A5A5A5"
+                            android:textCursorDrawable="@null"
+                            android:textSize="14sp" />
+
+                        <EditText
+                            android:id="@+id/et_landmark"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:background="@drawable/boundary_gray"
+                            android:fontFamily="@font/noto_sans_semi_bold"
+                            android:gravity="start"
+                            android:hint="@string/landmark_hint"
+                            android:imeOptions="actionNext"
+                            android:inputType="text"
+                            android:maxLength="250"
+                            android:padding="8dp"
+                            android:textColor="@color/text_color"
+                            android:textColorHint="#A5A5A5"
+                            android:textCursorDrawable="@null"
+                            android:textSize="14sp" />
+
+                        <EditText
+                            android:id="@+id/et_city"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:background="@drawable/boundary_gray"
+                            android:fontFamily="@font/noto_sans_semi_bold"
+                            android:gravity="start"
+                            android:hint="@string/town_city"
+                            android:imeOptions="actionNext"
+                            android:inputType="text"
+                            android:maxLength="150"
+                            android:maxLines="1"
+                            android:padding="8dp"
+                            android:textColor="@color/text_color"
+                            android:textColorHint="#A5A5A5"
+                            android:textCursorDrawable="@null"
+                            android:textSize="14sp" />
+
+                        <EditText
+                            android:id="@+id/et_state"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:background="@drawable/boundary_gray"
+                            android:fontFamily="@font/noto_sans_semi_bold"
+                            android:gravity="start"
+                            android:hint="@string/state_hint"
+                            android:imeOptions="actionNext"
+                            android:inputType="text"
+                            android:maxLength="150"
+                            android:maxLines="1"
+                            android:padding="8dp"
+                            android:textColor="@color/text_color"
+                            android:textColorHint="#A5A5A5"
+                            android:textCursorDrawable="@null"
+                            android:textSize="14sp" />
+
+                        <EditText
+                            android:id="@+id/et_country"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:background="@drawable/boundary_gray"
+                            android:fontFamily="@font/noto_sans_semi_bold"
+                            android:gravity="start"
+                            android:hint="@string/country_hint"
+                            android:imeOptions="actionNext"
+                            android:inputType="text"
+                            android:maxLength="50"
+                            android:maxLines="1"
+                            android:padding="8dp"
+                            android:textColor="@color/text_color"
+                            android:textColorHint="#A5A5A5"
+                            android:textCursorDrawable="@null"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+                </ScrollView>
+
+                <Button
+                    android:id="@+id/btn_add_address"
+                    style="@style/ButtonNormal"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="24dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="@string/add_address"
+                    android:textColor="@color/white" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <include
+            android:id="@+id/ln_progressbar"
+            layout="@layout/progress_bar_layout"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+</layout>

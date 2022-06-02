@@ -93,6 +93,10 @@
             android:name=".address.AddressSelectionActivity"
             android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
             android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".address.AddressAddActivity"
+            android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
+            android:windowSoftInputMode="adjustPan" />
 
         <service
             android:name=".service.ProductsService"

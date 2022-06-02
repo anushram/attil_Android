@@ -10,11 +10,14 @@ class AddressListDto : Serializable {
     var createdAtTZ: String = ""
     var _id: String = ""
     var street: String = ""
-    var phoneNumber: String = ""
-    var doorNo: String = ""
     var landmark: String = ""
-    var pinCode: String = ""
+    var doorNo: String = ""
+    var phoneNumber: String = ""
     var townORcity: String = ""
+    var pinCode: String = ""
+    var fullName: String = ""
+    var updatedAt: String = ""
+    var additionalPhoneNumber: String = ""
 
 
     override fun toString(): String {

@@ -17,4 +17,9 @@ class AddressViewModel : ViewModel() {
         val call = api.getSavedAddrList("Bearer $token", requestObject)
         return apiRepository.callApi(call)
     }
+
+    fun saveAddress(requestObject: JsonObject, token: String): LiveData<JSONObject> {
+        val call = api.saveAddress("Bearer $token", requestObject)
+        return apiRepository.callApi(call)
+    }
 }

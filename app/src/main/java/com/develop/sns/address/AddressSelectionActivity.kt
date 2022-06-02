@@ -2,7 +2,9 @@ package com.develop.sns.address
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.IntentSender.SendIntentException
 import android.content.pm.PackageManager
 import android.location.Location
@@ -11,7 +13,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import com.develop.sns.R
-import android.telecom.VideoProfile.isVideo
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
@@ -211,6 +212,7 @@ class AddressSelectionActivity : SubModuleActivity(), AddressListener {
                 binding.rgType.clearCheck()
                 latitude = ""
                 longitude = ""
+                launchAddNewAddressActivity(null)
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -296,25 +298,39 @@ class AddressSelectionActivity : SubModuleActivity(), AddressListener {
                                     addressListDto.street = itemObject.getString("street")
                                 }
 
-                                if (itemObject.has("phoneNumber") && !itemObject.isNull("phoneNumber")) {
-                                    addressListDto.phoneNumber = itemObject.getString("phoneNumber")
+                                if (itemObject.has("landmark") && !itemObject.isNull("landmark")) {
+                                    addressListDto.landmark = itemObject.getString("landmark")
                                 }
 
                                 if (itemObject.has("doorNo") && !itemObject.isNull("doorNo")) {
                                     addressListDto.doorNo = itemObject.getString("doorNo")
                                 }
 
-                                if (itemObject.has("landmark") && !itemObject.isNull("landmark")) {
-                                    addressListDto.landmark = itemObject.getString("landmark")
+                                if (itemObject.has("phoneNumber") && !itemObject.isNull("phoneNumber")) {
+                                    addressListDto.phoneNumber = itemObject.getString("phoneNumber")
+                                }
+
+                                if (itemObject.has("townORcity") && !itemObject.isNull("townORcity")) {
+                                    addressListDto.townORcity = itemObject.getString("townORcity")
                                 }
 
                                 if (itemObject.has("pinCode") && !itemObject.isNull("pinCode")) {
                                     addressListDto.pinCode = itemObject.getString("pinCode")
                                 }
 
-                                if (itemObject.has("townORcity") && !itemObject.isNull("townORcity")) {
-                                    addressListDto.townORcity = itemObject.getString("townORcity")
+                                if (itemObject.has("fullName") && !itemObject.isNull("fullName")) {
+                                    addressListDto.fullName = itemObject.getString("fullName")
                                 }
+
+                                if (itemObject.has("updatedAt") && !itemObject.isNull("updatedAt")) {
+                                    addressListDto.updatedAt = itemObject.getString("updatedAt")
+                                }
+
+                                if (itemObject.has("additionalPhoneNumber") && !itemObject.isNull("additionalPhoneNumber")) {
+                                    addressListDto.additionalPhoneNumber =
+                                        itemObject.getString("additionalPhoneNumber")
+                                }
+
                                 addressItemList.add(addressListDto)
                             }
                         }
@@ -360,7 +376,7 @@ class AddressSelectionActivity : SubModuleActivity(), AddressListener {
 
     override fun edit(addressListDto: AddressListDto) {
         try {
-
+            launchAddNewAddressActivity(addressListDto)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -526,4 +542,24 @@ class AddressSelectionActivity : SubModuleActivity(), AddressListener {
             LocationManager.NETWORK_PROVIDER
         )
     }
+
+    private fun launchAddNewAddressActivity(addressListDto: AddressListDto?) {
+        try {
+            val intent = Intent(context, AddressAddActivity::class.java)
+            intent.putExtra("addressListDto", addressListDto)
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+            resultLauncher.launch(intent)
+        } catch (e: Exception) {
+
+        }
+    }
+
+    var resultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                addressItemList.clear()
+                getSavedAddress()
+            }
+        }
+
 }

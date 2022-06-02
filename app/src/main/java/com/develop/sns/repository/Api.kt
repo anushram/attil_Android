@@ -124,6 +124,13 @@ interface Api {
         @Body requestObject: JsonObject,
     ): Call<ResponseBody>
 
+    @POST("customer/userAddress/create")
+    fun saveAddress(
+        @Header("Authorization") authorization: String,
+        @Body requestObject: JsonObject,
+    ): Call<ResponseBody>
+
+
     companion object {
 
         fun initRetrofit(): Api {
