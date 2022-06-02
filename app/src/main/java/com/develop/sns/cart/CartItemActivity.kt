@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.develop.sns.R
 import com.develop.sns.SubModuleActivity
 import com.develop.sns.address.AddressSelectionActivity
-import com.develop.sns.cart.adapter.AddressItemListAdapter
 import com.develop.sns.cart.adapter.CartItemListAdapter
 import com.develop.sns.cart.dto.CartListDto
 import com.develop.sns.cart.listener.CartListener

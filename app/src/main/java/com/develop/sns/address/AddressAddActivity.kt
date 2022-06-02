@@ -13,23 +13,16 @@ import android.os.Bundle
 import android.os.Looper
 import com.develop.sns.R
 import android.util.Log
-import android.view.MotionEvent
 import android.view.View
-import android.view.View.OnTouchListener
-import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.develop.sns.SubModuleActivity
 import com.develop.sns.address.dto.AddressListDto
-import com.develop.sns.address.listener.AddressListener
-import com.develop.sns.cart.adapter.AddressItemListAdapter
 import com.develop.sns.databinding.ActivityAddressAddBinding
-import com.develop.sns.databinding.ActivityAddressSelectionBinding
 import com.develop.sns.utils.AppConstant
 import com.develop.sns.utils.AppUtils
 import com.develop.sns.utils.CommonClass
@@ -46,9 +39,7 @@ import kotlin.Int
 import kotlin.IntArray
 import kotlin.arrayOf
 import kotlin.assert
-import kotlin.getValue
 import kotlin.lazy
-import kotlin.toString
 
 
 class AddressAddActivity : SubModuleActivity() {

@@ -37,6 +37,7 @@ object AppConstant {
     const val KEY_ADDRESS_MAIN_ID = "addressMainId"
     const val KEY_CURRENT_LATITUDE = "currentLatitude"
     const val KEY_CURRENT_LONGITUDE = "currentLongitude"
+    const val KEY_SHOP_ID = "shopID"
 
     //LanguageId
     var LANGUAGE_ID = 1

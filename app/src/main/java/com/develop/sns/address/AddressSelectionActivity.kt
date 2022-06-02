@@ -30,6 +30,7 @@ import com.develop.sns.address.dto.AddressListDto
 import com.develop.sns.address.listener.AddressListener
 import com.develop.sns.cart.adapter.AddressItemListAdapter
 import com.develop.sns.databinding.ActivityAddressSelectionBinding
+import com.develop.sns.payment.PaymentSelectionActivity
 import com.develop.sns.utils.AppConstant
 import com.develop.sns.utils.AppUtils
 import com.develop.sns.utils.CommonClass
@@ -46,7 +47,6 @@ import kotlin.Int
 import kotlin.IntArray
 import kotlin.arrayOf
 import kotlin.assert
-import kotlin.getValue
 import kotlin.lazy
 import kotlin.toString
 
@@ -63,6 +63,7 @@ class AddressSelectionActivity : SubModuleActivity(), AddressListener {
 
     private var totalAmount = 0F
     private var deliveryCharge = 0F
+    private var total = 0F
 
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     private lateinit var mSettingsClient: SettingsClient
@@ -178,8 +179,9 @@ class AddressSelectionActivity : SubModuleActivity(), AddressListener {
             binding.tvPackingCharges.text =
                 getString(R.string.packing_charges).plus(" ").plus(getString(R.string.Rs)).plus(" ")
                     .plus("%.2f".format(packingCharges))
+            total = deliveryCharge + packingCharges + totalAmount
             binding.tvTotalPrice.text =
-                getString(R.string.Rs).plus(" ").plus("%.2f".format(totalAmount))
+                getString(R.string.Rs).plus(" ").plus("%.2f".format(total))
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -453,12 +455,21 @@ class AddressSelectionActivity : SubModuleActivity(), AddressListener {
 
     private fun parseFindShopResponse(obj: JSONObject) {
         try {
-            Log.e("FindShop", obj.toString())
+            Log.e("SavedAddress", obj.toString())
             binding.rootView.visibility = View.VISIBLE
             if (obj.has("code") && obj.getInt("code") == 200) {
                 if (obj.has("status") && obj.getBoolean("status")) {
                     if (obj.has("data") && !obj.isNull("data")) {
+                        val dataObject = obj.getJSONObject("data")
 
+                        if (dataObject.has("shopId") && !dataObject.isNull("shopId")) {
+                            val id = dataObject.getString("shopId")
+                            preferenceHelper!!.saveValueToSharedPrefs(
+                                AppConstant.KEY_SHOP_ID,
+                                id
+                            )
+                        }
+                        launchPaymentActivity()
                     }
                 }
             } else {
@@ -651,4 +662,15 @@ class AddressSelectionActivity : SubModuleActivity(), AddressListener {
             }
         }
 
+
+    private fun launchPaymentActivity() {
+        try {
+            val intent = Intent(context, PaymentSelectionActivity::class.java)
+            intent.putExtra("totalAmount", total)
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+            startActivity(intent)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 }

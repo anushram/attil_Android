@@ -110,4 +110,8 @@
     <string name="town_city">Town / City</string>
     <string name="state_hint">State</string>
     <string name="country_hint">Country</string>
+    <string name="pay_using">Pay Using</string>
+    <string name="debit_credit_card">Debit / Credit Card</string>
+    <string name="upi">UPI</string>
+    <string name="cash_on_delivery">Cash On Delivery</string>
 </resources>
