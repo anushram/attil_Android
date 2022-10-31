@@ -538,7 +538,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
                 offersViewModel.getNormalOffers(
                     requestObject,
                     preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!
-                ).observe(viewLifecycleOwner, Observer<JSONObject?> { jsonObject ->
+                ).observe(viewLifecycleOwner, { jsonObject ->
                     dismissProgressBar()
                     parseNormalOffersResponse(jsonObject)
                 })
