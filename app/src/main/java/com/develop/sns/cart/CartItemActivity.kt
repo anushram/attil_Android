@@ -634,6 +634,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
             if (!cartItemList.isNullOrEmpty()) {
                 binding.lvProducts.visibility = View.VISIBLE
                 binding.tvNoData.visibility = View.GONE
+                binding.coordinatorLayout.visibility = View.VISIBLE
                 linearLayoutManager = LinearLayoutManager(context)
                 binding.lvProducts.layoutManager = linearLayoutManager
                 cartItemListAdapter =
@@ -642,6 +643,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
             } else {
                 binding.lvProducts.visibility = View.GONE
                 binding.tvNoData.visibility = View.VISIBLE
+                binding.coordinatorLayout.visibility = View.GONE
             }
             calculateTotal(cartItemList)
         } catch (e: Exception) {
@@ -651,7 +653,6 @@ class CartItemActivity : SubModuleActivity(), CartListener {
 
     private fun calculateTotal(cartItemList: java.util.ArrayList<ProductDto>) {
         try {
-
             for (k in 0 until cartItemList.size) {
                 val cartItemDto = cartItemList[k]
                 val cartDetailsList = cartItemDto.cartList
@@ -796,10 +797,10 @@ class CartItemActivity : SubModuleActivity(), CartListener {
                 cartViewModel.removeCartItem(
                     requestObject,
                     preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!
-                ).observe(this, { jsonObject ->
+                ).observe(this) { jsonObject ->
                     dismissProgressBar()
                     parseRemoveCartItemResponse(jsonObject)
-                })
+                }
             } else {
                 CommonClass.showToastMessage(
                     context,

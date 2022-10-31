@@ -29,15 +29,10 @@
     <color name="md_red_A700">#D50000</color>
     <color name="md_white_1000">#FFFFFF</color>
 
-
     <!-- Red -->
     <color name="red_700">#D32F2F</color>
     <color name="red_A700">#D50000</color>
     <!-- Red -->
-
-
-    <!-- Cyan -->
-    <!-- Cyan -->
 
     <!-- Teal -->
     <color name="teal_300">#4DB6AC</color>
@@ -45,30 +40,16 @@
     <color name="teal_A700">#00BFA5</color>
     <!-- Teal -->
 
-    <!-- Green -->
-    <!-- Green -->
-
-    <!-- Yellow -->
-    <!-- Yellow -->
-
-    <!-- Amber -->
-    <!-- Amber -->
-
-    <!-- Deep Orange -->
-    <!-- Deep Orange -->
-
     <!-- Grey -->
     <color name="grey">#808080</color>
 
-
     <color name="black_transparent_16">#16000000</color>
 
-
     <color name="error_color">#E7492E</color>
-
     <color name="button_color">#00CA3B</color>
     <color name="text_color">#19424D</color>
-
     <color name="item_tile_bg">#F4F7FB</color>
+    <color name="loader_defalut">#44ffffff</color>
+    <color name="loader_selected">#ffffff</color>
 
 </resources>
