@@ -50,3 +50,6 @@ local.properties
 *.lock
 *.lock
 *.bin
+*.bin
+*.lock
+.idea/gradle.xml
