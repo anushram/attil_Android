@@ -38,6 +38,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.gson.JsonObject
+import org.json.JSONArray
 import org.json.JSONObject
 import java.lang.String
 import kotlin.Array
@@ -60,10 +61,12 @@ class AddressSelectionActivity : SubModuleActivity(), AddressListener {
     private lateinit var addressItemList: ArrayList<AddressListDto>
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var addressItemListAdapter: AddressItemListAdapter
+    private lateinit var cartItemArray: JSONArray
 
     private var totalAmount = 0F
     private var deliveryCharge = 0F
     private var total = 0F
+    private var packingCharges = 0F
 
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     private lateinit var mSettingsClient: SettingsClient
@@ -140,6 +143,8 @@ class AddressSelectionActivity : SubModuleActivity(), AddressListener {
         try {
             val intent = intent
             totalAmount = intent.getFloatExtra("total", 0F);
+            val cartItem = intent.getStringExtra("cart")
+            cartItemArray = JSONArray(cartItem)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -160,6 +165,7 @@ class AddressSelectionActivity : SubModuleActivity(), AddressListener {
                     ?.toFloat()
             Log.e("min", minFreeDelivery.toString());
             if (totalAmount >= minFreeDelivery!!.toFloat()) {
+                deliveryCharge = (0).toFloat()
                 binding.tvDeliveryCharge.text = getString(R.string.free)
             } else {
                 deliveryCharge =
@@ -174,7 +180,7 @@ class AddressSelectionActivity : SubModuleActivity(), AddressListener {
                     .plus("%.2f".format(minFreeDelivery)).plus(" ")
                     .plus(getString(R.string.free_delivery))
 
-            val packingCharges =
+            packingCharges =
                 preferenceHelper!!.getIntFromSharedPrefs(AppConstant.KEY_PACKAGE_COST).toFloat()
             binding.tvPackingCharges.text =
                 getString(R.string.packing_charges).plus(" ").plus(getString(R.string.Rs)).plus(" ")
@@ -200,6 +206,7 @@ class AddressSelectionActivity : SubModuleActivity(), AddressListener {
                 }
                 false
             })
+
 
             binding.rgType.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { group, checkedId -> //Log.e("HandleUi", "Element");
                 when (checkedId) {
@@ -666,7 +673,16 @@ class AddressSelectionActivity : SubModuleActivity(), AddressListener {
     private fun launchPaymentActivity() {
         try {
             val intent = Intent(context, PaymentSelectionActivity::class.java)
-            intent.putExtra("totalAmount", total)
+            intent.putExtra("totalCost", total)
+            intent.putExtra("productCost", totalAmount)
+            intent.putExtra("packageCost", packingCharges)
+            intent.putExtra("deliveryCost", deliveryCharge)
+            intent.putExtra("reductionAmount", 0)
+            intent.putExtra("cart", cartItemArray.toString())
+            intent.putExtra("deliveryAddressId", selectedAddressListDto._id)
+            intent.putExtra("lat", selectedAddressListDto.lat)
+            intent.putExtra("lng", selectedAddressListDto.lng)
+            intent.putExtra("isCurrentLocation", isCurrLoc)
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
             startActivity(intent)
         } catch (e: Exception) {

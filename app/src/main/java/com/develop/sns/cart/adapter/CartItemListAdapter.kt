@@ -45,10 +45,12 @@ class CartItemListAdapter(
 
                 tvProductName.text = productDto.productName
 
-                Picasso.with(context).load(productDto.brandImage[0])
-                    .placeholder(R.drawable.product)
-                    .error(R.drawable.product)
-                    .into(ivProduct)
+                if(productDto.brandImage.size>0) {
+                    Picasso.with(context).load(productDto.brandImage[0])
+                        .placeholder(R.drawable.product)
+                        .error(R.drawable.product)
+                        .into(ivProduct)
+                }
 
 
                 var mrp = 0F

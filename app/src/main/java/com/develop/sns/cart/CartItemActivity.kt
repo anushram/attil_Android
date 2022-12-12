@@ -41,6 +41,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
     private lateinit var cartItemListAdapter: CartItemListAdapter
     private lateinit var cartMap: HashMap<String, CartListDto>
     private lateinit var cartViewModel: CartViewModel
+    private lateinit var cartItemArray: JSONArray
 
     var packageType = ""
     var offerType = ""
@@ -109,6 +110,7 @@ class CartItemActivity : SubModuleActivity(), CartListener {
         try {
             val intent = Intent(context, AddressSelectionActivity::class.java)
             intent.putExtra("total", totalAmount)
+            intent.putExtra("cart", cartItemArray.toString())
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
             startActivity(intent)
         } catch (e: Exception) {
@@ -148,14 +150,13 @@ class CartItemActivity : SubModuleActivity(), CartListener {
 
     private fun parseCartItemsResponse(obj: JSONObject) {
         try {
-            Log.e("CartItem", obj.toString())
             binding.rootView.visibility = View.VISIBLE
             if (obj.has("code") && obj.getInt("code") == 200) {
                 if (obj.has("status") && obj.getBoolean("status")) {
                     if (obj.has("data") && !obj.isNull("data")) {
-                        val dataArray = obj.getJSONArray("data")
-                        for (i in 0 until dataArray.length()) {
-                            val itemObject = dataArray.getJSONObject(i)
+                        cartItemArray = obj.getJSONArray("data")
+                        for (i in 0 until cartItemArray.length()) {
+                            val itemObject = cartItemArray.getJSONObject(i)
                             val productDto = ProductDto()
 
                             if (itemObject.has("_id") && !itemObject.isNull("_id")) {

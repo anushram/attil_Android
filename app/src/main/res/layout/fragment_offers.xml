@@ -31,221 +31,151 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/ln_error"
+                android:background="@color/white"
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/ln_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:orientation="vertical">
 
                     <LinearLayout
-                        android:id="@+id/ln_header"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/white"
-                        android:orientation="vertical">
+                        android:layout_gravity="center"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="4dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:id="@+id/ln_filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:padding="6dp">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/filter" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginStart="5dp"
+                                android:fontFamily="@font/noto_sans_regular"
+                                android:gravity="center"
+                                android:text="Filter"
+                                android:textColor="@color/text_color"
+                                android:textSize="15sp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:fontFamily="@font/noto_sans_bold"
+                            android:gravity="center"
+                            android:maxLines="1"
+                            android:paddingStart="-30dp"
+                            android:text="@string/trending_offers"
+                            android:textColor="@color/text_color"
+                            android:textSize="16sp" />
+
+                        <ru.nikartm.support.ImageBadgeView
+                            android:id="@+id/ibv_cart"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_gravity="center"
+                            android:padding="2dp"
+                            android:src="@drawable/cart_bag"
+                            app:ibv_badgeColor="@color/md_red_500"
+                            app:ibv_badgeLimitValue="true"
+                            app:ibv_badgeTextColor="@color/white"
+                            app:ibv_badgeTextSize="9sp"
+                            app:ibv_badgeTextStyle="bold"
+                            app:ibv_badgeValue="0"
+                            app:ibv_fixedBadgeRadius="10dp"
+                            app:ibv_visibleBadge="true" />
+
+                    </LinearLayout>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginBottom="5dp"
+                        app:cardBackgroundColor="@color/md_grey_50"
+                        app:cardCornerRadius="2dp"
+                        app:cardUseCompatPadding="true">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginStart="4dp"
-                            android:layout_marginTop="4dp"
-                            android:layout_marginEnd="4dp"
+                            android:layout_weight="1"
                             android:gravity="center"
-                            android:orientation="horizontal">
+                            android:orientation="vertical"
+                            android:padding="1dp">
 
-                            <LinearLayout
-                                android:id="@+id/ln_filter"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:gravity="center"
-                                android:padding="6dp">
-
-                                <ImageView
-                                    android:layout_width="20dp"
-                                    android:layout_height="20dp"
-                                    android:src="@drawable/filter" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:layout_marginStart="5dp"
-                                    android:fontFamily="@font/noto_sans_regular"
-                                    android:gravity="center"
-                                    android:text="Filter"
-                                    android:textColor="@color/text_color"
-                                    android:textSize="15sp" />
-                            </LinearLayout>
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
+                            <com.develop.sns.customviews.CustomSearchView
+                                android:id="@+id/sv_search"
+                                android:layout_width="match_parent"
+                                android:layout_height="32dp"
                                 android:layout_weight="1"
-                                android:ellipsize="end"
-                                android:fontFamily="@font/noto_sans_bold"
-                                android:gravity="center"
-                                android:maxLines="1"
-                                android:paddingStart="-30dp"
-                                android:text="@string/trending_offers"
-                                android:textColor="@color/text_color"
-                                android:textSize="16sp" />
-
-                            <ru.nikartm.support.ImageBadgeView
-                                android:id="@+id/ibv_cart"
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:layout_gravity="center"
-                                android:padding="2dp"
-                                android:src="@drawable/cart_bag"
-                                app:ibv_badgeColor="@color/md_red_500"
-                                app:ibv_badgeLimitValue="true"
-                                app:ibv_badgeTextColor="@color/white"
-                                app:ibv_badgeTextSize="9sp"
-                                app:ibv_badgeTextStyle="bold"
-                                app:ibv_badgeValue="0"
-                                app:ibv_fixedBadgeRadius="10dp"
-                                app:ibv_visibleBadge="true" />
+                                android:focusable="false"
+                                android:focusableInTouchMode="true"
+                                android:focusedByDefault="false"
+                                android:paddingStart="-16dp"
+                                android:paddingLeft="-16dp"
+                                app:iconifiedByDefault="false"
+                                app:queryBackground="@android:color/transparent"
+                                app:queryHint="@string/home_search_hint"
+                                app:showAsAction="always|collapseActionView"
+                                app:theme="@style/AppSearchView" />
 
                         </LinearLayout>
+                    </androidx.cardview.widget.CardView>
 
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="5dp"
-                            android:layout_marginEnd="5dp"
-                            android:layout_marginBottom="5dp"
-                            app:cardBackgroundColor="@color/md_grey_50"
-                            app:cardCornerRadius="2dp"
-                            app:cardUseCompatPadding="true">
+                </LinearLayout>
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:orientation="vertical"
-                                android:padding="1dp">
+                <androidx.coordinatorlayout.widget.CoordinatorLayout
+                    android:id="@+id/coordinate_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-                                <com.develop.sns.customviews.CustomSearchView
-                                    android:id="@+id/sv_search"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="32dp"
-                                    android:layout_weight="1"
-                                    android:focusable="false"
-                                    android:focusableInTouchMode="true"
-                                    android:focusedByDefault="false"
-                                    android:paddingStart="-16dp"
-                                    android:paddingLeft="-16dp"
-                                    app:iconifiedByDefault="false"
-                                    app:queryBackground="@android:color/transparent"
-                                    app:queryHint="@string/home_search_hint"
-                                    app:showAsAction="always|collapseActionView"
-                                    app:theme="@style/AppSearchView" />
-
-                            </LinearLayout>
-                        </androidx.cardview.widget.CardView>
-
-                    </LinearLayout>
-
-                    <androidx.coordinatorlayout.widget.CoordinatorLayout
-                        android:id="@+id/coordinate_layout"
+                    <com.google.android.material.appbar.AppBarLayout
+                        android:id="@+id/appbar"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
+                        android:layout_height="wrap_content"
+                        android:fitsSystemWindows="true"
+                        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-                        <com.google.android.material.appbar.AppBarLayout
-                            android:id="@+id/appbar"
+                        <com.google.android.material.appbar.CollapsingToolbarLayout
+                            android:id="@+id/ctl_main"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fitsSystemWindows="true"
-                            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-
-                            <com.google.android.material.appbar.CollapsingToolbarLayout
-                                android:id="@+id/ctl_main"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:fitsSystemWindows="true"
-                                app:contentScrim="@color/md_grey_300"
-                                app:expandedTitleMarginEnd="64dp"
-                                app:expandedTitleMarginStart="48dp"
-                                app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
-                                <LinearLayout
-                                    android:id="@+id/ln_top_offers"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:background="@color/white"
-                                    android:orientation="vertical"
-                                    android:paddingStart="5dp"
-                                    android:paddingTop="10dp"
-                                    android:paddingEnd="5dp"
-                                    android:paddingBottom="10dp"
-                                    android:visibility="gone">
-
-                                    <TextView
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_gravity="start"
-                                        android:layout_marginBottom="4dp"
-                                        android:layout_weight="1"
-                                        android:fontFamily="@font/noto_sans_bold"
-                                        android:gravity="start"
-                                        android:paddingStart="8dp"
-                                        android:text="@string/top_offers"
-                                        android:textColor="@color/text_color"
-                                        android:textSize="16sp"
-                                        android:visibility="visible" />
-
-                                    <RelativeLayout
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:orientation="vertical">
-
-                                        <com.develop.sns.customviews.AutoScrollRecyclerView
-                                            android:id="@+id/lv_top_offers"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="match_parent"
-                                            android:overScrollMode="never"
-                                            android:scrollbars="vertical"
-                                            android:scrollingCache="false"
-                                            android:visibility="visible" />
-
-                                        <TextView
-                                            android:id="@+id/tv_top_offer_no_data"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_centerInParent="true"
-                                            android:fontFamily="@font/noto_sans_bold"
-                                            android:text="No item found"
-                                            android:textColor="@color/text_color"
-                                            android:textSize="15sp"
-                                            android:visibility="gone" />
-                                    </RelativeLayout>
-                                </LinearLayout>
-
-                            </com.google.android.material.appbar.CollapsingToolbarLayout>
-
-                        </com.google.android.material.appbar.AppBarLayout>
-
-                        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-                            android:id="@+id/srl_list"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingTop="5dp"
-                            android:paddingBottom="2dp"
-                            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+                            app:contentScrim="@color/md_grey_300"
+                            app:expandedTitleMarginEnd="64dp"
+                            app:expandedTitleMarginStart="48dp"
+                            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                             <LinearLayout
-                                android:id="@+id/ln_normal_offers"
+                                android:id="@+id/ln_top_offers"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
+                                android:background="@color/white"
                                 android:orientation="vertical"
                                 android:paddingStart="5dp"
                                 android:paddingTop="10dp"
@@ -258,10 +188,11 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="start"
                                     android:layout_marginBottom="4dp"
+                                    android:layout_weight="1"
                                     android:fontFamily="@font/noto_sans_bold"
                                     android:gravity="start"
                                     android:paddingStart="8dp"
-                                    android:text="@string/normal_offers"
+                                    android:text="@string/top_offers"
                                     android:textColor="@color/text_color"
                                     android:textSize="16sp"
                                     android:visibility="visible" />
@@ -271,8 +202,8 @@
                                     android:layout_height="match_parent"
                                     android:orientation="vertical">
 
-                                    <com.develop.sns.customviews.CustomRecyclerView
-                                        android:id="@+id/lv_normal_offers"
+                                    <com.develop.sns.customviews.AutoScrollRecyclerView
+                                        android:id="@+id/lv_top_offers"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:overScrollMode="never"
@@ -281,7 +212,7 @@
                                         android:visibility="visible" />
 
                                     <TextView
-                                        android:id="@+id/tv_normal_offer_no_data"
+                                        android:id="@+id/tv_top_offer_no_data"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_centerInParent="true"
@@ -290,14 +221,75 @@
                                         android:textColor="@color/text_color"
                                         android:textSize="15sp"
                                         android:visibility="gone" />
-
                                 </RelativeLayout>
                             </LinearLayout>
-                        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-                    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+                        </com.google.android.material.appbar.CollapsingToolbarLayout>
 
-                </LinearLayout>
+                    </com.google.android.material.appbar.AppBarLayout>
+
+                    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                        android:id="@+id/srl_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="2dp"
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                        <LinearLayout
+                            android:id="@+id/ln_normal_offers"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:paddingStart="5dp"
+                            android:paddingTop="10dp"
+                            android:paddingEnd="5dp"
+                            android:paddingBottom="10dp"
+                            android:visibility="gone">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="start"
+                                android:layout_marginBottom="4dp"
+                                android:fontFamily="@font/noto_sans_bold"
+                                android:gravity="start"
+                                android:paddingStart="8dp"
+                                android:text="@string/normal_offers"
+                                android:textColor="@color/text_color"
+                                android:textSize="16sp"
+                                android:visibility="visible" />
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical">
+
+                                <com.develop.sns.customviews.CustomRecyclerView
+                                    android:id="@+id/lv_normal_offers"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:overScrollMode="never"
+                                    android:scrollbars="vertical"
+                                    android:scrollingCache="false"
+                                    android:visibility="visible" />
+
+                                <TextView
+                                    android:id="@+id/tv_normal_offer_no_data"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerHorizontal="true"
+                                    android:fontFamily="@font/noto_sans_bold"
+                                    android:text="No item found"
+                                    android:textColor="@color/text_color"
+                                    android:textSize="15sp"
+                                    android:visibility="visible" />
+
+                            </RelativeLayout>
+                        </LinearLayout>
+                    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+                </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
             </LinearLayout>
 

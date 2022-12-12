@@ -18,7 +18,9 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SplashActivity">
+        <activity
+            android:name=".SplashActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,78 +30,97 @@
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
+            android:exported="true"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ModuleActivity"
             android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
+            android:exported="true"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".SubModuleActivity"
             android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
+            android:exported="true"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".login.LoginActivity"
             android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
+            android:exported="true"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".login.otp.OtpActivity"
             android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
+            android:exported="true"
             android:windowSoftInputMode="stateAlwaysVisible" />
         <activity
             android:name=".signup.info.SignUpInfoActivity"
             android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
+            android:exported="true"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".signup.mobileno.SignUpMobileActivity"
             android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
+            android:exported="true"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".signup.userdetail.SignUpUserDetailActivity"
             android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
+            android:exported="true"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".home.HomeActivity"
             android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
+            android:exported="true"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".home.details.ItemDetailsActivity"
             android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
+            android:exported="true"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".signup.password.SignUpPasswordActivity"
             android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
+            android:exported="true"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".home.profile.LanguageSelectionActivity"
             android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
+            android:exported="true"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".home.product.VarietyListActivity"
             android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
+            android:exported="true"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".home.product.BrandListActivity"
             android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
+            android:exported="true"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".home.offers.FilterActivity"
             android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
+            android:exported="true"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".cart.CartItemActivity"
             android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
+            android:exported="true"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".address.AddressSelectionActivity"
             android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
+            android:exported="true"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".address.AddressAddActivity"
             android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
+            android:exported="true"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".payment.PaymentSelectionActivity"
             android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
+            android:exported="true"
             android:windowSoftInputMode="adjustPan" />
 
         <service

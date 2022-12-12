@@ -2,8 +2,8 @@ package com.develop.sns.repository
 
 import com.develop.sns.BuildConfig
 import com.google.gson.JsonObject
-import okhttp3.OkHttpClient
-import okhttp3.ResponseBody
+import okhttp3.*
+import okhttp3.ResponseBody.Companion.toResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -11,6 +11,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.POST
+import java.net.ConnectException
+import java.net.SocketTimeoutException
 import java.util.concurrent.TimeUnit
 
 
@@ -146,6 +148,7 @@ interface Api {
             //logging.setLevel(HttpLoggingInterceptor.Level.HEADERS)
             logging.setLevel(HttpLoggingInterceptor.Level.BODY)
             val httpClient = OkHttpClient.Builder()
+                //.addInterceptor(ErrorInterceptor())
                 .connectTimeout(60000, TimeUnit.SECONDS)
                 .readTimeout(60000, TimeUnit.SECONDS)
             httpClient.addInterceptor(logging)
@@ -157,6 +160,49 @@ interface Api {
                 .build()
             api = retrofit.create(Api::class.java)
             return api
+        }
+    }
+
+    class ErrorInterceptor : Interceptor {
+
+        override fun intercept(chain: Interceptor.Chain): Response {
+
+            val request = chain.request()
+
+            try {
+                val response = chain.proceed(request)
+                val bodyString = response.body!!.string()
+
+                return response.newBuilder()
+                    .body(bodyString.toResponseBody(response.body?.contentType()))
+                    .build()
+            } catch (e: Exception) {
+                var msg = ""
+                var interceptorCode = 0
+
+                when (e) {
+                    is SocketTimeoutException -> {
+
+                        msg = "Socket timeout error"
+                        interceptorCode = 408
+
+                    }
+                    is ConnectException -> {
+                        msg = "Connect timeout error"
+                        interceptorCode = 408
+                    }
+
+                    // Add additional errors... //
+
+                }
+
+                return Response.Builder()
+                    .request(request)
+                    .protocol(Protocol.HTTP_1_1)
+                    .code(interceptorCode)
+                    .message(msg)
+                    .body("{${e}}".toResponseBody(null)).build()
+            }
         }
     }
 }

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
 import android.text.method.PasswordTransformationMethod
+import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -26,9 +27,8 @@ import com.develop.sns.utils.AppConstant
 import com.develop.sns.utils.AppUtils
 import com.develop.sns.utils.CommonClass
 import com.develop.sns.utils.PreferenceHelper
-import com.google.firebase.FirebaseApp
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.iid.FirebaseInstanceId
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.JsonObject
 import org.json.JSONObject
 
@@ -75,14 +75,7 @@ class LoginActivity : SubModuleActivity() {
             gcmId = preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_GCM_ID)!!
             if (gcmId.trim { it <= ' ' }.isEmpty()) {
                 gcmId = getFireBaseToken()
-
-                val secretKey = gcmId.substring(0, 32)
-                //Log.i("secretKey", "secretKey: $secretKey")
-                preferenceHelper!!.saveValueToSharedPrefs(AppConstant.KEY_SECRET, secretKey)
                 preferenceHelper!!.saveValueToSharedPrefs(AppConstant.KEY_GCM_ID, gcmId)
-            } else {
-                //Log.i( "secretKey","secretKey: " + preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_SECRET))
-                //Log.i("fcmId", "" + gcmId)
             }
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
@@ -90,14 +83,18 @@ class LoginActivity : SubModuleActivity() {
     }
 
     private fun getFireBaseToken(): String {
-        var gcmId: String = ""
+        var gcmId = ""
         try {
-            if (!FirebaseApp.getApps(this).isEmpty()) {
-                FirebaseApp.initializeApp(this)
-                FirebaseDatabase.getInstance().setPersistenceEnabled(true)
-            }
-            gcmId = FirebaseInstanceId.getInstance().token.toString()
-            //Log.i("fcmId", "" + gcmId)
+            FirebaseMessaging.getInstance().token
+                .addOnCompleteListener(OnCompleteListener { task ->
+                    if (!task.isSuccessful) {
+                        Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                        return@OnCompleteListener
+                    }
+                    // Get new FCM registration token
+                    gcmId = task.result!!
+                    preferenceHelper!!.saveValueToSharedPrefs(AppConstant.KEY_GCM_ID, gcmId)
+                })
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
         }

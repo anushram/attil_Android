@@ -146,7 +146,7 @@ class CommonClass {
         }
 
         fun handleErrorResponse(context: Context, jsonObject: JSONObject, view: View) {
-            val statusCode = jsonObject.getInt("statusCode")
+            val statusCode = jsonObject.getInt("code")
             if (statusCode == 401) {
                 logoutSession(context)
                 (context as Activity).finish()

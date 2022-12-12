@@ -62,7 +62,7 @@
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:scaleType="fitXY"
-                    android:src="@drawable/sample"
+                    android:src="@drawable/no_media"
                     app:riv_border_color="@color/transparent"
                     app:riv_border_width="0dp"
                     app:riv_corner_radius="10dp"
