@@ -13,18 +13,8 @@ class PaymentViewModel : ViewModel() {
     private val apiRepository: ApiRepository = ApiRepository()
     private val api = Api.initRetrofit()
 
-    fun getSavedAddressList(requestObject: JsonObject, token: String): LiveData<JSONObject> {
-        val call = api.getSavedAddrList("Bearer $token", requestObject)
-        return apiRepository.callApi(call)
-    }
-
-    fun saveAddress(requestObject: JsonObject, token: String): LiveData<JSONObject> {
-        val call = api.saveAddress("Bearer $token", requestObject)
-        return apiRepository.callApi(call)
-    }
-
-    fun findShop(requestObject: JsonObject, token: String): LiveData<JSONObject> {
-        val call = api.findShop("Bearer $token", requestObject)
+    fun initPayment(requestObject: JsonObject, token: String): LiveData<JSONObject> {
+        val call = api.initPayment("Bearer $token", requestObject)
         return apiRepository.callApi(call)
     }
 }

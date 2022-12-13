@@ -77,12 +77,11 @@ class AddressSelectionActivity : SubModuleActivity(), AddressListener {
     private var longitude = "0"
 
     private val REQUEST_FINE_LOCATION = 104
-    private val REQUEST_CHECK_SETTINGS = 100
     private var isRadioClicked = false
     private var isCurrLoc = false
     private var isFromList = false
 
-    private lateinit var selectedAddressListDto: AddressListDto
+    private var selectedAddressListDto: AddressListDto? = null
     private var lastCheckedPosition = -1
 
     private val mLocationCallback: LocationCallback = object : LocationCallback() {
@@ -247,11 +246,12 @@ class AddressSelectionActivity : SubModuleActivity(), AddressListener {
                     )
                 } else {
                     if (isCurrLoc) {
+                        selectedAddressListDto = null
                         findShopByCoordinates(latitude, longitude)
                     } else if (isFromList) {
                         findShopByCoordinates(
-                            selectedAddressListDto.lat,
-                            selectedAddressListDto.lng
+                            selectedAddressListDto!!.lat,
+                            selectedAddressListDto!!.lng
                         )
                     }
                 }
@@ -679,9 +679,11 @@ class AddressSelectionActivity : SubModuleActivity(), AddressListener {
             intent.putExtra("deliveryCost", deliveryCharge)
             intent.putExtra("reductionAmount", 0)
             intent.putExtra("cart", cartItemArray.toString())
-            intent.putExtra("deliveryAddressId", selectedAddressListDto._id)
-            intent.putExtra("lat", selectedAddressListDto.lat)
-            intent.putExtra("lng", selectedAddressListDto.lng)
+            if (selectedAddressListDto != null) {
+                intent.putExtra("deliveryAddressId", selectedAddressListDto!!._id)
+                intent.putExtra("lat", selectedAddressListDto!!.lat)
+                intent.putExtra("lng", selectedAddressListDto!!.lng)
+            }
             intent.putExtra("isCurrentLocation", isCurrLoc)
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
             startActivity(intent)

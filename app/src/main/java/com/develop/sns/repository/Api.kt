@@ -138,17 +138,22 @@ interface Api {
         @Body requestObject: JsonObject,
     ): Call<ResponseBody>
 
+    @POST("payment/initPayment")
+    fun initPayment(
+        @Header("Authorization") authorization: String,
+        @Body requestObject: JsonObject,
+    ): Call<ResponseBody>
+
 
     companion object {
 
         fun initRetrofit(): Api {
             val api: Api
             val logging = HttpLoggingInterceptor()
-            //logging.setLevel(HttpLoggingInterceptor.Level.BASIC)
+            logging.setLevel(HttpLoggingInterceptor.Level.BASIC)
             //logging.setLevel(HttpLoggingInterceptor.Level.HEADERS)
             logging.setLevel(HttpLoggingInterceptor.Level.BODY)
             val httpClient = OkHttpClient.Builder()
-                //.addInterceptor(ErrorInterceptor())
                 .connectTimeout(60000, TimeUnit.SECONDS)
                 .readTimeout(60000, TimeUnit.SECONDS)
             httpClient.addInterceptor(logging)
@@ -160,49 +165,6 @@ interface Api {
                 .build()
             api = retrofit.create(Api::class.java)
             return api
-        }
-    }
-
-    class ErrorInterceptor : Interceptor {
-
-        override fun intercept(chain: Interceptor.Chain): Response {
-
-            val request = chain.request()
-
-            try {
-                val response = chain.proceed(request)
-                val bodyString = response.body!!.string()
-
-                return response.newBuilder()
-                    .body(bodyString.toResponseBody(response.body?.contentType()))
-                    .build()
-            } catch (e: Exception) {
-                var msg = ""
-                var interceptorCode = 0
-
-                when (e) {
-                    is SocketTimeoutException -> {
-
-                        msg = "Socket timeout error"
-                        interceptorCode = 408
-
-                    }
-                    is ConnectException -> {
-                        msg = "Connect timeout error"
-                        interceptorCode = 408
-                    }
-
-                    // Add additional errors... //
-
-                }
-
-                return Response.Builder()
-                    .request(request)
-                    .protocol(Protocol.HTTP_1_1)
-                    .code(interceptorCode)
-                    .message(msg)
-                    .body("{${e}}".toResponseBody(null)).build()
-            }
         }
     }
 }

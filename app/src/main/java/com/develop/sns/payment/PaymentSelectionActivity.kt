@@ -1,55 +1,27 @@
 package com.develop.sns.payment
 
-import android.Manifest
-import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
-import android.content.IntentSender.SendIntentException
-import android.content.pm.PackageManager
-import android.location.Location
-import android.location.LocationManager
-import android.os.Build
 import android.os.Bundle
-import android.os.Looper
-import com.develop.sns.R
 import android.util.Log
-import android.view.MotionEvent
+import com.develop.sns.R
 import android.view.View
-import android.view.View.OnTouchListener
-import android.widget.RadioGroup
 import android.widget.Toast
-import androidx.activity.result.IntentSenderRequest
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.develop.sns.SubModuleActivity
-import com.develop.sns.address.AddressViewModel
 import com.develop.sns.address.dto.AddressListDto
-import com.develop.sns.cart.adapter.AddressItemListAdapter
-import com.develop.sns.databinding.ActivityAddressSelectionBinding
 import com.develop.sns.databinding.ActivityPaymentSelectionBinding
 import com.develop.sns.utils.AppConstant
 import com.develop.sns.utils.AppUtils
 import com.develop.sns.utils.CommonClass
-import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.common.api.ResolvableApiException
-import com.google.android.gms.location.*
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
+import org.json.JSONArray
 import org.json.JSONObject
-import java.lang.String
-import kotlin.Array
-import kotlin.Boolean
 import kotlin.Exception
-import kotlin.Int
-import kotlin.IntArray
-import kotlin.arrayOf
 import kotlin.assert
 import kotlin.getValue
 import kotlin.lazy
-import kotlin.toString
 
 
 class PaymentSelectionActivity : SubModuleActivity() {
@@ -59,7 +31,19 @@ class PaymentSelectionActivity : SubModuleActivity() {
 
     private lateinit var paymentViewModel: PaymentViewModel
 
-    private var totalAmount = 0F
+    private var totalCost = 0F
+    private var productCost = 0F
+    private var packageCost = 0F
+    private var deliveryCost = 0F
+    private var reductionAmount = 0F
+    private var deliveryAddressId = ""
+    private var lat = ""
+    private var lng = ""
+    private var paymentMode = ""
+    private lateinit var cartItemArray: JSONArray
+    private var selectedAddressListDto: AddressListDto? = null
+    private var isCurrLoc = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,7 +78,17 @@ class PaymentSelectionActivity : SubModuleActivity() {
     private fun getIntentValue() {
         try {
             val intent = intent
-            totalAmount = intent.getFloatExtra("totalAmount", 0F);
+            totalCost = intent.getFloatExtra("totalCost", 0F);
+            productCost = intent.getFloatExtra("productCost", 0F);
+            packageCost = intent.getFloatExtra("packageCost", 0F);
+            deliveryCost = intent.getFloatExtra("deliveryCost", 0F);
+            reductionAmount = intent.getFloatExtra("reductionAmount", 0F);
+            val cartItem = intent.getStringExtra("cart")
+            cartItemArray = JSONArray(cartItem)
+            deliveryAddressId = intent.getStringExtra("deliveryAddressId")!!
+            lat = intent.getStringExtra("lat")!!
+            lng = intent.getStringExtra("lng")!!
+            isCurrLoc = intent.getBooleanExtra("isCurrentLocation", false)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -106,7 +100,7 @@ class PaymentSelectionActivity : SubModuleActivity() {
 
             binding.tvTotalAmount.text = getString(R.string.Rs)
                 .plus(" ")
-                .plus("%.2f".format(totalAmount))
+                .plus("%.2f".format(totalCost))
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -114,7 +108,71 @@ class PaymentSelectionActivity : SubModuleActivity() {
 
     private fun handleUiElement() {
         try {
+            binding.lnDebitCredit.setOnClickListener {
+                paymentMode = "debitcard"
+                initPayment()
+            }
+            binding.lnUpi.setOnClickListener {
+                paymentMode = "upi"
+                initPayment()
+            }
+            binding.lnCod.setOnClickListener {
+                paymentMode = "cod"
+                initPayment()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 
+    private fun initPayment() {
+        try {
+            if (AppUtils.isConnectedToInternet(context)) {
+                val requestObject = JsonObject()
+                requestObject.addProperty(
+                    "userId",
+                    preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_USER_ID)
+                )
+                requestObject.addProperty("paymentMode", paymentMode)
+                requestObject.addProperty("totalCost", totalCost)
+                requestObject.addProperty("productCost", productCost)
+                requestObject.addProperty("packageCost", packageCost)
+                requestObject.addProperty("deliveryCost", deliveryCost)
+                requestObject.addProperty("reductionAmount", reductionAmount)
+                val cartArray = JsonArray()
+                cartArray.add(cartItemArray.toString())
+                requestObject.add("cart", cartArray)
+                requestObject.addProperty("deliveryAddressId", deliveryAddressId)
+                val deliveryLocObj = JsonObject()
+                deliveryLocObj.addProperty("lat", lat)
+                deliveryLocObj.addProperty("lng", lng)
+                requestObject.add("deliveryLocation", deliveryLocObj)
+                requestObject.addProperty("isCurrentLocation", isCurrLoc)
+                showProgressBar()
+
+                paymentViewModel.initPayment(
+                    requestObject,
+                    preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!
+                ).observe(this) { jsonObject ->
+                    dismissProgressBar()
+                    parseInitPayment(jsonObject)
+                }
+            } else {
+                CommonClass.showToastMessage(
+                    context,
+                    binding.rootView,
+                    resources.getString(R.string.no_internet),
+                    Toast.LENGTH_SHORT
+                )
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun parseInitPayment(obj: JSONObject) {
+        try {
+            Log.e("parseInitPayment", obj.toString())
         } catch (e: Exception) {
             e.printStackTrace()
         }
