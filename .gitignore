@@ -9,7 +9,6 @@
 **/.idea/workspace.xml
 *.so
 *.iml
-*.gradle
 *.bin
 *.app
 *.lock
