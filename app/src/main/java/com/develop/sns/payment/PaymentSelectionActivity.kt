@@ -3,11 +3,11 @@ package com.develop.sns.payment
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import com.develop.sns.R
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import com.develop.sns.R
 import com.develop.sns.SubModuleActivity
 import com.develop.sns.address.dto.AddressListDto
 import com.develop.sns.databinding.ActivityPaymentSelectionBinding
@@ -15,13 +15,11 @@ import com.develop.sns.utils.AppConstant
 import com.develop.sns.utils.AppUtils
 import com.develop.sns.utils.CommonClass
 import com.google.gson.JsonArray
+import com.google.gson.JsonElement
 import com.google.gson.JsonObject
-import org.json.JSONArray
+import com.google.gson.JsonParser
+import com.google.gson.JsonParser.parseString
 import org.json.JSONObject
-import kotlin.Exception
-import kotlin.assert
-import kotlin.getValue
-import kotlin.lazy
 
 
 class PaymentSelectionActivity : SubModuleActivity() {
@@ -40,7 +38,7 @@ class PaymentSelectionActivity : SubModuleActivity() {
     private var lat = ""
     private var lng = ""
     private var paymentMode = ""
-    private lateinit var cartItemArray: JSONArray
+    private lateinit var cartItemArray: JsonArray
     private var selectedAddressListDto: AddressListDto? = null
     private var isCurrLoc = false
 
@@ -84,7 +82,8 @@ class PaymentSelectionActivity : SubModuleActivity() {
             deliveryCost = intent.getFloatExtra("deliveryCost", 0F);
             reductionAmount = intent.getFloatExtra("reductionAmount", 0F);
             val cartItem = intent.getStringExtra("cart")
-            cartItemArray = JSONArray(cartItem)
+            val elem: JsonElement = parseString(cartItem)
+            cartItemArray = elem.asJsonArray
             deliveryAddressId = intent.getStringExtra("deliveryAddressId")!!
             lat = intent.getStringExtra("lat")!!
             lng = intent.getStringExtra("lng")!!
@@ -134,13 +133,13 @@ class PaymentSelectionActivity : SubModuleActivity() {
                     preferenceHelper!!.getValueFromSharedPrefs(AppConstant.KEY_USER_ID)
                 )
                 requestObject.addProperty("paymentMode", paymentMode)
-                requestObject.addProperty("totalCost", totalCost)
-                requestObject.addProperty("productCost", productCost)
-                requestObject.addProperty("packageCost", packageCost)
-                requestObject.addProperty("deliveryCost", deliveryCost)
-                requestObject.addProperty("reductionAmount", reductionAmount)
+                requestObject.addProperty("totalCost", totalCost.toString())
+                requestObject.addProperty("productCost", productCost.toString())
+                requestObject.addProperty("packageCost", packageCost.toString())
+                requestObject.addProperty("deliveryCost", deliveryCost.toString())
+                requestObject.addProperty("reductionAmount", reductionAmount.toString())
                 val cartArray = JsonArray()
-                cartArray.add(cartItemArray.toString())
+                cartArray.add(cartItemArray)
                 requestObject.add("cart", cartArray)
                 requestObject.addProperty("deliveryAddressId", deliveryAddressId)
                 val deliveryLocObj = JsonObject()

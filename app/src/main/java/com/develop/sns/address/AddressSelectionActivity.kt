@@ -677,7 +677,7 @@ class AddressSelectionActivity : SubModuleActivity(), AddressListener {
             intent.putExtra("productCost", totalAmount)
             intent.putExtra("packageCost", packingCharges)
             intent.putExtra("deliveryCost", deliveryCharge)
-            intent.putExtra("reductionAmount", 0)
+            intent.putExtra("reductionAmount", 0F)
             intent.putExtra("cart", cartItemArray.toString())
             if (selectedAddressListDto != null) {
                 intent.putExtra("deliveryAddressId", selectedAddressListDto!!._id)

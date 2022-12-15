@@ -907,13 +907,13 @@ class CartItemActivity : SubModuleActivity(), CartListener {
             itemDetailsViewModel.addToCart(
                 requestObject,
                 preferenceHelper?.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)
-            ).observe(this, { jsonObject ->
+            ).observe(this) { jsonObject ->
                 //Log.e("Response", jsonObject.toString())
                 if (jsonObject != null) {
                     dismissProgressBar()
                     parseUpdateCartResponse(jsonObject, isRemove)
                 }
-            })
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }
