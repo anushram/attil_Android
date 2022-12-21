@@ -17,4 +17,9 @@ class PaymentViewModel : ViewModel() {
         val call = api.initPayment("Bearer $token", requestObject)
         return apiRepository.callApi(call)
     }
+
+    fun deliverNotification(requestObject: JsonObject, token: String): LiveData<JSONObject> {
+        val call = api.deliverNotification("Bearer $token", requestObject)
+        return apiRepository.callApi(call)
+    }
 }

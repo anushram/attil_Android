@@ -144,6 +144,18 @@ interface Api {
         @Body requestObject: JsonObject,
     ): Call<ResponseBody>
 
+    @POST("deliveryNotifications/create")
+    fun deliverNotification(
+        @Header("Authorization") authorization: String,
+        @Body requestObject: JsonObject,
+    ): Call<ResponseBody>
+
+    @POST("order/get/getOngoingOrders")
+    fun getOnGoingOrders(
+        @Header("Authorization") authorization: String,
+        @Body requestObject: JsonObject,
+    ): Call<ResponseBody>
+
 
     companion object {
 

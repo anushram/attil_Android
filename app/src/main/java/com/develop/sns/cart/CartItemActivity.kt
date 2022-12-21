@@ -112,7 +112,24 @@ class CartItemActivity : SubModuleActivity(), CartListener {
             intent.putExtra("total", totalAmount)
             intent.putExtra("cart", cartItemArray.toString())
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
-            startActivity(intent)
+            launcher.launch(intent)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    var launcher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                handleResponse()
+            }
+        }
+
+    private fun handleResponse() {
+        try {
+            val intent = Intent()
+            setResult(Activity.RESULT_OK, intent)
+            finish()
         } catch (e: Exception) {
             e.printStackTrace()
         }

@@ -122,6 +122,11 @@
             android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
             android:exported="true"
             android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".payment.SuccessActivity"
+            android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan" />
 
         <service
             android:name=".service.ProductsService"

@@ -116,4 +116,8 @@
     <string name="cash_on_delivery">Cash On Delivery</string>
     <string name="update_address">Update Address</string>
     <string name="address">Address</string>
+    <string name="delivered">Delivered</string>
+    <string name="on_returning">On Returning</string>
+    <string name="on_going">On Going</string>
+    <string name="orders_dot_title">Orders...</string>
 </resources>

@@ -16,9 +16,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.NonNull
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import androidx.recyclerview.widget.*
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.develop.sns.R
 import com.develop.sns.cart.CartItemActivity
@@ -39,9 +38,6 @@ import com.google.gson.JsonObject
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import java.util.*
-import kotlin.Comparator
-import kotlin.collections.ArrayList
 
 
 class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
@@ -280,11 +276,20 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
             intent.putExtra("filterPrice", filterPrice)
             intent.putExtra("filterView", filterView)
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
-            startActivity(intent)
+            launcher.launch(intent)
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
+
+    var launcher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val intent = Intent("nav-orders")
+                LocalBroadcastManager.getInstance(requireActivity()).sendBroadcast(intent)
+            }
+        }
+
 
     private fun resetPagination() {
         try {
@@ -317,11 +322,9 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
                 offersViewModel.getTopOffers(
                     requestObject,
                     preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!
-                )
-                    .observe(viewLifecycleOwner, { jsonObject ->
-                        parseTopOffersResponse(jsonObject)
-
-                    })
+                ).observe(viewLifecycleOwner) { jsonObject ->
+                    parseTopOffersResponse(jsonObject)
+                }
             } else {
                 CommonClass.showToastMessage(
                     requireActivity(),
@@ -918,14 +921,6 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
         }
     }
 
-    var resultLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                // There are no request codes
-                val data: Intent? = result.data
-                callApi()
-            }
-        }
 
     private fun launchItemDetailsActivity(itemDto: ProductDto) {
         try {
@@ -937,5 +932,14 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
             e.printStackTrace()
         }
     }
+
+    var resultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                // There are no request codes
+                val data: Intent? = result.data
+                callApi()
+            }
+        }
 
 }

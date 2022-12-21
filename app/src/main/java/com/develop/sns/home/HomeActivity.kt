@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.PorterDuff
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
@@ -16,6 +17,7 @@ import com.develop.sns.R
 import com.develop.sns.SubModuleActivity
 import com.develop.sns.databinding.ActivityHomeBinding
 import com.develop.sns.home.offers.OffersFragment
+import com.develop.sns.home.orders.OrdersFragment
 import com.develop.sns.home.product.ProductFragment
 import com.develop.sns.home.profile.fragment.ProfileFragment
 import com.develop.sns.utils.AppConstant
@@ -30,6 +32,7 @@ class HomeActivity : SubModuleActivity() {
     private var currentFragment = 0
     private val offersFragment = OffersFragment()
     private val productFragment = ProductFragment()
+    private val ordersFragment = OrdersFragment()
     private val profileFragment = ProfileFragment()
     var fa: Activity? = null
     var firstTime = false
@@ -47,6 +50,10 @@ class HomeActivity : SubModuleActivity() {
             mMessageReceiver,
             IntentFilter("custom-event-name")
         )
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+            ordersReceiver,
+            IntentFilter("nav-orders")
+        )
     }
 
     private fun initClassReference() {
@@ -59,21 +66,21 @@ class HomeActivity : SubModuleActivity() {
 
     private fun handleUiElement() {
         try {
-            binding.lnOffers.setOnClickListener(View.OnClickListener {
+            binding.lnOffers.setOnClickListener {
                 if (currentFragment != AppConstant.OFFERS_FRAGMENT) selectItem(AppConstant.OFFERS_FRAGMENT)
-            })
+            }
 
-            binding.lnProducts.setOnClickListener(View.OnClickListener {
+            binding.lnProducts.setOnClickListener {
                 if (currentFragment != AppConstant.PRODUCTS_FRAGMENT) selectItem(AppConstant.PRODUCTS_FRAGMENT)
-            })
+            }
 
-            binding.lnOrders.setOnClickListener(View.OnClickListener {
+            binding.lnOrders.setOnClickListener {
                 if (currentFragment != AppConstant.ORDERS_FRAGMENT) selectItem(AppConstant.ORDERS_FRAGMENT)
-            })
+            }
 
-            binding.lnProfile.setOnClickListener(View.OnClickListener {
+            binding.lnProfile.setOnClickListener {
                 if (currentFragment != AppConstant.PROFILE_FRAGMENT) selectItem(AppConstant.PROFILE_FRAGMENT)
-            })
+            }
 
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
@@ -174,7 +181,7 @@ class HomeActivity : SubModuleActivity() {
                         PorterDuff.Mode.SRC_ATOP
                     )
 
-                    //launchChatFragment()
+                    launchOrdersFragment()
                 }
                 AppConstant.PROFILE_FRAGMENT -> {
                     binding.tvOffers.setTextColor(ContextCompat.getColor(context, R.color.grey))
@@ -236,6 +243,17 @@ class HomeActivity : SubModuleActivity() {
         }
     }
 
+    private fun launchOrdersFragment() {
+        try {
+            val fragmentManager: FragmentManager = supportFragmentManager
+            val transaction: FragmentTransaction = fragmentManager.beginTransaction()
+            transaction.replace(R.id.fl_fragment, ordersFragment)
+            transaction.commitAllowingStateLoss()
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+    }
+
     private fun launchProfileFragment() {
         try {
             val fragmentManager: FragmentManager = supportFragmentManager
@@ -249,10 +267,15 @@ class HomeActivity : SubModuleActivity() {
 
     private val mMessageReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent) {
-            // Get extra data included in the Intent
             val cartCount = intent.getIntExtra("cartCount", 0)
-            //Log.d("receiver", "Got message: $cartCount")
             binding.ivOffers.badgeValue = cartCount
+        }
+    }
+
+    private val ordersReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent) {
+            Log.e("Comes", "NavOrders")
+            if (currentFragment != AppConstant.ORDERS_FRAGMENT) selectItem(AppConstant.ORDERS_FRAGMENT)
         }
     }
 }

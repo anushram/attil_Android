@@ -138,7 +138,7 @@ class LoginActivity : SubModuleActivity() {
             }
 
             binding.btnLoginOtp.setOnClickListener(View.OnClickListener {
-                if (submitFlag == false) {
+                if (!submitFlag) {
                     submitFlag = true
                     sendOtpService()
                 }

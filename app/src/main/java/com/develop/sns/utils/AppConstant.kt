@@ -38,6 +38,7 @@ object AppConstant {
     const val KEY_CURRENT_LATITUDE = "currentLatitude"
     const val KEY_CURRENT_LONGITUDE = "currentLongitude"
     const val KEY_SHOP_ID = "shopID"
+    const val KEY_ORDER_ID = "orderId"
 
     //LanguageId
     var LANGUAGE_ID = 1
@@ -63,6 +64,10 @@ object AppConstant {
 
     const val PRODUCT_FRAGMENT = 1
     const val PACKED_FRAGMENT = 2
+
+    const val ONGOING_ORDERS = 1
+    const val ONGOING_RETURNS = 2
+    const val DELIVERED = 3
 
     //Time Format
     val appFormatTimeStart = SimpleDateFormat("hh:mm", Locale.getDefault())

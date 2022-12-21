@@ -55,12 +55,12 @@ class ItemDetailsListAdapter(
                 val obj = preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_MIN_UNITS)
 
                 val jsonArray = JSONArray(obj)
-
-                Picasso.with(context).load(productDto.brandImage[0])
-                    .placeholder(R.drawable.product)
-                    .error(R.drawable.product)
-                    .into(ivProduct)
-
+                if (productDto.brandImage.size > 0) {
+                    Picasso.with(context).load(productDto.brandImage[0])
+                        .placeholder(R.drawable.product)
+                        .error(R.drawable.product)
+                        .into(ivProduct)
+                }
                 if (productDto.packageType.equals("loose", true)
                     && productDto.offerType.equals("normal", true)
                 ) {
