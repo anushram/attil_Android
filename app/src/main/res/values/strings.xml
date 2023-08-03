@@ -5,17 +5,21 @@
     <string name="required">Required</string>
     <string name="retry">Retry</string>
     <string name="new_user">New User?</string>
-    <string name="enter_your_password">Enter your password</string>
+    <string name="enter_your_password">Enter Your Password</string>
     <string name="login_with_otp">Login with OTP</string>
     <string name="login_with_password">Login with password</string>
     <string name="otp_info">Verification code has been sent to your mobile number, please enter it to verify</string>
     <string name="resend_otp">Resend OTP</string>
     <string name="otp_verification">OTP Verification</string>
+    <string name="verify_otp">Verify OTP</string>
     <string name="invalid_otp">Invalid OTP</string>
     <string name="offers">Offers</string>
     <string name="products">Products</string>
     <string name="orders">Orders</string>
     <string name="profile">Profile</string>
+
+    <string name="privacy_policy">By continuing, I accept Attil\'s   <a href="https://attic-official.s3.ap-south-1.amazonaws.com/Attil+Terms+and+Condition.pdf">Terms and Conditions</a> and <a href="https://attic-official.s3.ap-south-1.amazonaws.com/Attil+Privacy+Policy.pdf">Privacy Policy.</a> </string>
+<!--    <string name="privacy_policy">By continuing I accept</string>-->
     <!-- TODO: Remove or change this placeholder text -->
     <string name="reset_password">Reset Password</string>
     <string name="yes">Yes</string>
@@ -23,9 +27,10 @@
     <string name="sign_out_title">Are you sure you want to logout?</string>
     <string name="register_for_attil">Register for Attil</string>
     <string name="create_account">Create Account</string>
-    <string name="login">Login</string>
+    <string name="login">Sign In</string>
     <string name="register">Register</string>
-    <string name="verify">Verify</string>
+    <string name="verify">Verify Mobile Number</string>
+    <string name="sendotp">Send OTP</string>
     <string name="sign_up_warning">Please register the Mobile Number</string>
     <string name="give_your_username">Give your Username</string>
     <string name="username_available"><font fgcolor='#00C853'>Username Available</font> &#128077;</string>

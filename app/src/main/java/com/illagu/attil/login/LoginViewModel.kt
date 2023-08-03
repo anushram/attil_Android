@@ -1,0 +1,27 @@
+package com.illagu.attil.login
+
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
+import com.illagu.attil.repository.Api
+import com.illagu.attil.repository.ApiRepository
+import com.google.gson.JsonObject
+import org.json.JSONObject
+
+class LoginViewModel(app:Application) : AndroidViewModel(app) {
+    private val apiRepository: ApiRepository = ApiRepository()
+    private val context = getApplication<Application>().applicationContext
+    private val api = Api.initRetrofit(context)
+
+    fun sendOtpService(requestObject: JsonObject): LiveData<JSONObject> {
+        val call = api.sendOtpLogin("", requestObject)
+        return apiRepository.callApi(call)
+    }
+
+    fun makeLogin(requestObject: JsonObject): LiveData<JSONObject> {
+        val call = api.loginService("", requestObject)
+        return apiRepository.callApi(call)
+    }
+
+}

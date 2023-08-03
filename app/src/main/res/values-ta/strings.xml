@@ -4,13 +4,14 @@
     <string name="no_internet">தயவுசெய்து உங்கள் இணைய இணைப்பைச் சரிபார்க்கவும்</string>
     <string name="required">தேவை</string>
     <string name="retry">மீண்டும் முயற்சிக்கவும்</string>
-    <string name="new_user">புதிய பயனர்?</string>
+    <string name="new_user">புதிய நபர்?</string>
     <string name="enter_your_password">உங்கள் கடவுச்சொல்லை உள்ளிடவும்</string>
     <string name="login_with_otp">OTP உடன் உள்நுழைக</string>
     <string name="login_with_password">கடவுச்சொல்லுடன் உள்நுழைக</string>
     <string name="otp_info">சரிபார்ப்பு குறியீடு உங்கள் மொபைல் எண்ணுக்கு அனுப்பப்பட்டுள்ளது, சரிபார்க்க அதை உள்ளிடவும்</string>
     <string name="resend_otp">OTP ஐ மீண்டும் அனுப்பவும்</string>
     <string name="otp_verification">OTP சரிபார்ப்பு</string>
+    <string name="verify_otp">OTP சரிபார்ப்பு</string>
     <string name="invalid_otp">தவறான OTP</string>
     <string name="offers">சலுகைகள்</string>
     <string name="products">தயாரிப்புகள்</string>
@@ -19,10 +20,11 @@
     <string name="reset_password">கடவுச்சொல்லை மீட்டமைக்க</string>
     <string name="yes">ஆம்</string>
     <string name="no">இல்லை</string>
+    <string name="sendotp">OTP ஐ அனுப்பவும்</string>
     <string name="sign_out_title">நீங்கள் நிச்சயமாக வெளியேற விரும்புகிறீர்களா?</string>
     <string name="register_for_attil">அட்டில் பதிவு செய்யவும்</string>
     <string name="create_account">உங்கள் கணக்கை துவங்குங்கள்</string>
-    <string name="login">உள்நுழைய</string>
+    <string name="login">உள்நுழை</string>
     <string name="register">பதிவு</string>
     <string name="verify">சரிபார்க்கவும்</string>
     <string name="sign_up_warning">தயவுசெய்து மொபைல் எண்ணை பதிவு செய்யவும்</string>
@@ -88,7 +90,9 @@
     <string name="use_current_location">Use Current Location</string>
     <string name="delivery_to">Delivery To</string>
     <string name="delivery_charge">Delivery Charge</string>
+    <string name="privacy_policy">தொடர்வதன் மூலம், நான் அட்டிலின் <a href="https://attic-official.s3.ap-south-1.amazonaws.com/Attil+Terms+and+Condition.pdf">விதிமுறைகள் மற்றும் நிபந்தனைகள் </a> மற்றும் <a href="https://attic-official.s3.ap-south-1.amazonaws.com/Attil+Privacy+Policy.pdf">தனியுரிமைக் கொள்கையை</a> ஏற்கிறேன்.</string>
     <string name="or">OR</string>
+<!--    <string name="privacy_policy">By continuing, I accept Attil's Terms and Conditions and Privacy Policy.</string>-->
     <string name="add_new_address">ADD NEW ADDRESS</string>
     <string name="no_address_found">No Address Found</string>
     <string name="total_amount">Total Amount</string>

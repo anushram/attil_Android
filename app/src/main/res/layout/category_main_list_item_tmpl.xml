@@ -25,7 +25,7 @@
             android:paddingEnd="8dp"
             android:paddingBottom="4dp">
 
-            <com.develop.sns.customviews.CircleImageView
+            <com.illagu.attil.customviews.CircleImageView
                 android:id="@+id/iv_product"
                 android:layout_width="50dp"
                 android:layout_height="50dp"

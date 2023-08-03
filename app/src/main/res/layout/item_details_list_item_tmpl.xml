@@ -354,7 +354,7 @@
                             android:orientation="horizontal"
                             android:padding="3dp">
 
-                            <com.develop.sns.customviews.CircleImageView
+                            <com.illagu.attil.customviews.CircleImageView
                                 android:id="@+id/iv_boge_brand"
                                 android:layout_width="35dp"
                                 android:layout_height="35dp"

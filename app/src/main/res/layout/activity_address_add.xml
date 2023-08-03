@@ -6,7 +6,7 @@
 
         <variable
             name="Address"
-            type="com.develop.sns.address.AddressViewModel" />
+            type="com.illagu.attil.address.AddressViewModel" />
     </data>
 
     <RelativeLayout

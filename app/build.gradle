@@ -15,7 +15,7 @@ android {
         buildConfig = true
     }
     defaultConfig {
-        applicationId "com.develop.sns"
+        applicationId "com.illagu.attil"
         minSdkVersion 21
         targetSdkVersion 33
         versionCode 1
@@ -28,10 +28,12 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            buildConfigField "String", "BASE_API_URL", "\"http://156.67.217.185:3000/\""
+            //buildConfigField "String", "BASE_API_URL", "\"http://156.67.217.185:3000/\""
+            buildConfigField "String", "BASE_API_URL", "\"https://dev-backend.attilshop.in/\""
         }
         debug {
-            buildConfigField "String", "BASE_API_URL", "\"http://156.67.217.185:3000/\""
+           // buildConfigField "String", "BASE_API_URL", "\"http://156.67.217.185:3000/\""
+            buildConfigField "String", "BASE_API_URL", "\"https://dev-backend.attilshop.in/\""
         }
     }
     compileOptions {
@@ -93,4 +95,7 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
+    debugImplementation "com.github.chuckerteam.chucker:library:3.5.2"
+    releaseImplementation "com.github.chuckerteam.chucker:library-no-op:3.5.2"
+    implementation "com.google.android.material:material:1.2.1"
 }

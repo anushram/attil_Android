@@ -7,7 +7,7 @@
 
         <variable
             name="Address"
-            type="com.develop.sns.address.AddressViewModel" />
+            type="com.illagu.attil.address.AddressViewModel" />
     </data>
 
     <RelativeLayout
@@ -240,7 +240,7 @@
                     android:layout_below="@+id/ln_address_section"
                     android:orientation="vertical">
 
-                    <com.develop.sns.customviews.CustomRecyclerView
+                    <com.illagu.attil.customviews.CustomRecyclerView
                         android:id="@+id/lv_products"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"

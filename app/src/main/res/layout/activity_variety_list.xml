@@ -6,7 +6,7 @@
 
         <variable
             name="HomeViewModel"
-            type="com.develop.sns.home.offers.OffersViewModel" />
+            type="com.illagu.attil.home.offers.OffersViewModel" />
     </data>
 
     <LinearLayout
@@ -54,7 +54,7 @@
                         android:orientation="vertical"
                         android:padding="1dp">
 
-                        <com.develop.sns.customviews.CustomSearchView
+                        <com.illagu.attil.customviews.CustomSearchView
                             android:id="@+id/sv_search"
                             android:layout_width="match_parent"
                             android:layout_height="32dp"
