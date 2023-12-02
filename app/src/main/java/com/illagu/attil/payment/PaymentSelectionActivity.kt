@@ -10,7 +10,10 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import com.illagu.attil.MainActivityViewModel
+import com.google.gson.JsonArray
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser.parseString
 import com.illagu.attil.R
 import com.illagu.attil.SubModuleActivity
 import com.illagu.attil.address.dto.AddressListDto
@@ -18,10 +21,20 @@ import com.illagu.attil.databinding.ActivityPaymentSelectionBinding
 import com.illagu.attil.utils.AppConstant
 import com.illagu.attil.utils.AppUtils
 import com.illagu.attil.utils.CommonClass
-import com.google.gson.JsonArray
-import com.google.gson.JsonElement
-import com.google.gson.JsonObject
-import com.google.gson.JsonParser.parseString
+import com.paytm.pgsdk.Constants.CALLBACK_URL
+import com.paytm.pgsdk.Constants.CHANNEL_ID
+import com.paytm.pgsdk.Constants.CHECKSUMHASH
+import com.paytm.pgsdk.Constants.CUST_ID
+import com.paytm.pgsdk.Constants.INDUSTRY_TYPE_ID
+import com.paytm.pgsdk.Constants.MID
+import com.paytm.pgsdk.Constants.ORDER_ID
+import com.paytm.pgsdk.Constants.TXN_AMOUNT
+import com.paytm.pgsdk.Constants.TXN_TOKEN
+import com.paytm.pgsdk.Constants.WEBSITE
+import com.paytm.pgsdk.PaytmOrder
+import com.paytm.pgsdk.PaytmPGService
+import com.paytm.pgsdk.PaytmPaymentTransactionCallback
+import com.paytm.pgsdk.TransactionManager
 import org.json.JSONObject
 
 
@@ -46,6 +59,15 @@ class PaymentSelectionActivity : SubModuleActivity() {
     private var isCurrLoc = false
 
     private lateinit var dataPaymentObject: JSONObject
+
+    private var mid = ""
+    private var orderId = ""
+    private var userId = ""
+    private var txnToken = ""
+    private var totalPaymentCost = ""
+    private var callbackUrl = ""
+    private var checkSumHash = ""
+    private var channelId = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -179,10 +201,47 @@ class PaymentSelectionActivity : SubModuleActivity() {
                 if (obj.has("status") && obj.getBoolean("status")) {
                     if (obj.has("data") && !obj.isNull("data")) {
                         dataPaymentObject = obj.getJSONObject("data")
+
+                        if (dataPaymentObject.has("mid") && !dataPaymentObject.isNull("mid")) {
+                            mid = dataPaymentObject.getString("mid")
+                        }
+
+                        if (dataPaymentObject.has("userId") && !dataPaymentObject.isNull("userId")) {
+                            userId = dataPaymentObject.getString("userId")
+                        }
+
+                        if (dataPaymentObject.has("orderId") && !dataPaymentObject.isNull("orderId")) {
+                            orderId = dataPaymentObject.getString("orderId")
+                        }
+
+                        if (dataPaymentObject.has("txnToken") && !dataPaymentObject.isNull("txnToken")) {
+                            txnToken = dataPaymentObject.getString("txnToken")
+                        }
+
+                        if (dataPaymentObject.has("totalCost") && !dataPaymentObject.isNull("totalCost")) {
+                            totalPaymentCost = dataPaymentObject.getString("totalCost")
+                        }
+
+                        if (dataPaymentObject.has("callbackUrl") && !dataPaymentObject.isNull("callbackUrl")) {
+                            callbackUrl = dataPaymentObject.getString("callbackUrl")
+                        }
+
+                        if (dataPaymentObject.has("checkSumHash") && !dataPaymentObject.isNull("checkSumHash")) {
+                            checkSumHash = dataPaymentObject.getString("checkSumHash")
+                        }
+
+                        if (dataPaymentObject.has("channelId") && !dataPaymentObject.isNull("channelId")) {
+                            channelId = dataPaymentObject.getString("channelId")
+                        }
+
                     }
                 }
             }
-            deliverNotification()
+            if (paymentMode == "cod") {
+                deliverNotification()
+            } else {
+                initGateWay()
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -192,6 +251,10 @@ class PaymentSelectionActivity : SubModuleActivity() {
         try {
             if (AppUtils.isConnectedToInternet(context)) {
                 val requestObject = parseString(dataPaymentObject.toString()) as JsonObject
+                requestObject.addProperty("customerId", userId)
+                requestObject.addProperty("orderObjectId", orderId)
+                requestObject.addProperty("orderId", orderId)
+                requestObject.addProperty("sentBy", "user")
                 requestObject.addProperty("type", "delivery")
                 requestObject.addProperty(
                     "shopId",
@@ -226,6 +289,117 @@ class PaymentSelectionActivity : SubModuleActivity() {
         }
     }
 
+    private fun initGateWay() {
+        try {
+
+            val paramMap = HashMap<String, String>()
+            paramMap[MID] = mid
+            paramMap[ORDER_ID] = orderId
+            paramMap[TXN_TOKEN] = txnToken
+            paramMap[TXN_AMOUNT] = totalPaymentCost
+            paramMap[CALLBACK_URL] = callbackUrl
+            paramMap[CHECKSUMHASH] = checkSumHash
+            paramMap[CUST_ID] = userId
+            paramMap[CHANNEL_ID] = channelId
+            paramMap[INDUSTRY_TYPE_ID] = "Retail"
+            paramMap[WEBSITE] = ""
+
+            val paytmOrder =
+                PaytmOrder(orderId, mid, txnToken, totalPaymentCost, callbackUrl)
+
+            /*val paytmOrder =
+                PaytmOrder(paramMap)*/
+
+            /*paytmPGService.initialize(paytmOrder, null)
+            paytmPGService.startPaymentTransaction(
+                this,
+                true,
+                true,
+                object : PaytmPaymentTransactionCallback {
+                    override fun onTransactionResponse(inResponse: Bundle?) {
+                        TODO("Not yet implemented")
+                        Log.d("TAG", "onTransactionResponse: $inResponse")
+                        val ORDERID = inResponse!!.getString("ORDERID")
+                        Log.d("TAG", "onTransactionResponse: $ORDERID")
+                    }
+
+                    override fun networkNotAvailable() {
+                        Log.d("TAG", "networkNotAvailable: ");
+                    }
+
+                    override fun onErrorProceed(error: String?) {
+                        TODO("Not yet implemented")
+                    }
+
+                    override fun clientAuthenticationFailed(inErrorMessage: String?) {
+                        TODO("Not yet implemented")
+                        Log.d("TAG", "clientAuthenticationFailed: ")
+                    }
+
+                    override fun someUIErrorOccurred(inErrorMessage: String?) {
+                        Log.d("TAG", "someUIErrorOccurred: ")
+                    }
+
+                    override fun onErrorLoadingWebPage(
+                        iniErrorCode: Int,
+                        inErrorMessage: String?,
+                        inFailingUrl: String?
+                    ) {
+                        Log.d("TAG", "onErrorLoadingWebPage: ")
+                    }
+
+                    override fun onBackPressedCancelTransaction() {
+                        Log.d("TAG", "onBackPressedCancelTransaction: ")
+                    }
+
+                    override fun onTransactionCancel(inErrorMessage: String?, inResponse: Bundle?) {
+                        Log.d("TAG", "onTransactionCancel: $inErrorMessage")
+                        Log.d("TAG", "onTransactionCancel: $inResponse")
+                    }
+
+                })*/
+
+            val transactionManager =
+                TransactionManager(paytmOrder, object : PaytmPaymentTransactionCallback {
+                    override fun onTransactionResponse(bundle: Bundle?) {
+                        Toast.makeText(
+                            this@PaymentSelectionActivity,
+                            "Response (onTransactionResponse) : " + bundle.toString(),
+                            Toast.LENGTH_SHORT
+                        ).show();
+                        Log.e("Response", bundle.toString())
+                    }
+
+                    override fun networkNotAvailable() {}
+                    override fun onErrorProceed(s: String) {}
+                    override fun clientAuthenticationFailed(s: String) {}
+                    override fun someUIErrorOccurred(s: String) {}
+                    override fun onErrorLoadingWebPage(i: Int, s: String, s1: String) {}
+                    override fun onBackPressedCancelTransaction() {}
+                    override fun onTransactionCancel(s: String, bundle: Bundle) {}
+                })
+
+            transactionManager.setAppInvokeEnabled(false)
+            transactionManager.setShowPaymentUrl("https://securegw-stage.paytm.in/theia/api/v1/showPaymentPage")
+            transactionManager.startTransaction(this, REQUEST_CHECK)
+
+        } catch (e: Exception) {
+            e.printStackTrace();
+        }
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == Companion.REQUEST_CHECK && data != null) {
+            Toast.makeText(
+                this,
+                data.getStringExtra("nativeSdkForMerchantMessage") + data.getStringExtra("response"),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
     private fun launchSuccessActivity() {
         try {
             val intent = Intent(context, SuccessActivity::class.java)
@@ -237,7 +411,7 @@ class PaymentSelectionActivity : SubModuleActivity() {
         }
     }
 
-    var launcher =
+    private var launcher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 handleResponse()
@@ -252,5 +426,9 @@ class PaymentSelectionActivity : SubModuleActivity() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    companion object {
+        private const val REQUEST_CHECK = 100
     }
 }

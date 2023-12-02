@@ -17,6 +17,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.NonNull
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -50,6 +51,8 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
     private lateinit var normalOfferList: ArrayList<ProductDto>
 
     private lateinit var normalOffersListAdapter: NormalOffersListAdapter
+
+    private lateinit var offersViewModel: OffersViewModel
 
     val time = 4000
     var cartCount = 0
@@ -121,6 +124,7 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
 
     private fun initClassReference() {
         try {
+            offersViewModel = ViewModelProvider(this)[OffersViewModel::class.java]
             binding.srlList.isRefreshing = false
             binding.srlList.isEnabled = false
             language =
@@ -319,7 +323,6 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
                 requestObject.addProperty("skip", 0)
                 //Log.e("requestObj", requestObject.toString())
                 showProgressBar()
-                val offersViewModel = OffersViewModel(Application())
                 offersViewModel.getTopOffers(
                     requestObject,
                     preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!
@@ -538,14 +541,13 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
                 requestObject.addProperty("search", searchQuery)
                 requestObject.addProperty("view", "")
                 //Log.e("Normal request", requestObject.toString())
-                val offersViewModel = OffersViewModel(Application())
                 offersViewModel.getNormalOffers(
                     requestObject,
                     preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!
-                ).observe(viewLifecycleOwner, { jsonObject ->
+                ).observe(viewLifecycleOwner) { jsonObject ->
                     dismissProgressBar()
                     parseNormalOffersResponse(jsonObject)
-                })
+                }
             } else {
                 CommonClass.showToastMessage(
                     requireActivity(),
@@ -838,14 +840,12 @@ class OffersFragment : Fragment(), TopOfferListener, NormalOfferListener {
                     "userId",
                     preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_USER_ID)
                 )
-
-                val offersViewModel = OffersViewModel(Application())
                 offersViewModel.getCartCount(
                     requestObject,
                     preferenceHelper.getValueFromSharedPrefs(AppConstant.KEY_TOKEN)!!
-                ).observe(viewLifecycleOwner, { jsonObject ->
+                ).observe(viewLifecycleOwner) { jsonObject ->
                     parseCartCountResponse(jsonObject)
-                })
+                }
             } else {
                 CommonClass.showToastMessage(
                     requireActivity(),

@@ -22,6 +22,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.JsonObject
@@ -30,6 +31,7 @@ import com.illagu.attil.R
 import com.illagu.attil.SubModuleActivity
 import com.illagu.attil.databinding.ActivityLoginBinding
 import com.illagu.attil.home.HomeActivity
+import com.illagu.attil.home.offers.OffersViewModel
 import com.illagu.attil.login.otp.OtpActivity
 import com.illagu.attil.signup.mobileno.SignUpMobileActivity
 import com.illagu.attil.utils.AppConstant
@@ -45,10 +47,12 @@ class LoginActivity : SubModuleActivity() {
 
     override var preferenceHelper: PreferenceHelper? = null
     private var submitFlag = false
-    var gcmId = ""
-    var otp = ""
-    lateinit var myAnim: Animation
-   private var ispasstoggle:Boolean = false
+    private var gcmId = ""
+    private var otp = ""
+    private lateinit var myAnim: Animation
+    private var ispasstoggle: Boolean = false
+
+    private lateinit var loginViewModel:LoginViewModel
 
     var fa: Activity? = null
 
@@ -59,7 +63,7 @@ class LoginActivity : SubModuleActivity() {
         fa = this
 
         //initialiseProgressBar(binding.lnProgressbar)
-       // initialiseErrorMessage(binding.lnError)
+        // initialiseErrorMessage(binding.lnError)
         initClassReference()
         checkFireBaseToken()
         handleUiElement()
@@ -69,11 +73,12 @@ class LoginActivity : SubModuleActivity() {
 
     private fun initClassReference() {
         try {
+            loginViewModel = ViewModelProvider(this)[LoginViewModel::class.java]
             preferenceHelper = PreferenceHelper(context)
             languageId = preferenceHelper!!.getIntFromSharedPrefs(AppConstant.KEY_LANGUAGE_ID)
             myAnim = AnimationUtils.loadAnimation(this, R.anim.zoom_in_out)
             binding.btnSignUp.startAnimation(myAnim)
-           // binding.cbShowPassword.setButtonDrawable(R.drawable.password_show_drawable)
+            // binding.cbShowPassword.setButtonDrawable(R.drawable.password_show_drawable)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -116,7 +121,7 @@ class LoginActivity : SubModuleActivity() {
 //        spnstr.setSpan(RelativeSizeSpan(0.5f),0,resources.getString(R.string.enter_your_password).length,Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 //        binding.etPassword.setHint(spnstr)
         try {
-           // binding.lnError.ivClose.setOnClickListener(View.OnClickListener { hideErrorMessage() })
+            // binding.lnError.ivClose.setOnClickListener(View.OnClickListener { hideErrorMessage() })
 
             binding.etMobileNo.setOnEditorActionListener(OnEditorActionListener { v, actionId, event -> //////Log.i("onEditorAction", "onEditorAction");
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -170,18 +175,21 @@ class LoginActivity : SubModuleActivity() {
                 launchSignUpActivity()
             })
             binding.passtoggle.setOnClickListener {
-                if(!ispasstoggle){
+                if (!ispasstoggle) {
                     ispasstoggle = true
                     binding.etPassword.inputType = InputType.TYPE_CLASS_TEXT
-               //   binding.etPassword.hintTextColors.defaultColor
-                    binding.etPassword.typeface = ResourcesCompat.getFont(context, R.font.noto_sans_light)
+                    //   binding.etPassword.hintTextColors.defaultColor
+                    binding.etPassword.typeface =
+                        ResourcesCompat.getFont(context, R.font.noto_sans_light)
                     binding.passtoggle.setImageDrawable(resources.getDrawable(R.drawable.ic_show_pass))
 
-                }else{
+                } else {
                     ispasstoggle = false
-                    binding.etPassword.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-                  //  binding.etPassword.hintTextColors.defaultColor
-                    binding.etPassword.typeface = ResourcesCompat.getFont(context, R.font.noto_sans_light)
+                    binding.etPassword.inputType =
+                        InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                    //  binding.etPassword.hintTextColors.defaultColor
+                    binding.etPassword.typeface =
+                        ResourcesCompat.getFont(context, R.font.noto_sans_light)
                     binding.passtoggle.setImageDrawable(resources.getDrawable(R.drawable.ic_hide_pass))
 
                 }
@@ -198,7 +206,7 @@ class LoginActivity : SubModuleActivity() {
 
                 } else {
                     if (!binding.etMobileNo.text.isEmpty() && binding.etMobileNo.text.length == 10) {
-                      //  binding.lnAfterMobileNo.visibility = View.VISIBLE
+                        //  binding.lnAfterMobileNo.visibility = View.VISIBLE
                     }
                 }
             }
@@ -225,7 +233,7 @@ class LoginActivity : SubModuleActivity() {
 
     private fun launchSignUpActivity() {
         try {
-          //  val intent = Intent(context, SignUpInfoActivity::class.java)// written by kumar
+            //  val intent = Intent(context, SignUpInfoActivity::class.java)// written by kumar
             val intent = Intent(context, SignUpMobileActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
             signUpLauncher.launch(intent)
@@ -248,7 +256,6 @@ class LoginActivity : SubModuleActivity() {
                     requestObject.addProperty("preferredLanguage", language)
 
                     showProgressBar()
-                    val loginViewModel = LoginViewModel(application)
                     loginViewModel.sendOtpService(requestObject)
                         .observe(this, Observer<JSONObject?> { currencyPojos ->
                             if (currencyPojos != null) {
@@ -324,14 +331,13 @@ class LoginActivity : SubModuleActivity() {
                     requestObject.addProperty("preferredLanguage", language)
                     //Log.e("requestObj", requestObject.toString())
                     showProgressBar()
-                    val loginViewModel = LoginViewModel(application)
                     loginViewModel.makeLogin(requestObject)
-                        .observe(this, { jsonObject ->
+                        .observe(this) { jsonObject ->
                             //Log.e("jsonObject", jsonObject.toString() + "")
                             if (jsonObject != null) {
                                 parseSignInResponse(jsonObject)
                             }
-                        })
+                        }
                 } else {
                     CommonClass.showToastMessage(
                         context,
