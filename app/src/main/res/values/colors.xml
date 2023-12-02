@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!--<color name="primary">#00CA3B</color>-->
     <color name="primary">#00CA3B</color>
     <color name="primary_dark">#005858</color>
 
@@ -9,6 +10,7 @@
     <color name="transparent">#00000000</color>
 
     <color name="accent">@color/colorAccent</color>
+    <color name="varient_green">#19424D</color>
     <color name="colorAccent">@color/primary</color>
     <color name="md_deep_orange_50">#FBE9E7</color>
     <color name="md_deep_purple_600">#5E35B1</color>

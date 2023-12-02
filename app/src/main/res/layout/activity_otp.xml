@@ -6,7 +6,7 @@
 
         <variable
             name="SignUpOtp"
-            type="com.develop.sns.login.otp.OtpViewModel" />
+            type="com.illagu.attil.login.otp.OtpViewModel" />
     </data>
 
     <LinearLayout
@@ -51,22 +51,22 @@
                         android:textSize="20dp"
                         android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/tv_top_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="10dp"
-                        android:gravity="center"
-                        android:padding="8dp"
-                        android:text="@string/otp_info"
-                        android:textColor="@color/text_color"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:visibility="visible" />
+<!--                    <TextView-->
+<!--                        android:id="@+id/tv_top_text"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_gravity="center"-->
+<!--                        android:layout_marginTop="10dp"-->
+<!--                        android:gravity="center"-->
+<!--                        android:padding="8dp"-->
+<!--                        android:text="@string/otp_info"-->
+<!--                        android:textColor="@color/text_color"-->
+<!--                        android:textSize="14sp"-->
+<!--                        android:textStyle="bold"-->
+<!--                        android:visibility="visible" />-->
 
 
-                    <com.develop.sns.customviews.otpview.OtpView
+                    <com.illagu.attil.customviews.otpview.OtpView
                         android:id="@+id/et_otp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

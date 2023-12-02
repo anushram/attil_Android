@@ -6,7 +6,7 @@
 
         <variable
             name="HomeViewModel"
-            type="com.develop.sns.home.offers.OffersViewModel" />
+            type="com.illagu.attil.home.offers.OffersViewModel" />
     </data>
 
     <LinearLayout
@@ -139,7 +139,7 @@
                             android:textSize="22sp" />
                     </LinearLayout>
 
-                    <com.develop.sns.customviews.CustomRecyclerView
+                    <com.illagu.attil.customviews.CustomRecyclerView
                         android:id="@+id/lv_products"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"

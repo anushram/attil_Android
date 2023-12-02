@@ -24,7 +24,7 @@
             android:orientation="vertical"
             android:padding="12dp">
 
-            <com.develop.sns.customviews.RoundedCornerImageView
+            <com.illagu.attil.customviews.RoundedCornerImageView
                 android:id="@+id/iv_product"
                 android:layout_width="100dp"
                 android:layout_height="100dp"

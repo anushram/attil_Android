@@ -6,7 +6,7 @@
     <data>
         <variable
             name="HomeViewModel"
-            type="com.develop.sns.home.HomeViewModel" />
+            type="com.illagu.attil.home.HomeViewModel" />
 
     </data>
 
@@ -51,7 +51,7 @@
                             android:padding="1dp"
                             android:visibility="visible">
 
-                            <com.develop.sns.customviews.CircleImageView
+                            <com.illagu.attil.customviews.CircleImageView
                                 android:id="@+id/iv_profile_pic"
                                 android:layout_width="120dp"
                                 android:layout_height="120dp"

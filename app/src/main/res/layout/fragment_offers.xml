@@ -6,7 +6,7 @@
 
         <variable
             name="HomeViewModel"
-            type="com.develop.sns.home.offers.OffersViewModel" />
+            type="com.illagu.attil.home.offers.OffersViewModel" />
     </data>
 
     <LinearLayout
@@ -127,7 +127,7 @@
                             android:orientation="vertical"
                             android:padding="1dp">
 
-                            <com.develop.sns.customviews.CustomSearchView
+                            <com.illagu.attil.customviews.CustomSearchView
                                 android:id="@+id/sv_search"
                                 android:layout_width="match_parent"
                                 android:layout_height="32dp"
@@ -202,7 +202,7 @@
                                     android:layout_height="match_parent"
                                     android:orientation="vertical">
 
-                                    <com.develop.sns.customviews.AutoScrollRecyclerView
+                                    <com.illagu.attil.customviews.AutoScrollRecyclerView
                                         android:id="@+id/lv_top_offers"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
@@ -265,7 +265,7 @@
                                 android:layout_height="match_parent"
                                 android:orientation="vertical">
 
-                                <com.develop.sns.customviews.CustomRecyclerView
+                                <com.illagu.attil.customviews.CustomRecyclerView
                                     android:id="@+id/lv_normal_offers"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"

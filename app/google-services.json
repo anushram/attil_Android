@@ -1,41 +1,40 @@
 {
   "project_info": {
-    "project_number": "1093250527845",
-    "firebase_url": "https://attil-c61f9-default-rtdb.firebaseio.com",
-    "project_id": "attil-c61f9",
-    "storage_bucket": "attil-c61f9.appspot.com"
+    "project_number": "1072863870938",
+    "project_id": "attil-294905",
+    "storage_bucket": "attil-294905.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1093250527845:android:bbd07b8f7017a103298c8c",
+        "mobilesdk_app_id": "1:1072863870938:android:4d11ba2fb4c6bc45f90ae3",
         "android_client_info": {
-          "package_name": "com.develop.sns"
+          "package_name": "com.illagu.attil"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1093250527845-4u73i8ks9hbfloer3nh2e8p6lab3aesl.apps.googleusercontent.com",
+          "client_id": "1072863870938-56k9uk7g9c3ino2ar16n2ebj254ee252.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDp-19PgwDu4WsuJuvnE142c3JJzcF5N7k"
+          "current_key": "AIzaSyAO2MpY8VKbOLWzOMY5hGCfCaJwyomvFVU"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1093250527845-4u73i8ks9hbfloer3nh2e8p6lab3aesl.apps.googleusercontent.com",
+              "client_id": "1072863870938-56k9uk7g9c3ino2ar16n2ebj254ee252.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "1093250527845-6ju4orgadggj606purekkeo0dgv99nbq.apps.googleusercontent.com",
+              "client_id": "1072863870938-d9an59nib2553tmbo2095voud59v63el.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.attildelivery.illagu"
+                "bundle_id": "com.illagu.attil"
               }
             }
           ]

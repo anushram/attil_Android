@@ -7,7 +7,7 @@
 
         <variable
             name="ProductFragment"
-            type="com.develop.sns.home.product.ProductsViewModel" />
+            type="com.illagu.attil.home.product.ProductsViewModel" />
 
     </data>
 

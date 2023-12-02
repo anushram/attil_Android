@@ -188,7 +188,7 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <com.develop.sns.customviews.CustomRecyclerView
+            <com.illagu.attil.customviews.CustomRecyclerView
                 android:id="@+id/lv_items"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

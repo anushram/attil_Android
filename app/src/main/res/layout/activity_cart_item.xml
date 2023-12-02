@@ -7,7 +7,7 @@
 
         <variable
             name="Cart"
-            type="com.develop.sns.cart.CartViewModel" />
+            type="com.illagu.attil.cart.CartViewModel" />
     </data>
 
     <RelativeLayout
@@ -42,7 +42,7 @@
                     android:layout_above="@+id/coordinator_layout"
                     android:orientation="vertical">
 
-                    <com.develop.sns.customviews.CustomRecyclerView
+                    <com.illagu.attil.customviews.CustomRecyclerView
                         android:id="@+id/lv_products"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
