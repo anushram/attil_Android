@@ -21,6 +21,9 @@ import android.widget.TextView.OnEditorActionListener
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.res.ResourcesCompat
+import androidx.dynamicanimation.animation.DynamicAnimation
+import androidx.dynamicanimation.animation.SpringAnimation
+import androidx.dynamicanimation.animation.SpringForce
 import androidx.lifecycle.Observer
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
@@ -71,9 +74,22 @@ class LoginActivity : SubModuleActivity() {
         try {
             preferenceHelper = PreferenceHelper(context)
             languageId = preferenceHelper!!.getIntFromSharedPrefs(AppConstant.KEY_LANGUAGE_ID)
-            myAnim = AnimationUtils.loadAnimation(this, R.anim.zoom_in_out)
-            binding.btnSignUp.startAnimation(myAnim)
+           // myAnim = AnimationUtils.loadAnimation(this, R.anim.zoom_in_out)
+          //  binding.btnSignUp.startAnimation(myAnim)
+            myAnim = AnimationUtils.loadAnimation(this, R.anim.springani)
+           // binding.btnSignUp.startAnimation(myAnim)
+            binding.conTopBt.startAnimation(myAnim)
+
+
+
+//          var spa : SpringAnimation = binding.btnSignUp.let{btn->
+//                SpringAnimation(btn, DynamicAnimation.TRANSLATION_Y)
+//            }
            // binding.cbShowPassword.setButtonDrawable(R.drawable.password_show_drawable)
+           // spa.spring.setDampingRatio(SpringForce.DAMPING_RATIO_HIGH_BOUNCY)
+           // spa.spring.setStiffness(SpringForce.STIFFNESS_VERY_LOW)
+
+           // spa.animateToFinalPosition(50f)
         } catch (e: Exception) {
             e.printStackTrace()
         }

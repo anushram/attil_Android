@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">அட்டில்</string>
-    <string name="enter_your_mobile_number">உங்களுடைய கைபேசி எண்ணை உள்ளிடவும்</string>
+    <string name="enter_your_mobile_number">கைபேசி எண்ணை உள்ளிடவும்</string>
     <string name="no_internet">தயவுசெய்து உங்கள் இணைய இணைப்பைச் சரிபார்க்கவும்</string>
     <string name="required">தேவை</string>
     <string name="retry">மீண்டும் முயற்சிக்கவும்</string>

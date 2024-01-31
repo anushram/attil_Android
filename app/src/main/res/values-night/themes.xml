@@ -9,6 +9,8 @@
         <item name="colorPrimaryDark">@color/primary</item>
         <item name="colorAccent">@color/accent</item>
         <item name="actionModeBackground">@color/primary</item>
+        <item name="android:statusBarColor" >@color/white</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
         <item name="android:dialogTheme">@style/AppDialogTheme</item>
         <item name="android:navigationBarColor" tools:targetApi="lollipop">@color/black</item>
         <item name="android:actionMenuTextAppearance">@style/MyMenuTextAppearance</item>

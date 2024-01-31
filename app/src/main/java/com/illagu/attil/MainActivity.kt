@@ -34,7 +34,8 @@ class MainActivity : SubModuleActivity() {
         getIntentValue()
         getAndroidDeviceId()
         handleUiElement()
-        getSystemConfig()
+       // getSystemConfig()
+        launchLoginActivity()
 
     }
 

@@ -44,10 +44,10 @@ open class SubModuleActivity : ModuleActivity() {
                 val window = window
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
                 window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-                window.statusBarColor = ContextCompat.getColor(
-                    context,
-                    R.color.accent
-                )
+//                window.statusBarColor = ContextCompat.getColor(
+//                    context,
+//                    R.color.white
+//                )
                 window.navigationBarColor = ContextCompat.getColor(
                     context,
                     R.color.black

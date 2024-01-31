@@ -23,8 +23,8 @@ open class ModuleActivity : AppCompatActivity() {
                 val window: Window = window
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
                 window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-                window.statusBarColor =
-                    ContextCompat.getColor(this@ModuleActivity, R.color.accent)
+//                window.statusBarColor =
+//                    ContextCompat.getColor(this@ModuleActivity, R.color.accent)
                 window.navigationBarColor =
                     ContextCompat.getColor(this@ModuleActivity, R.color.black)
             }
